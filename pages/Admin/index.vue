@@ -1,10 +1,10 @@
-<template>
-  <Tutorial/>
-</template>
+<template></template>
 
 <script>
 export default {
   layout: "defaults",
-  name: 'IndexPage'
-}
+};
 </script>
+
+<style>
+</style>
