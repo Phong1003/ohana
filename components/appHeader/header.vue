@@ -1,12 +1,12 @@
 <template>
-  <header class="container d-flex flex-column justify-content-center">
+  <div class="container header__contain d-flex flex-column justify-content-center">
     <div class="header__nav"></div>
     <div class="header__search">
       <div class="search__contain d-flex align-items-center flex-row">
         <img src="~/assets/icon/ohanaLogo.svg" alt="OhanaLogo" />
       </div>
     </div>
-  </header>
+  </div>
 </template>
 
 <script>
@@ -14,6 +14,9 @@ export default {};
 </script>
 
 <style>
+.header__contain {
+  height: 112px;
+}
 .search__contain {
   margin: auto;
   padding: 0 32px;
