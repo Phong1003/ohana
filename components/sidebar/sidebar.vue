@@ -2,9 +2,11 @@
   <div class="sidebar">
     <div class="contain__item">
       <div
-        class="sidebar__item cursor-pointer d-flex align-items-center justify-content-start"
         v-for="(option, index) in listSideBar"
+        @click="handleChangeTabIndex(option.id)"
+        class="sidebar__item cursor-pointer d-flex align-items-center justify-content-start"
         :key="index"
+        :class="{ tab__active: tabIndex == option.id ? true : false }"
       >
         {{ option.title }}
       </div>
@@ -13,6 +15,8 @@
 </template>
 
 <script>
+import { mapGetters, mapActions } from "vuex";
+
 export default {
   data() {
     return {
@@ -28,10 +32,21 @@ export default {
       ],
     };
   },
+  computed: {
+    ...mapGetters("admin", ["tabIndex"]),
+  },
+  methods: {
+    ...mapActions("admin", ["handleChangeTabIndex"]),
+  },
 };
 </script>
 
 <style>
+.tab__active {
+  border-bottom: 5px solid #ee3d8b;
+  border-radius: 2px 2px 0px 0px;
+  color: #ee3d8b;
+}
 .sidebar {
   width: 300px;
   height: 100%;

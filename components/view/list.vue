@@ -1,22 +1,27 @@
 <template>
   <div class="list__container">
     <div class="d-flex justify-content-between">
-      <h4 class="list__title">Tất cả các phòng hiện có</h4>
-      <div class="h4 icon-create cursor-pointer">
-        <b-icon icon="plus-square" class="border-info" variant="info"></b-icon>
-        <span>Create New</span>
+      <h4 class="list__title">Tất cả các phòng</h4>
+      <div class="h4 cursor-pointer mr-3">
+        <b-button class="bg-primary border-primary">
+          <b-icon icon="plus-square"></b-icon>
+          <span>Tạo mới</span>
+        </b-button>
       </div>
     </div>
     <div class="items" v-for="(item, index) in lists" :key="index">
       <div class="action-contain pt-2 px-3 d-flex">
         <div class="icon-action mr-2 h5 cursor-pointer">
-          <b-icon class="border-success" variant="success" icon="pencil-square">
-          </b-icon>
-          <span class="mr-2"> Edit</span>
+          <b-button class="bg-success border-success">
+            <b-icon icon="pencil-square"> </b-icon>
+            <span>Chỉnh sửa</span>
+          </b-button>
         </div>
         <div class="icon-action mr-2 h5 cursor-pointer">
-          <b-icon class="border-danger" variant="danger" icon="trash"></b-icon>
-          <span class="mr-2"> Delete</span>
+          <b-button class="bg-danger border-danger">
+            <b-icon icon="trash"></b-icon>
+            <span>Xóa</span>
+          </b-button>
         </div>
       </div>
       <a href="" target="_blank" class="info-contain">
@@ -75,6 +80,7 @@
         prev-text="Prev"
         next-text="Next"
         last-text="Last"
+        @page-click="handleChangePage"
       />
     </div>
   </div>
@@ -112,12 +118,6 @@ export default {
 <style>
 .cursor-pointer {
   cursor: pointer;
-}
-.icon-action {
-  border-right: 1px solid #cdcdcd;
-}
-.icon-create:hover, .icon-action:hover {
-  opacity: 0.7;
 }
 .item__details {
   line-height: 22px;

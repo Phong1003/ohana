@@ -3,7 +3,8 @@
     <b-container class="contain">
       <div class="d-flex flex-lg-row flex-column">
         <Sidebar class="sidebar-space" />
-        <ListComponent :showList="listHouseForRent" />
+        <ListComponent v-if="tabIndex == 1" :showList="listHouseForRent" />
+        <TableAccount v-if="tabIndex == 2" />
       </div>
     </b-container>
   </div>
@@ -12,11 +13,15 @@
 <script>
 import Sidebar from "../../components/sidebar/sidebar.vue";
 import ListComponent from "../../components/view/list.vue";
+import TableAccount from "../../components/view/tableAccount.vue";
+import { mapGetters, mapActions } from "vuex";
+
 export default {
   layout: "defaults",
   components: {
     Sidebar,
     ListComponent,
+    TableAccount,
   },
   data() {
     return {
@@ -94,6 +99,9 @@ export default {
         },
       ],
     };
+  },
+  computed: {
+    ...mapGetters("admin", ["tabIndex"]),
   },
 };
 </script>
