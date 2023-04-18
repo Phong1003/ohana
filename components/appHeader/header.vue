@@ -1,16 +1,26 @@
 <template>
-  <div class="container header__contain d-flex flex-column justify-content-center">
-    <div class="header__nav"></div>
+  <div class="container_header">
+    <div class="header__nav d-flex justify-content-end align-items-center text-white pr-4">
+      <div class="mr-2">Trang chủ</div>
+      <div>|</div>
+      <div class="ml-2">Đăng nhập</div>
+    </div>
     <div class="header__search">
-      <div class="search__contain d-flex align-items-center flex-row">
+      <div class="search__contain d-flex align-items-center">
         <img src="~/assets/icon/ohanaLogo.svg" alt="OhanaLogo" />
+        <FilterHouse class="filter_house" />
       </div>
     </div>
   </div>
 </template>
 
 <script>
-export default {};
+import FilterHouse from '../filterHouse'
+export default {
+  components: {
+    FilterHouse
+  }
+};
 </script>
 
 <style>
@@ -24,22 +34,24 @@ export default {};
   width: 100%;
 }
 .header__nav {
-  height: 40px;
+  height: 60px;
+  /* position: fixed; */
   opacity: 1;
   background: #f7346f;
-  position: fixed;
   top: 0px;
   left: 0px;
   width: 100%;
   z-index: 20;
+  font-size: 20px;
+  font-weight: 700;
 }
 
 .header__search {
+  /* position: fixed; */
   width: 100%;
-  height: 72px;
-  position: fixed;
+  height: 90px;
   z-index: 20;
-  top: 40px;
+  top: 50px;
   left: 0px;
   -webkit-transition: 0.5s;
   -o-transition: 0.5s;
@@ -48,5 +60,9 @@ export default {};
   background-color: #ffffff;
   -webkit-box-shadow: 0 2px 8px 0 rgba(0, 0, 0, 0.12);
   box-shadow: 0 2px 8px 0 rgba(0, 0, 0, 0.12);
+}
+.filter_house{
+  margin-left: 50px;
+  border-right: 1px solid #B4B4B4;
 }
 </style>
