@@ -25,7 +25,9 @@ export default {
     { src: '@/plugins/paginate.js', ssr: false },
     { src: '@/plugins/vue-multiselect.js', ssr: false },
     { src: '@/plugins/vClickOutside.js', ssr: false },
-    { src: '@/plugins/vue-simple-suggest.js', ssr: false}
+    { src: '@/plugins/vue-simple-suggest.js', ssr: false},
+    { src: '@/plugins/vViewer.js', ssr: false},
+    
   ],
 
   // Auto import components: https://go.nuxtjs.dev/config-components

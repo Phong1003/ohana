@@ -9,7 +9,12 @@
         </b-button>
       </div>
     </div>
-    <div class="items" v-for="(item, index) in lists" :key="index">
+    <div
+      class="items"
+      @click="routerDetails()"
+      v-for="(item, index) in lists"
+      :key="index"
+    >
       <div class="action-contain pt-2 px-3 d-flex">
         <div class="icon-action mr-2 h5 cursor-pointer">
           <b-button class="bg-success border-success">
@@ -24,7 +29,7 @@
           </b-button>
         </div>
       </div>
-      <a href="" target="_blank" class="info-contain">
+      <a target="_blank" class="info-contain">
         <div class="item__details my-3 d-flex justify-content-between">
           <div class="col-4">
             <img
@@ -110,6 +115,9 @@ export default {
   methods: {
     handleChangePage() {
       window.scrollTo({ top: 0, behavior: "smooth" });
+    },
+    routerDetails() {
+      this.$router.push({ name: "details" });
     },
   },
 };
