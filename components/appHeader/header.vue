@@ -1,13 +1,13 @@
 <template>
   <div class="container_header">
     <div class="header__nav d-flex justify-content-end align-items-center text-white pr-4">
-      <div class="mr-2">Trang chủ</div>
+      <div class="mr-2" style="cursor: pointer;" @click="gotoDashboard">Trang chủ</div>
       <div>|</div>
-      <div class="ml-2">Đăng nhập</div>
+      <div class="ml-2" style="cursor: pointer;" @click="login">Đăng nhập/Đăng ký</div>
     </div>
     <div class="header__search">
       <div class="search__contain d-flex align-items-center">
-        <img src="~/assets/icon/ohanaLogo.svg" alt="OhanaLogo" />
+        <img src="~/assets/icon/ohanaLogo.svg" style="cursor: pointer;" alt="OhanaLogo" @click="gotoDashboard" />
         <FilterHouse class="filter_house" />
       </div>
     </div>
@@ -16,14 +16,23 @@
 
 <script>
 import FilterHouse from '../filterHouse'
+import { mapGetters, mapActions } from 'vuex';
 export default {
   components: {
     FilterHouse
+  },
+  methods:{
+    gotoDashboard(){
+      this.$router.push({name: 'dashboard'})
+    },
+    login(){
+      this.$router.push({name: 'login'})
+    }
   }
 };
 </script>
 
-<style>
+<style scoped>
 .header__contain {
   height: 112px;
 }
@@ -47,8 +56,8 @@ export default {
 }
 
 .header__search {
-  /* position: fixed; */
-  width: 100%;
+  /* position: fixed;
+  width: 100%; */
   height: 90px;
   z-index: 20;
   top: 50px;

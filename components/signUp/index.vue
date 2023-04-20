@@ -1,0 +1,67 @@
+<template>
+  <div style="margin-top: 30px;">
+    <b-form autocomplete="off" @submit.stop.prevent="handleSignUp">
+      <b-form-group id="form-group-1" class="form-group-login d-flex align-items-center justify-content-center form-group"
+        label-for="input-field-username">
+        <div class="input-label text-black">
+          Fullname
+        </div>
+        <b-form-input autocomplete="off" class="input-field input-username" id="input-field-username"
+          name="input-field-username" />
+      </b-form-group>
+
+      <b-form-group id="form-group-1" class="form-group-login d-flex align-items-center justify-content-center form-group"
+        label-for="input-field-username">
+        <div class="input-label text-black">
+          Email
+        </div>
+        <b-form-input autocomplete="off" class="input-field input-username" id="input-field-username"
+          name="input-field-username" />
+      </b-form-group>
+
+      <b-form-group id="form-group-2"
+        class="form-group-login d-flex align-items-center justify-content-center form-group position-relative"
+        label-for="input-field-password">
+        <div class="input-label text-black">
+          Password
+        </div>
+        <b-form-input autocomplete="off" class="input-field input-password" type="password"
+          id="input-field-password" name="input-field-password"
+        />
+      </b-form-group>
+
+      <b-form-group id="form-group-1" class="form-group-login d-flex align-items-center justify-content-center form-group"
+        label-for="input-field-username">
+        <div class="input-label text-black">
+          Phone
+        </div>
+        <b-form-input autocomplete="off" class="input-field input-username" id="input-field-username"
+          name="input-field-username" />
+      </b-form-group>
+    </b-form>
+    <div class="d-flex align-items-center justify-content-center" style="margin-top: 30px;">
+      <b-button class="btn-sign-up border-0" @click="handleSignUp">
+        Đăng ký
+      </b-button>
+    </div>
+  </div>
+</template>
+
+<script>
+export default {
+  methods: {
+    handleSignUp(){
+      this.$emit('goBack')
+    }
+  }
+}
+</script>
+
+<style scoped>
+.input-label, .btn-sign-up{
+  width: 300px;
+}
+.btn-sign-up{
+  background: green;
+}
+</style>

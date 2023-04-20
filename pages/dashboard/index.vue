@@ -2,7 +2,7 @@
   <div>
     <div class="banner_dashboard">
       <div class="d-flex justify-content-between">
-        <img src="~/assets/icon/ohanaLogo.svg" alt="OhanaLogo" />
+        <img src="~/assets/icon/logoBanner.svg" alt="OhanaLogo" />
         <div class="text-white create_room">Đăng phòng</div>
       </div>
       <div class="description_banner text-white mb-2 w-50">Ứng dụng tìm kiếm phòng trọ miễn phí cho người đi thuê hàng đầu Việt Nam</div>
@@ -10,19 +10,140 @@
     </div>
     <div class="content_dashboard">
       <div class="search_trends mb-4">Xu hướng tìm kiếm</div>
-      
+      <div class="d-flex justify-content-between">
+        <div v-for="(item, index) in cardList" :key="index">
+          <CardTrend :cardContent="item" />
+        </div>
+      </div>
+      <div class="d-flex flex-row main_content">
+        <div class="container_new_room bg-white">
+          <div class="d-flex justify-content-between align-items-center" style="margin-bottom: 32px;">
+            <div class="title_new_room">Phòng mới nhất</div>
+            <div class="view_all" @click="viewNew">Xem tất cả</div>
+          </div>
+          <div class="content_room" v-for="(item, index) in listRoom" :key="index">
+            <CardRoom :contentRoom="item" />
+          </div>
+          <div class="d-flex justify-content-center align-items-center mt-4" style="color: #4877F8; cursor: pointer;" @click="viewNew">Xem tất cả</div>
+        </div>
+        <div class="container_verified bg-white">
+          <div class="d-flex justify-content-between">
+            <div class="d-flex align-items-center">
+              <b-icon icon="shield-fill-check" class="mr-2 icon_shield" />
+              <div style="font-size: 24px; font-weight: 700;">Đã xác thực</div>
+            </div>
+            <div class="view_all">Xem tất cả</div>
+          </div>
+          <div style="border-bottom: 1px solid #CDCDCD; padding-bottom: 20px;">
+            <div class="mt-4" v-for="(item, index) in listVerified" :key="index">
+              <CardVerified :contentVerified="item" />
+            </div>
+          </div>
+          <div class="d-flex justify-content-center align-items-center mt-3" style="color: #4877F8; cursor: pointer;">Xem tất cả</div>
+        </div>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
 import FilterHouse from '../../components/filterHouse/index.vue'
+import CardTrend from '../../components/cardTrend/index.vue'
+import CardRoom from '../../components/listRoom/index.vue'
+import CardVerified from '../../components/listVerified/index.vue'
+import { mapGetters, mapActions } from 'vuex'
 export default {
   layout: "defaults",
   components: {
-    FilterHouse
+    FilterHouse,
+    CardTrend,
+    CardRoom,
+    CardVerified
+  },
+  data(){
+    return{
+      cardList: [
+        {img: require('@/assets/images/binhthanh.jpg'), nameCard: 'Bình Thạnh'},
+        {img: require('@/assets/images/quan10.jpg'), nameCard: 'Quận 10'},
+        {img: require('@/assets/images/quan1.jpg'), nameCard: 'Quận 1'},
+        {img: require('@/assets/images/quan7.jpg'), nameCard: 'Quận 7'},
+        {img: require('@/assets/images/thuduc.jpg'), nameCard: 'Thủ Đức'},
+        {img: require('@/assets/images/quan3.jpg'), nameCard: 'Quận 3'},
+      ],
+      listRoom: [
+        {
+          img: require('@/assets/images/imgRoom.jpg'),
+          nameRoom: 'Ký túc xá quận Thủ Đức',
+          typeRoom: 'Ký túc xá',
+          sex: 'Nam & Nữ',
+          acreage: '30m²',
+          address: '10 Đường sô 4, Phường Hiệp Bình Phước, Quận Thủ Đức, Hồ Chí Minh',
+          price: '1,5'
+        },
+        {
+          img: require('@/assets/images/imgRoom.jpg'),
+          nameRoom: 'Ký túc xá quận Thủ Đức',
+          typeRoom: 'Ký túc xá',
+          sex: 'Nam & Nữ',
+          acreage: '30m²',
+          address: '10 Đường sô 4, Phường Hiệp Bình Phước, Quận Thủ Đức, Hồ Chí Minh',
+          price: '1,5'
+        },
+        {
+          img: require('@/assets/images/imgRoom.jpg'),
+          nameRoom: 'Ký túc xá quận Thủ Đức',
+          typeRoom: 'Ký túc xá',
+          sex: 'Nam & Nữ',
+          acreage: '30m²',
+          address: '10 Đường sô 4, Phường Hiệp Bình Phước, Quận Thủ Đức, Hồ Chí Minh',
+          price: '1,5'
+        },
+        {
+          img: require('@/assets/images/imgRoom.jpg'),
+          nameRoom: 'Ký túc xá quận Thủ Đức',
+          typeRoom: 'Ký túc xá',
+          sex: 'Nam & Nữ',
+          acreage: '30m²',
+          address: '10 Đường sô 4, Phường Hiệp Bình Phước, Quận Thủ Đức, Hồ Chí Minh',
+          price: '1,5'
+        },
+        {
+          img: require('@/assets/images/imgRoom.jpg'),
+          nameRoom: 'Ký túc xá quận Thủ Đức',
+          typeRoom: 'Ký túc xá',
+          sex: 'Nam & Nữ',
+          acreage: '30m²',
+          address: '10 Đường sô 4, Phường Hiệp Bình Phước, Quận Thủ Đức, Hồ Chí Minh',
+          price: '1,5'
+        }
+      ],
+      listVerified: [
+        {
+          img: require('@/assets/images/imgRoom.jpg'),
+          nameCard: 'Ký túc xá quận Thủ Đức',
+          address: 'Quận Thủ Đức',
+          price: 1.6
+        },
+        {
+          img: require('@/assets/images/imgRoom.jpg'),
+          nameCard: 'Ký túc xá quận Thủ Đức',
+          address: 'Quận Thủ Đức',
+          price: 1.6
+        },
+        {
+          img: require('@/assets/images/imgRoom.jpg'),
+          nameCard: 'Ký túc xá quận Thủ Đức',
+          address: 'Quận Thủ Đức',
+          price: 1.6
+        }
+      ]
+    }
+  },
+  methods: {
+    viewNew(){
+      this.$router.push({name: 'viewAll-newRoom'})
+    }
   }
-
 }
 </script>
 
@@ -32,7 +153,7 @@ export default {
   background-size: cover;
   height: 500px;
   background-position: center center;
-  padding: 48px 32px 0;
+  padding: 150px 32px 0;
 }
 .create_room{
   font-size: 20px;
@@ -51,5 +172,42 @@ export default {
   font-size: 32px;
   color: #333333;
   font-weight: 500;
+}
+.main_content{
+  margin-top: 32px;
+}
+.container_new_room{
+  padding: 32px;
+  border-radius: 20px;
+  width: 69%;
+  box-shadow: 0 4px 12px 0 rgba(0, 0, 0, 0.08);
+}
+.title_new_room{
+  font-size: 24px;
+  font-weight: 500;
+}
+.view_all{
+  font-size: 16px;
+  color: #4877F8;
+  border: 1px solid #4877F8;
+  border-radius: 16px;
+  cursor: pointer;
+  padding: 4px 12px;
+}
+.content_room{
+  border-bottom: 1px solid #CDCDCD;
+}
+.container_verified{
+  padding: 32px;
+  border-radius: 20px;
+  box-shadow: 0 4px 12px 0 rgba(0, 0, 0, 0.08);
+  margin-left: 32px;
+  width: 31%;
+  height: 835px;
+}
+.icon_shield{
+  width: 33px;
+  height: 33px;
+  color: #4877F8;
 }
 </style>

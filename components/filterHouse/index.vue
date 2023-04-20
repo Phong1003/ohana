@@ -29,7 +29,7 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 .container_filter{
   border: 1px solid #CDCDCD;
   width: 510px;
