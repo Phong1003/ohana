@@ -1,24 +1,28 @@
 <template>
-  <div class="cover">
-    <b-container class="contain">
-      <div class="d-flex flex-lg-row flex-column">
-        <Sidebar class="sidebar-space" />
-        <ListComponent v-if="tabIndex == 1" :showList="listHouseForRent" />
-        <TableAccount v-if="tabIndex == 2" />
-      </div>
-    </b-container>
-  </div>
+  <AuthWrapper>
+    <div class="cover">
+      <b-container class="contain">
+        <div class="d-flex flex-lg-row flex-column">
+          <Sidebar class="sidebar-space" />
+          <ListComponent v-if="tabIndex == 1" :showList="listHouseForRent" />
+          <TableAccount v-if="tabIndex == 2" />
+        </div>
+      </b-container>
+    </div>
+  </AuthWrapper>
 </template>
 
 <script>
 import Sidebar from "../../components/sidebar/sidebar.vue";
 import ListComponent from "../../components/view/list.vue";
 import TableAccount from "../../components/view/tableAccount.vue";
+import AuthWrapper from "../../components/authWrapper/index.vue";
 import { mapGetters, mapActions } from "vuex";
 
 export default {
   layout: "defaults",
   components: {
+    AuthWrapper,
     Sidebar,
     ListComponent,
     TableAccount,
