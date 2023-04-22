@@ -1,9 +1,8 @@
 <template>
   <div class="house__detail__container">
     <div class="image__container mb-4 d-flex justify-content-center">
-      <div class="col-6 px-0 image__first mr-1" v-viewer>
+      <div class="col-6 px-0 image__first mr-1">
         <img
-          @click="show"
           src="~/assets/images/binhthanh.jpg"
           alt="binh thanh"
           class="image__cover"
@@ -308,7 +307,6 @@
 export default {
   data() {
     return {
-      showModal: false,
       listIcon: [
         {
           id: "1",
@@ -383,7 +381,6 @@ export default {
           sub_title: "water-heater",
         },
       ],
-      images: ["1.jpg", "2.jpg", "3.jpg"],
     };
   },
 };

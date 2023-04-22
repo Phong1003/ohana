@@ -26,7 +26,6 @@
         responsive="sm"
         :default-sort="{ prop: 'date', order: 'descending' }"
         @row-dblclicked="onRowClicked"
-        @head-clicked="handleSortChange"
       >
         <template #head(accountID)="data">
           <span
