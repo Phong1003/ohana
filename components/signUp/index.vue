@@ -7,7 +7,7 @@
           Fullname
         </div>
         <b-form-input autocomplete="off" class="input-field input-username" id="input-field-username"
-          name="input-field-username" />
+          name="input-field-username" v-model="formRegister.fullName" />
       </b-form-group>
 
       <b-form-group id="form-group-1" class="form-group-login d-flex align-items-center justify-content-center form-group"
@@ -16,7 +16,7 @@
           Email
         </div>
         <b-form-input autocomplete="off" class="input-field input-username" id="input-field-username"
-          name="input-field-username" />
+          name="input-field-username" v-model="formRegister.email" />
       </b-form-group>
 
       <b-form-group id="form-group-2"
@@ -26,7 +26,7 @@
           Password
         </div>
         <b-form-input autocomplete="off" class="input-field input-password" type="password"
-          id="input-field-password" name="input-field-password"
+          id="input-field-password" name="input-field-password" v-model="formRegister.password"
         />
       </b-form-group>
 
@@ -36,7 +36,7 @@
           Phone
         </div>
         <b-form-input autocomplete="off" class="input-field input-username" id="input-field-username"
-          name="input-field-username" />
+          name="input-field-username" v-model="formRegister.phone" />
       </b-form-group>
     </b-form>
     <div class="d-flex align-items-center justify-content-center" style="margin-top: 30px;">
@@ -48,10 +48,27 @@
 </template>
 
 <script>
+import {registerApi} from "../../api/auth";
 export default {
+  data(){
+    return{
+      formRegister: {
+        fullName: '',
+        email: '',
+        password: '',
+        phone: ''
+      }
+    }
+  },
   methods: {
-    handleSignUp(){
-      this.$emit('goBack')
+    async handleSignUp(){
+      // try {
+        const response = await registerApi(this.formRegister)
+        console.log(response);
+        this.$emit('goBack')
+      // } catch (error) {
+      //   console.log(error);
+      // }
     }
   }
 }

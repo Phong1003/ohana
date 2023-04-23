@@ -3,7 +3,9 @@
     <div class="header__nav d-flex justify-content-end align-items-center text-white pr-4">
       <div class="mr-2" style="cursor: pointer;" @click="gotoDashboard">Trang chủ</div>
       <div>|</div>
-      <div class="ml-2" style="cursor: pointer;" @click="login">Đăng nhập/Đăng ký</div>
+      <div class="ml-2" style="cursor: pointer;" @click="login" v-if="!role">Đăng nhập/Đăng ký</div>
+      <div class="ml-2" style="cursor: pointer;" @click="admin" v-if="role == 'ADMIN'">Admin</div>
+      <div class="ml-2" style="cursor: pointer;" @click="admin" v-if="role == 'USER'">User</div>
     </div>
     <div class="header__search">
       <div class="search__contain d-flex align-items-center">
@@ -21,12 +23,32 @@ export default {
   components: {
     FilterHouse
   },
+  data(){
+    return{
+      role: ''
+    }
+  },
+  created(){
+    this.checkRole()
+  },
+  computed: {
+    ...mapGetters('dashboard', ['show']),
+  },
   methods:{
+    ...mapActions('dashboard', ['handleShow']),
+    checkRole(){
+      if (typeof window !== 'undefined') {
+        this.role= localStorage.getItem('role')
+      }
+    },
     gotoDashboard(){
       this.$router.push({name: 'dashboard'})
     },
     login(){
       this.$router.push({name: 'login'})
+    },
+    admin(){
+      this.$router.push({name: 'Admin'})
     }
   }
 };

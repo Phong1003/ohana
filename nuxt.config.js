@@ -35,7 +35,7 @@ export default {
   buildModules: ["@nuxtjs/dayjs"],
 
   // Modules: https://go.nuxtjs.dev/config-modules
-  modules: ["bootstrap-vue/nuxt", "@nuxtjs/axios", "cookie-universal-nuxt"],
+  modules: ["bootstrap-vue/nuxt", "@nuxtjs/axios"],
 
   router: {
     // middleware: [MIDDLEWARE.auth],

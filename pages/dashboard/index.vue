@@ -3,7 +3,7 @@
     <div class="banner_dashboard">
       <div class="d-flex justify-content-between">
         <img src="~/assets/icon/logoBanner.svg" alt="OhanaLogo" />
-        <div class="text-white create_room">Đăng phòng</div>
+        <div class="text-white create_room" v-if="role == 'ADMIN' || role == 'USER'">Đăng phòng</div>
       </div>
       <div class="description_banner text-white mb-2 w-50">
         Ứng dụng tìm kiếm phòng trọ miễn phí cho người đi thuê hàng đầu Việt Nam
@@ -47,7 +47,7 @@
               <b-icon icon="shield-fill-check" class="mr-2 icon_shield" />
               <div style="font-size: 24px; font-weight: 700">Đã xác thực</div>
             </div>
-            <div class="view_all">Xem tất cả</div>
+            <div class="view_all" @click="viewTop">Xem tất cả</div>
           </div>
           <div style="border-bottom: 1px solid #cdcdcd; padding-bottom: 20px">
             <div
@@ -76,7 +76,6 @@ import CardTrend from "../../components/cardTrend/index.vue";
 import CardRoom from "../../components/listRoom/index.vue";
 import CardVerified from "../../components/listVerified/index.vue";
 import { mapGetters, mapActions } from "vuex";
-import { loginApi } from "../../api/auth";
 export default {
   layout: "defaults",
   components: {
@@ -172,12 +171,32 @@ export default {
       ],
     };
   },
-  methods: {
-    viewNew() {
-      this.$router.push({ name: "viewAll-newRoom" });
-    },
+  computed: {
+    ...mapGetters('dashboard', ['show']),
+    role(){
+      if (typeof window !== 'undefined') {
+        return localStorage.getItem('role')
+      }
+    }
   },
-};
+  async created(){
+    try {
+      const response = await getAxios('https://r4r.up.railway.app/api/Rooms/searchRooms')
+      console.log(response);
+    } catch (error) {
+      
+    }
+  },
+  methods: {
+    ...mapActions('dashboard', ['handleShow']),
+    viewNew(){
+      this.$router.push({name: 'viewAll-newRoom'})
+    },
+    viewTop(){
+      this.$router.push({name: 'viewAll-topRoom'})
+    }
+  }
+}
 </script>
 
 <style scoped>

@@ -11,7 +11,7 @@
             class="form-group-login d-flex align-items-center justify-content-center form-group"
             label-for="input-field-username"
           >
-            <div class="input-label text-black">Username</div>
+            <div class="input-label text-black">email</div>
             <b-form-input
               autocomplete="off"
               class="input-field input-username"
@@ -61,6 +61,7 @@
 import SignUp from "../../components/signUp/index.vue";
 import { loginApi } from "../../api/auth";
 import { LocalStorageKey, ROUTER } from "../../constants/common";
+import { mapGetters, mapActions } from "vuex";
 
 export default {
   layout: "login",
@@ -73,10 +74,15 @@ export default {
       },
     };
   },
+  computed:{
+  ...mapGetters('dashboard', ['show']),
+  },
   methods: {
+    ...mapActions('dashboard', ['handleShow']),
     async handleLogin() {
       try {
         const response = await loginApi(this.loginForm);
+        localStorage.clear();
         localStorage.setItem(
           LocalStorageKey.accessToken,
           response.data.accessToken
@@ -85,9 +91,16 @@ export default {
         localStorage.setItem(LocalStorageKey.email, response.data.email);
         localStorage.setItem(LocalStorageKey.phone, response.data.phone);
         localStorage.setItem(LocalStorageKey.role, response.data.role);
+        this.handleShow(true)
         this.$router.push(ROUTER.Dashboard);
       } catch (error) {
-        console.log("error", error);
+          if (error.response) {
+            console.log(error.response.status);
+            console.log(error.message);
+            console.log(error.response.headers); 
+            console.log(error.response.data);
+            console.log("error", error);
+          }
       }
     },
     SignUp() {
