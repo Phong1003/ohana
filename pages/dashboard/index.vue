@@ -8,7 +8,7 @@
       <div class="description_banner text-white mb-2 w-50">
         Ứng dụng tìm kiếm phòng trọ miễn phí cho người đi thuê hàng đầu Việt Nam
       </div>
-      <FilterHouse />
+      <FilterHouse class="filter_dashboard" />
     </div>
     <div class="content_dashboard">
       <div class="search_trends mb-4">Xu hướng tìm kiếm</div>
@@ -262,5 +262,8 @@ export default {
   width: 33px;
   height: 33px;
   color: #4877f8;
+}
+.filter_dashboard{
+  max-width: 390px;
 }
 </style>
