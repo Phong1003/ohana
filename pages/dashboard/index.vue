@@ -76,6 +76,7 @@ import CardTrend from "../../components/cardTrend/index.vue";
 import CardRoom from "../../components/listRoom/index.vue";
 import CardVerified from "../../components/listVerified/index.vue";
 import { mapGetters, mapActions } from "vuex";
+import {search} from "../../api/dashboard/index"
 export default {
   layout: "defaults",
   components: {
@@ -181,10 +182,10 @@ export default {
   },
   async created(){
     try {
-      const response = await getAxios('https://r4r.up.railway.app/api/Rooms/searchRooms')
+      const response = await search("")
       console.log(response);
     } catch (error) {
-      
+      console.log(error);
     }
   },
   methods: {
