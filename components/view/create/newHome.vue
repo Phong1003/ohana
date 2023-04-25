@@ -20,6 +20,9 @@
         >
         </b-form-file>
       </div>
+      <div>
+        <b-button @click="handleAddNewHome()">ADD NEW</b-button>
+      </div>
       <div class="information__section d-flex mt-4 justify-content-center">
         <div class="house__section col-8 px-0">
           <div class="house__detail">
@@ -324,85 +327,41 @@
 </template>
 
 <script>
+import { createApi } from "../../../api/auth/index";
+
 export default {
   data() {
     return {
       fileHolder: [],
-      listIcon: [
-        {
-          id: "1",
-          source: "~/assets/icon/air-conditioner-icon.svg",
-          title: "Điều hòa",
-          sub_title: "air-conditioner",
-        },
-        {
-          id: "2",
-          source: "~/assets/icon/toilet.svg",
-          title: "WC riêng",
-          sub_title: "toilet",
-        },
-        {
-          id: "3",
-          source: "~/assets/icon/wifi.svg",
-          title: "Wifi",
-          sub_title: "wifi",
-        },
-        {
-          id: "4",
-          source: "~/assets/icon/clock.svg",
-          title: "Tự do",
-          sub_title: "clock",
-        },
-        {
-          id: "5",
-          source: "~/assets/icon/key.svg",
-          title: "Không chủ",
-          sub_title: "key",
-        },
-        {
-          id: "6",
-          source: "~/assets/icon/washing-machine.svg",
-          title: "Máy giặt",
-          sub_title: "washing-machine",
-        },
-        {
-          id: "7",
-          source: "~/assets/icon/police-officer.svg",
-          title: "Bảo vệ",
-          sub_title: "police",
-        },
-        {
-          id: "8",
-          source: "~/assets/icon/bed.svg",
-          title: "Giường",
-          sub_title: "bed",
-        },
-        {
-          id: "9",
-          source: "~/assets/icon/pot.svg",
-          title: "Nấu ăn",
-          sub_title: "pot",
-        },
-        {
-          id: "10",
-          source: "~/assets/icon/wardrobe.svg",
-          title: "Tủ đồ",
-          sub_title: "wardrobe",
-        },
-        {
-          id: "11",
-          source: "~/assets/icon/window.svg",
-          title: "Cửa sổ",
-          sub_title: "window",
-        },
-        {
-          id: "12",
-          source: "~/assets/icon/water-heater.svg",
-          title: "Bình nóng lạnh",
-          sub_title: "water-heater",
-        },
-      ],
+      roomInfo: {
+        name: "Tran Van Phong",
+        address: "94 Phuong Liet",
+        category: "Chung cu",
+        area: "Quan Thanh Xuan",
+        capacity: "25m",
+        description: "Phong dep vai ca l, khong thue hoi phi",
+        price: "3.500.000",
+        deposit: "3.500.000",
+        electricprice: "4.000",
+        waterprice: "24.000",
+        otherprice: "100.000",
+        houseowner: "Anh Tu",
+        ownerphone: "0969966566",
+        imgRoom: ["day la img test"],
+        noSex: "Nam",
+        utilities: "Co ghe cau truot",
+      },
     };
+  },
+  methods: {
+    async handleAddNewHome() {
+      try {
+        const response = await createApi(this.roomInfo);
+        console.log(response);
+      } catch (error) {
+        console.log("error", error);
+      }
+    },
   },
 };
 </script>
