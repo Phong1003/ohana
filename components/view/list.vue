@@ -3,7 +3,7 @@
     <div class="d-flex justify-content-between">
       <h4 class="list__title">Tất cả các phòng</h4>
       <div class="h4 cursor-pointer mr-3">
-        <b-button class="bg-primary border-primary">
+        <b-button @click="createNewRoom()" class="bg-primary border-primary">
           <b-icon icon="plus-square"></b-icon>
           <span>Tạo mới</span>
         </b-button>
@@ -98,6 +98,22 @@ export default {
     return {
       currentPage: 1,
       perPage: 3,
+      roomInfo: {
+        name: "phong",
+        address: "121 kim nguu",
+        category: "123",
+        area: "hai ba trung",
+        capacity: "3",
+        description: "phong tro danh cho 3 nguoi",
+        price: "3.000.000",
+        deposit: "2",
+        electricprice: "4000",
+        waterprice: "24000",
+        otherprice: "100000",
+        houseowner: "tran van phong",
+        ownerphone: "0969966566",
+        imgRoom: "",
+      },
     };
   },
   computed: {
@@ -113,6 +129,9 @@ export default {
     },
   },
   methods: {
+    createNewRoom() {
+      this.$router.push({ name: "create" });
+    },
     handleChangePage() {
       window.scrollTo({ top: 0, behavior: "smooth" });
     },
