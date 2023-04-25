@@ -99,7 +99,7 @@ export default {
             console.log(error.message);
             console.log(error.response.headers); 
             console.log(error.response.data);
-            console.log("error", error);
+            console.log("error", error.config.headers.Accept);
           }
       }
     },

@@ -8,7 +8,7 @@
       <div class="description_banner text-white mb-2 w-50">
         Ứng dụng tìm kiếm phòng trọ miễn phí cho người đi thuê hàng đầu Việt Nam
       </div>
-      <FilterHouse />
+      <FilterHouse class="filter_dashboard" />
     </div>
     <div class="content_dashboard">
       <div class="search_trends mb-4">Xu hướng tìm kiếm</div>
@@ -76,6 +76,7 @@ import CardTrend from "../../components/cardTrend/index.vue";
 import CardRoom from "../../components/listRoom/index.vue";
 import CardVerified from "../../components/listVerified/index.vue";
 import { mapGetters, mapActions } from "vuex";
+import {search} from "../../api/dashboard/index"
 export default {
   layout: "defaults",
   components: {
@@ -181,10 +182,10 @@ export default {
   },
   async created(){
     try {
-      const response = await getAxios('https://r4r.up.railway.app/api/Rooms/searchRooms')
+      const response = await search("")
       console.log(response);
     } catch (error) {
-      
+      console.log(error);
     }
   },
   methods: {
@@ -261,5 +262,8 @@ export default {
   width: 33px;
   height: 33px;
   color: #4877f8;
+}
+.filter_dashboard{
+  max-width: 390px;
 }
 </style>

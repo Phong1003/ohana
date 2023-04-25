@@ -1,18 +1,7 @@
 <template>
-  <div class="container_filter bg-white d-flex">
-    <b-icon class="icon_geo_alt" icon="geo-alt-fill" />
-    <Autocomplete
-      :placeholder="''"
-      :value="''"
-      :displayAttribute="'name'"
-      :valueAttribute="'id'"
-      :optionDropdowns="listCity"
-      :filter="true"
-      :isDisabled="false"
-      class="autocomplete_filter_house position-relative"
-    />
+  <div class="container_filter p-3 bg-white d-flex">
     <input class="input_filter border-0" placeholder="Tìm kiếm theo địa điểm, quận, tên đường..." />
-    <b-icon class="mt-3 mr-2 icon_search" icon="search" />
+    <b-icon class="mr-2 icon_search" icon="search" />
   </div>
 </template>
 
@@ -20,10 +9,7 @@
 export default {
   data(){
     return {
-      listCity: [
-        {id: 1, name: 'Hà Nội'},
-        {id: 2, name: 'Hồ Chí Minh'}
-      ]
+      
     }
   }
 }
@@ -32,7 +18,6 @@ export default {
 <style scoped>
 .container_filter{
   border: 1px solid #CDCDCD;
-  width: 510px;
   border-radius: 30px;
   height: 50px;
 }
