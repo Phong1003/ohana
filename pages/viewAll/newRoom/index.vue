@@ -42,8 +42,8 @@
             v-model="typeHouse"
             :options="optionsHouse"
             class="mb-3"
-            value-field="item"
-            text-field="name"
+            value-field="item1"
+            text-field="name1"
           ></b-form-checkbox-group>
         </b-collapse>
         <b-button class="d-flex align-items-center justify-content-between px-4" @click="gender" v-b-toggle.collapse-4>
@@ -91,8 +91,8 @@ export default {
       listRoom: [],
       priceRadio: "",
       genderRadio: "",
-      ulitiesCheck: "",
-      typeHouse: "",
+      ulitiesCheck: [],
+      typeHouse: [],
       optionsPrice: [
         { text: '1tr-5tr', value: 'first' },
         { text: '6tr-10tr', value: 'second' },
@@ -111,12 +111,12 @@ export default {
         { item: 'Wifi', name: 'Wifi' }
       ],
       optionsHouse: [
-        { item: 'Tất cả', name: 'Tất cả' },
-        { item: 'Phòng cho thuê', name: 'Phòng cho thuê' },
-        { item: 'Phòng ở ghép', name: 'Phòng ở ghép' },
-        { item: 'kí túc xá', name: 'kí túc xá' },
-        { item: 'Nhà nguyên căn', name: 'Nhà nguyên căn' },
-        { item: 'Căn hộ', name: 'Căn hộ' }
+        { item1: 'Tất cả', name1: 'Tất cả' },
+        { item1: 'Phòng cho thuê', name1: 'Phòng cho thuê' },
+        { item1: 'Phòng ở ghép', name1: 'Phòng ở ghép' },
+        { item1: 'kí túc xá', name1: 'kí túc xá' },
+        { item1: 'Nhà nguyên căn', name1: 'Nhà nguyên căn' },
+        { item1: 'Căn hộ', name1: 'Căn hộ' }
       ]
     }
   },
@@ -135,18 +135,17 @@ export default {
       if(response && response.data.length){
         this.listRoom = response.data.map(item => {
           return {
-            img: item.imgRoom,
-            nameRoom: item.name,
-            typeRoom: item.category,
-            sex: '',
-            acreage: item.capacity,
-            address: item.address,
-            price: item.price
+            img: item.imgRoom[0].imgRoom,
+            nameRoom: item.room.description,
+            typeRoom: item.room.category,
+            sex: item.room.noSex,
+            acreage: item.room.capacity,
+            address: item.room.address,
+            area: item.room.area,
+            price: new Intl.NumberFormat().format(item.room.price)
           }
         })
-        console.log(this.listRoom);
       }
-      console.log(response);
     } catch (error) {
       console.log(error);
     }
@@ -164,8 +163,40 @@ export default {
     gender(){
       this.genderActive = !this.genderActive
     },
-    applyFilter(){
-      
+    async applyFilter(){
+      try {
+        const response = await search({
+          searchQuery: "",
+          price: this.priceRadio,
+          category: this.typeHouse,
+          utilities: this.ulitiesCheck,
+          noSex: this.genderRadio,
+          status: "",
+          pageNumber: 0,
+          pageSize: 10
+        })
+        if(response){
+          if(response.data.length){
+            this.listRoom = response.data.map(item => {
+              return {
+                img: item.imgRoom[0].imgRoom,
+                nameRoom: item.room.description,
+                typeRoom: item.room.category,
+                sex: item.room.noSex,
+                acreage: item.room.capacity,
+                address: item.room.address,
+                area: item.room.area,
+                price: new Intl.NumberFormat().format(item.room.price)
+              }
+            })
+            console.log(this.listRoom);
+          } else {
+            this.listRoom = []
+          }
+        }
+      } catch(error) {
+        console.log(error);
+      }
     }
   }
 }
