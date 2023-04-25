@@ -20,11 +20,11 @@
         </div>
         <div class="d-flex align-items-center">
           <b-icon class="mr-1" icon="geo-alt-fill" />
-          <div class="address_content">{{ inforCard.address }}</div>
+          <div class="address_content">{{ inforCard.address }}, {{ inforCard.area }}</div>
         </div>
       </div>
     </div>
-    <div style="font-size: 48px; color: #F73486; font-weight: 700;">{{ inforCard.price }}</div>
+    <div style="font-size: 32px; color: #F73486; font-weight: 700;">{{ inforCard.price }}<span style="font-size: 20px;">/phòng</span></div>
   </div>
 </template>
 
@@ -40,6 +40,7 @@ export default {
         sex: '',
         acreage: '',
         address: '',
+        area: '',
         price: ''
       }
     }

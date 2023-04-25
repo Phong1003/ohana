@@ -28,7 +28,7 @@
           </div>
           <div
             class="content_room"
-            @click="routerDetails()"
+            @click="routerDetails(item)"
             v-for="(item, index) in listRoom"
             :key="index"
           >
@@ -139,24 +139,24 @@ export default {
         utilities: "",
         noSex: "",
         status: "",
-        pageNumber: 10,
-        pageSize: 0
+        pageNumber: 0,
+        pageSize: 10
       })
       if(response && response.data.length){
         this.listRoom = response.data.map(item => {
           return {
-            img: item.imgRoom,
-            nameRoom: item.name,
-            typeRoom: item.category,
-            sex: '',
-            acreage: item.capacity,
-            address: item.address,
-            price: item.price
+            id: item.room.id,
+            img: item.imgRoom[0].imgRoom,
+            nameRoom: item.room.description,
+            typeRoom: item.room.category,
+            sex: item.room.noSex,
+            acreage: item.room.capacity,
+            address: item.room.address,
+            area: item.room.area,
+            price: new Intl.NumberFormat().format(item.room.price)
           }
         })
-        console.log(this.listRoom);
       }
-      console.log(response);
     } catch (error) {
       console.log(error);
     }
@@ -169,9 +169,9 @@ export default {
     viewTop(){
       this.$router.push({name: 'viewAll-topRoom'})
     },
-    routerDetails() {
-      this.$router.push({ name: "details" });
-    },
+    routerDetails(item) {
+      this.$router.push({ name: 'details', params: { id: item.id } });
+    }
   }
 }
 </script>
@@ -225,6 +225,7 @@ export default {
 }
 .content_room {
   border-bottom: 1px solid #cdcdcd;
+  cursor: pointer;
 }
 .container_verified {
   padding: 32px;
