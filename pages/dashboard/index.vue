@@ -170,7 +170,7 @@ export default {
       this.$router.push({name: 'viewAll-topRoom'})
     },
     routerDetails(item) {
-      this.$router.push({ name: 'details', params: { id: item.id } });
+      this.$router.push({ name: 'dashboard-id', params: { id: item.id } });
     }
   }
 }

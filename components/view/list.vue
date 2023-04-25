@@ -120,7 +120,7 @@ export default {
       window.scrollTo({ top: 0, behavior: "smooth" });
     },
     routerDetails(value) {
-      this.$router.push({ name: "details" , params: { id: value } });
+      this.$router.push({ name: "admin-id" , params: { id: value } });
     },
   },
 };
