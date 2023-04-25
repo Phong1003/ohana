@@ -82,15 +82,15 @@ export default {
     async handleLogin() {
       try {
         const response = await loginApi(this.loginForm);
-        localStorage.clear();
-        localStorage.setItem(
+        sessionStorage.clear();
+        sessionStorage.setItem(
           LocalStorageKey.accessToken,
           response.data.accessToken
         );
-        localStorage.setItem(LocalStorageKey.fullName, response.data.fullName);
-        localStorage.setItem(LocalStorageKey.email, response.data.email);
-        localStorage.setItem(LocalStorageKey.phone, response.data.phone);
-        localStorage.setItem(LocalStorageKey.role, response.data.role);
+        sessionStorage.setItem(LocalStorageKey.fullName, response.data.fullName);
+        sessionStorage.setItem(LocalStorageKey.email, response.data.email);
+        sessionStorage.setItem(LocalStorageKey.phone, response.data.phone);
+        sessionStorage.setItem(LocalStorageKey.role, response.data.role);
         this.handleShow(true)
         this.$router.push(ROUTER.Dashboard);
       } catch (error) {

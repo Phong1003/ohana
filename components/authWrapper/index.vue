@@ -13,7 +13,7 @@ export default {
   methods: {
     handleAuthorization() {
       if (!process.browser) return;
-      const accessToken = localStorage.getItem(LocalStorageKey.accessToken);
+      const accessToken = sessionStorage.getItem(LocalStorageKey.accessToken);
       if (!accessToken) {
         return this.$router.push(ROUTER.Login);
       } else {

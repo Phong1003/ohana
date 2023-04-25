@@ -3,7 +3,7 @@
     <div class="container_filter bg-white h-100">
       <div class="d-flex justify-content-between align-items-center px-4 pt-4">
         <div style="font-size: 24px; font-weight: 500;">Bộ lọc</div>
-        <div class="apply">Áp dụng</div>
+        <div class="apply" @click="applyFilter">Áp dụng</div>
       </div>
       <div class="collapse_filter">
         <b-button class="d-flex align-items-center justify-content-between px-4 mt-3" @click="price" v-b-toggle.collapse-1>
@@ -25,45 +25,26 @@
           <b-icon :class="{'rotateUtilities': utilitiesActive ? true : false}" icon="chevron-right"></b-icon>
         </b-button>
         <b-collapse id="collapse-2" class="mt-2 px-4">
-          <b-form-checkbox id="checkbox-1" name="checkbox-1" value="accepted" unchecked-value="not_accepted">
-            WC riêng
-          </b-form-checkbox>
-          <b-form-checkbox id="checkbox-2" name="checkbox-2" value="accepted" unchecked-value="not_accepted">
-            Chỗ để xe
-          </b-form-checkbox>
-          <b-form-checkbox id="checkbox-3" name="checkbox-3" value="accepted" unchecked-value="not_accepted">
-            Cửa sổ
-          </b-form-checkbox>
-          <b-form-checkbox id="checkbox-4" name="checkbox-4" value="accepted" unchecked-value="not_accepted">
-            An ninh
-          </b-form-checkbox>
-          <b-form-checkbox id="checkbox-5" name="checkbox-5" value="accepted" unchecked-value="not_accepted">
-            Wifi
-          </b-form-checkbox>
+          <b-form-checkbox-group
+            v-model="ulitiesCheck"
+            :options="optionsUlities"
+            class="mb-3"
+            value-field="item"
+            text-field="name"
+          ></b-form-checkbox-group>
         </b-collapse>
         <b-button class="d-flex align-items-center justify-content-between px-4" @click="typeRoom" v-b-toggle.collapse-3>
           <div>Loại phòng</div>
           <b-icon :class="{'rotateRoom': roomActive ? true : false}" icon="chevron-right"></b-icon>
         </b-button>
         <b-collapse id="collapse-3" class="mt-2 px-4">
-          <b-form-checkbox id="checkbox-1" name="checkbox-1" value="accepted" unchecked-value="not_accepted">
-            Tất cả
-          </b-form-checkbox>
-          <b-form-checkbox id="checkbox-1" name="checkbox-1" value="accepted" unchecked-value="not_accepted">
-            Phòng cho thuê
-          </b-form-checkbox>
-          <b-form-checkbox id="checkbox-1" name="checkbox-1" value="accepted" unchecked-value="not_accepted">
-            Phòng ở ghép
-          </b-form-checkbox>
-          <b-form-checkbox id="checkbox-1" name="checkbox-1" value="accepted" unchecked-value="not_accepted">
-            kí túc xá
-          </b-form-checkbox>
-          <b-form-checkbox id="checkbox-1" name="checkbox-1" value="accepted" unchecked-value="not_accepted">
-            Nhà nguyên căn
-          </b-form-checkbox>
-          <b-form-checkbox id="checkbox-1" name="checkbox-1" value="accepted" unchecked-value="not_accepted">
-            Căn hộ
-          </b-form-checkbox>
+          <b-form-checkbox-group
+            v-model="typeHouse"
+            :options="optionsHouse"
+            class="mb-3"
+            value-field="item"
+            text-field="name"
+          ></b-form-checkbox-group>
         </b-collapse>
         <b-button class="d-flex align-items-center justify-content-between px-4" @click="gender" v-b-toggle.collapse-4>
           <div>Giới tính</div>
@@ -110,6 +91,8 @@ export default {
       listRoom: [],
       priceRadio: "",
       genderRadio: "",
+      ulitiesCheck: "",
+      typeHouse: "",
       optionsPrice: [
         { text: '1tr-5tr', value: 'first' },
         { text: '6tr-10tr', value: 'second' },
@@ -119,6 +102,21 @@ export default {
         { text: 'Tất cả', value: 'all' },
         { text: 'Nam', value: 'man' },
         { text: 'Nữ', value: 'woman' }
+      ],
+      optionsUlities: [
+        { item: 'WC riêng', name: 'WC riêng' },
+        { item: 'Chỗ để xe', name: 'Chỗ để xe' },
+        { item: 'Cửa sổ', name: 'Cửa sổ' },
+        { item: 'An ninh', name: 'An ninh' },
+        { item: 'Wifi', name: 'Wifi' }
+      ],
+      optionsHouse: [
+        { item: 'Tất cả', name: 'Tất cả' },
+        { item: 'Phòng cho thuê', name: 'Phòng cho thuê' },
+        { item: 'Phòng ở ghép', name: 'Phòng ở ghép' },
+        { item: 'kí túc xá', name: 'kí túc xá' },
+        { item: 'Nhà nguyên căn', name: 'Nhà nguyên căn' },
+        { item: 'Căn hộ', name: 'Căn hộ' }
       ]
     }
   },
@@ -165,6 +163,9 @@ export default {
     },
     gender(){
       this.genderActive = !this.genderActive
+    },
+    applyFilter(){
+      
     }
   }
 }
