@@ -28,6 +28,7 @@
           </div>
           <div
             class="content_room"
+            @click="routerDetails()"
             v-for="(item, index) in listRoom"
             :key="index"
           >
@@ -125,7 +126,7 @@ export default {
     ...mapGetters('dashboard', ['show']),
     role(){
       if (typeof window !== 'undefined') {
-        return localStorage.getItem('role')
+        return sessionStorage.getItem('role')
       }
     }
   },
@@ -138,7 +139,7 @@ export default {
         utilities: "",
         noSex: "",
         status: "",
-        pageNumber: 0,
+        pageNumber: 10,
         pageSize: 0
       })
       if(response && response.data.length){
@@ -167,7 +168,10 @@ export default {
     },
     viewTop(){
       this.$router.push({name: 'viewAll-topRoom'})
-    }
+    },
+    routerDetails() {
+      this.$router.push({ name: "details" });
+    },
   }
 }
 </script>

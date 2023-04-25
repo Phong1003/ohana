@@ -32,7 +32,7 @@ export default {
     ...mapActions('dashboard', ['handleShow']),
     checkRole(){
       if (typeof window !== 'undefined') {
-        this.role= localStorage.getItem('role')
+        this.role= sessionStorage.getItem('role')
       }
     },
     gotoDashboard(){
