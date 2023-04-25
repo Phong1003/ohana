@@ -1,6 +1,9 @@
 <template>
   <div class="house__detail__container">
     <div class="content__section mb-3">
+      <div class="title">
+        <p class="h2">Tạo phòng mới!</p>
+      </div>
       <div
         class="title__cover d-flex flex-column h-100 justify-content-between"
       >
@@ -20,11 +23,33 @@
         >
         </b-form-file>
       </div>
-      <div>
-        <b-button @click="handleAddNewHome()">ADD NEW</b-button>
-      </div>
-      <div class="information__section d-flex mt-4 justify-content-center">
-        <div class="house__section col-8 px-0">
+      <div class="information__section mt-4">
+        <div class="house__section px-0">
+          <div class="house__detail mb-4">
+            <div class="house__title d-flex align-items-center">
+              <b-icon
+                icon="person-fill"
+                class="bg-light mr-3"
+                variant="primary"
+                font-scale="2"
+              ></b-icon>
+              <p class="mb-0">Thông tin chủ phòng</p>
+            </div>
+            <div class="house__info mt-4 d-flex">
+              <div class="d-flex flex-column col-6">
+                <p class="mb-0 field__name mb-2">
+                  CHỦ PHÒNG <span class="text-danger">(*)</span>
+                </p>
+                <b-form-input v-model="roomInfo.houseowner"></b-form-input>
+              </div>
+              <div class="d-flex flex-column col-6">
+                <p class="mb-0 field__name mb-2">
+                  SĐT <span class="text-danger">(*)</span>
+                </p>
+                <b-form-input v-model="roomInfo.ownerphone"></b-form-input>
+              </div>
+            </div>
+          </div>
           <div class="house__detail">
             <div class="house__title d-flex align-items-center">
               <b-icon
@@ -40,13 +65,19 @@
                 <p class="mb-0 field__name mb-2">
                   GIÁ PHÒNG <span class="text-danger">(*)</span>
                 </p>
-                <b-form-input placeholder="Nhập giá phòng"></b-form-input>
+                <b-form-input
+                  v-model="roomInfo.price"
+                  placeholder="Nhập giá phòng"
+                ></b-form-input>
               </div>
               <div class="d-flex flex-column col-6">
                 <p class="mb-0 field__name mb-2">
                   DIỆN TÍCH <span class="text-danger">(*)</span>
                 </p>
-                <b-form-input placeholder="Nhập diện tích phòng"></b-form-input>
+                <b-form-input
+                  v-model="roomInfo.capacity"
+                  placeholder="Nhập diện tích phòng"
+                ></b-form-input>
               </div>
             </div>
             <div class="house__info mt-4 d-flex">
@@ -54,7 +85,10 @@
                 <p class="mb-0 field__name mb-2">
                   ĐẶT CỌC <span class="text-danger">(*)</span>
                 </p>
-                <b-form-input placeholder="Nhập tiền cần cọc"></b-form-input>
+                <b-form-input
+                  v-model="roomInfo.deposit"
+                  placeholder="Nhập tiền cần cọc"
+                ></b-form-input>
               </div>
               <div class="d-flex flex-column col-6">
                 <p class="mb-0 field__name mb-2">
@@ -64,17 +98,12 @@
               </div>
             </div>
             <div class="house__info mt-4 d-flex">
-              <div class="d-flex flex-column col-4">
-                <p class="mb-0 field__name mb-2">
-                  TRẠNG THÁI PHÒNG <span class="text-danger">(*)</span>
-                </p>
-                <b-form-input placeholder="VD: Còn phòng"></b-form-input>
-              </div>
-              <div class="d-flex flex-column col-8">
+              <div class="d-flex flex-column col-12">
                 <p class="mb-0 field__name mb-2">
                   ĐỊA CHỈ <span class="text-danger">(*)</span>
                 </p>
                 <b-form-input
+                  v-model="roomInfo.address"
                   placeholder="VD: Số 180 Phạm Hùng, Trung Hoà, Cầu Giấy, Hà Nội"
                 ></b-form-input>
               </div>
@@ -91,18 +120,6 @@
               <p class="mb-0">Tiện ích</p>
             </div>
             <div class="mt-3 d-flex flex-wrap">
-              <div
-                class="checkbox__custom align-items-center col-4 d-flex justify-content-start mt-3"
-              >
-                <b-form-checkbox>
-                  <img
-                    src="~/assets/icon/air-conditioner-icon.svg"
-                    alt="air-conditioner"
-                    class="icon__custom"
-                  />
-                  <span class="icon__title">Điều hòa</span>
-                </b-form-checkbox>
-              </div>
               <div
                 class="checkbox__custom align-items-center col-4 d-flex justify-content-start mt-3"
               >
@@ -132,85 +149,14 @@
               >
                 <b-form-checkbox>
                   <img
-                    src="~/assets/icon/clock.svg"
-                    alt="clock"
-                    class="icon__custom"
-                  />
-                  <span class="icon__title">Tự do</span>
-                </b-form-checkbox>
-              </div>
-              <div
-                class="checkbox__custom align-items-center col-4 d-flex justify-content-start mt-3"
-              >
-                <b-form-checkbox>
-                  <img
-                    src="~/assets/icon/key.svg"
-                    alt="key"
-                    class="icon__custom"
-                  />
-                  <span class="icon__title">Không chủ</span>
-                </b-form-checkbox>
-              </div>
-              <div
-                class="checkbox__custom align-items-center col-4 d-flex justify-content-start mt-3"
-              >
-                <b-form-checkbox>
-                  <img
-                    src="~/assets/icon/washing-machine.svg"
-                    alt="washing-machine"
-                    class="icon__custom"
-                  />
-                  <span class="icon__title">Máy giặt</span>
-                </b-form-checkbox>
-              </div>
-              <div
-                class="checkbox__custom align-items-center col-4 d-flex justify-content-start mt-3"
-              >
-                <b-form-checkbox>
-                  <img
                     src="~/assets/icon/police-officer.svg"
                     alt="police-officer"
                     class="icon__custom"
                   />
-                  <span class="icon__title">Bảo vệ</span>
+                  <span class="icon__title">An ninh</span>
                 </b-form-checkbox>
               </div>
-              <div
-                class="checkbox__custom align-items-center col-4 d-flex justify-content-start mt-3"
-              >
-                <b-form-checkbox>
-                  <img
-                    src="~/assets/icon/bed.svg"
-                    alt="bed"
-                    class="icon__custom"
-                  />
-                  <span class="icon__title">Giường</span>
-                </b-form-checkbox>
-              </div>
-              <div
-                class="checkbox__custom align-items-center col-4 d-flex justify-content-start mt-3"
-              >
-                <b-form-checkbox>
-                  <img
-                    src="~/assets/icon/pot.svg"
-                    alt="pot"
-                    class="icon__custom"
-                  />
-                  <span class="icon__title">Nấu ăn</span>
-                </b-form-checkbox>
-              </div>
-              <div
-                class="checkbox__custom align-items-center col-4 d-flex justify-content-start mt-3"
-              >
-                <b-form-checkbox>
-                  <img
-                    src="~/assets/icon/wardrobe.svg"
-                    alt="wardrobe"
-                    class="icon__custom"
-                  />
-                  <span class="icon__title">Tủ đồ</span>
-                </b-form-checkbox>
-              </div>
+
               <div
                 class="checkbox__custom align-items-center col-4 d-flex justify-content-start mt-3"
               >
@@ -222,52 +168,6 @@
                   />
                   <span class="icon__title">Cửa sổ</span>
                 </b-form-checkbox>
-              </div>
-              <div
-                class="checkbox__custom align-items-center col-4 d-flex justify-content-start mt-3"
-              >
-                <b-form-checkbox>
-                  <img
-                    src="~/assets/icon/water-heater.svg"
-                    alt="water-heater"
-                    class="icon__custom"
-                  />
-                  <span class="icon__title">Bình nóng lạnh</span>
-                </b-form-checkbox>
-              </div>
-            </div>
-          </div>
-          <div class="notice__details mt-5">
-            <div class="house__title d-flex align-items-center">
-              <b-icon
-                icon="exclamation-circle"
-                class="bg-light mr-3"
-                variant="danger"
-                font-scale="2"
-              ></b-icon>
-              <p class="mb-0">Lưu ý</p>
-            </div>
-            <div class="capacity__container mt-3">
-              <p class="capacity__title">Sức chứa</p>
-            </div>
-            <div class="capacity__options d-flex">
-              <div class="option col-4">
-                <p class="option__type">
-                  Rộng <span class="text-danger">(*)</span>
-                </p>
-                <b-form-input placeholder="Nhập số người"></b-form-input>
-              </div>
-              <div class="option col-4">
-                <p class="option__type">
-                  Vừa <span class="text-danger">(*)</span>
-                </p>
-                <b-form-input placeholder="Nhập số người"></b-form-input>
-              </div>
-              <div class="option col-4">
-                <p class="option__type">
-                  Chật <span class="text-danger">(*)</span>
-                </p>
-                <b-form-input placeholder="Nhập số người"></b-form-input>
               </div>
             </div>
           </div>
@@ -283,44 +183,17 @@
             </div>
             <div class="info__section mt-3">
               <b-form-textarea
+                v-model="roomInfo.description"
                 placeholder="Nhập thông tin mô tả cho phòng."
               ></b-form-textarea>
             </div>
           </div>
         </div>
-        <div class="owner__section col-4 ml-2">
-          <div class="house__title d-flex align-items-center">
-            <b-icon
-              icon="person-fill"
-              class="bg-light mr-3"
-              variant="primary"
-              font-scale="2"
-            ></b-icon>
-            <p class="mb-0">Thông tin chủ phòng</p>
-          </div>
-          <div class="owner__info mt-4">
-            <div class="d-flex">
-              <img
-                src="~/assets/images/avatar.png"
-                alt="binh thanh"
-                class="avatar__cover"
-              />
-              <div class="contact">
-                <span class="mb-0 mr-2">Cu Chung</span>
-                <div class="d-flex flex-column mr-2">
-                  <span>SĐT:</span>
-                  <span> 0904964437 </span>
-                </div>
-              </div>
-              <div class="d-flex created_date ml-3 mb-2 align-items-end">
-                <div class="d-flex flex-column mr-2">
-                  <span>Ngày đăng:</span>
-                  <span> 10/03/2000 </span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
+      </div>
+      <div class="mt-4 d-flex justify-content-end">
+        <b-button class="bg-primary button__create" @click="handleAddNewHome()"
+          >ADD NEW</b-button
+        >
       </div>
     </div>
   </div>
@@ -334,22 +207,22 @@ export default {
     return {
       fileHolder: [],
       roomInfo: {
-        name: "Tran Van Phong",
-        address: "94 Phuong Liet",
-        category: "Chung cu",
-        area: "Quan Thanh Xuan",
-        capacity: "25m",
-        description: "Phong dep vai ca l, khong thue hoi phi",
-        price: "3.500.000",
-        deposit: "3.500.000",
-        electricprice: "4.000",
-        waterprice: "24.000",
-        otherprice: "100.000",
-        houseowner: "Anh Tu",
-        ownerphone: "0969966566",
-        imgRoom: ["day la img test"],
-        noSex: "Nam",
-        utilities: "Co ghe cau truot",
+        name: "",
+        address: "",
+        category: "",
+        area: "",
+        capacity: "",
+        description: "",
+        price: "",
+        deposit: "",
+        electricprice: "",
+        waterprice: "",
+        otherprice: "",
+        houseowner: "",
+        ownerphone: "",
+        imgRoom: [],
+        noSex: "",
+        utilities: "",
       },
     };
   },
@@ -367,160 +240,5 @@ export default {
 </script>
 
 <style>
-.checkbox__custom {
-  cursor: pointer;
-}
-.files__holder {
-  height: 80px;
-  margin-top: 30px;
-}
-.info__section {
-  padding: 0 15px;
-}
-.option__type {
-  font-family: Nunito-SemiBold;
-  font-size: 12px;
-  color: #666666;
-  letter-spacing: 0;
-}
-.option__title {
-  padding: 10px 25px;
-  border-radius: 10px;
-  color: #fff;
-  text-align: center;
-  font-family: Nunito-Bold;
-  font-size: 16px;
-  color: #ffffff;
-}
-.capacity__title {
-  font-family: Nunito-SemiBold;
-  font-size: 20px;
-  color: #333333;
-  letter-spacing: 0;
-  line-height: 28px;
-  padding: 0 15px;
-}
-.icon__title {
-  font-size: 16px;
-  color: #333333;
-  letter-spacing: 0;
-  line-height: 24px;
-  margin-left: 8px;
-}
-.icon__custom {
-  width: 30px;
-  height: 30px;
-}
-.contact {
-  border-right: 1px solid #cdcdcd;
-  padding-right: 24px;
-}
-.avatar__cover {
-  width: 60px;
-  height: 60px;
-  border-radius: 30px;
-  object-fit: cover;
-  margin-right: 8px;
-}
-.field__name {
-  font-family: Nunito-SemiBold;
-  font-size: 12px;
-  color: #666666;
-  letter-spacing: 0;
-}
-.field__value {
-  font-size: 16px;
-  color: #333333;
-  letter-spacing: 0;
-  line-height: 24px;
-}
-.status__value {
-  font-family: Nunito-Bold;
-  font-weight: bold;
-}
-.owner__section {
-  padding: 30px;
-  border-radius: 15px;
-  background: #fff;
-  height: 100%;
-  box-shadow: 0 2px 8px 0 rgba(0, 0, 0, 0.12);
-}
-.more__information,
-.notice__details,
-.house__detail,
-.furniture__details {
-  padding: 30px;
-  border-radius: 15px;
-  background: #fff;
-  box-shadow: 0 2px 8px 0 rgba(0, 0, 0, 0.12);
-}
-.house__title {
-  background: #f6f7f9;
-  height: 50px;
-  padding: 0 15px;
-  border-radius: 24px;
-  width: fit-content;
-}
-.house__status,
-.house__localtion {
-  padding: 0 15px;
-}
-.house__title p {
-  font-family: Nunito-Bold;
-  font-weight: bold;
-  font-size: 24px;
-  color: #333333;
-  letter-spacing: 0;
-}
-.title {
-  font-size: 32px;
-  color: #333333;
-  letter-spacing: 0;
-  flex-basis: 800px;
-  font-weight: bold;
-}
-.house__detail__container {
-  padding: 50px;
-  margin-left: auto;
-  margin-right: auto;
-  max-width: 1440px;
-}
-.image__container {
-  height: 500px;
-  cursor: pointer;
-  overflow: hidden;
-  border: 1px solid #ffffff;
-  border-radius: 20px;
-}
-.image__before {
-  height: 250px;
-}
-.image__first {
-  border-right: 1px solid #ffffff;
-}
-.cover__image__before {
-  border-left: 1px solid #ffffff;
-}
-.image__cover {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-.modal {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.7);
-  z-index: 1;
-}
-
-.modal-content {
-  max-width: 80%;
-  max-height: 80%;
-}
+@import '@/assets/css/createNew/index.css';
 </style>

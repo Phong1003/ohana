@@ -11,7 +11,7 @@
     </div>
     <div
       class="items"
-      @click="routerDetails()"
+      @click="routerDetails(item.id)"
       v-for="(item, index) in lists"
       :key="index"
     >
@@ -40,36 +40,36 @@
           </div>
           <div class="col-8 px-0 d-flex flex-column">
             <div class="item__title">
-              <p>{{ item.title }}</p>
+              <p>{{ item.description }}</p>
             </div>
             <div class="d-flex">
-              <div class="col-10 px-0 item__info">
+              <div class="col-8 px-0 item__info">
                 <div class="mb-3">
                   <b-icon icon="house"></b-icon>
-                  <span> {{ item.typeOfHouse }} </span>
+                  <span> {{ item.category }} </span>
                 </div>
                 <div class="mb-3">
                   <b-icon icon="people"></b-icon>
-                  <span class="mr-3">{{ item.gender }}</span>
+                  <span class="mr-3"> Nam & Nữ</span>
                   <b-icon icon="rulers"></b-icon>
-                  <span>{{ item.square }}</span>
+                  <span>{{ item.capacity }}</span>
                 </div>
                 <div
                   :id="'location' + `${index}`"
                   class="d-flex align-items-center"
                 >
                   <b-icon icon="pin-map" class="mr-1"></b-icon>
-                  <span class="item__location">{{ item.location }}</span>
+                  <span class="item__location">{{ item.address }}</span>
                   <b-tooltip :target="'location' + `${index}`"
-                    >{{ item.location }}
+                    >{{ item.address }}
                   </b-tooltip>
                 </div>
               </div>
               <div
-                class="col-2 item__price flex-column d-flex align-items-center"
+                class="col-4 item__price d-flex align-items-center price"
               >
-                <span class="price">{{ item.price }}</span>
-                <span class="currency"> {{ item.currency }} </span>
+                {{ new Intl.NumberFormat().format(item.price) }}/
+                <span style="font-size: 20px">phòng</span>
               </div>
             </div>
           </div>
@@ -98,22 +98,6 @@ export default {
     return {
       currentPage: 1,
       perPage: 3,
-      roomInfo: {
-        name: "phong",
-        address: "121 kim nguu",
-        category: "123",
-        area: "hai ba trung",
-        capacity: "3",
-        description: "phong tro danh cho 3 nguoi",
-        price: "3.000.000",
-        deposit: "2",
-        electricprice: "4000",
-        waterprice: "24000",
-        otherprice: "100000",
-        houseowner: "tran van phong",
-        ownerphone: "0969966566",
-        imgRoom: "",
-      },
     };
   },
   computed: {
@@ -135,110 +119,13 @@ export default {
     handleChangePage() {
       window.scrollTo({ top: 0, behavior: "smooth" });
     },
-    routerDetails() {
-      this.$router.push({ name: "details" });
+    routerDetails(value) {
+      this.$router.push({ name: "details" , params: { id: value } });
     },
   },
 };
 </script>
 
 <style>
-.cursor-pointer {
-  cursor: pointer;
-}
-.item__details {
-  line-height: 22px;
-  font-size: 20px;
-}
-.items a {
-  text-decoration: none;
-  color: #000000;
-}
-.item__info {
-  font-size: 16px;
-  font-weight: 500;
-  font-family: Nunito-SemiBold;
-  color: #666666;
-}
-.item__info p {
-  font-size: 20px;
-  color: #000;
-  font-weight: bold;
-}
-.item__location {
-  overflow: hidden;
-  -o-text-overflow: ellipsis;
-  text-overflow: ellipsis;
-  display: -webkit-box;
-  line-height: 24px;
-  height: 24px;
-  -webkit-line-clamp: 1;
-}
-.item__price {
-  display: block;
-  color: #f73486;
-}
-.price {
-  font-weight: bold;
-  font-size: 48px;
-  line-height: 68px;
-  font-family: Nunito-Bold;
-}
-.currency {
-  font-size: 16px;
-  line-height: 24px;
-  font-family: Nunito-Regular;
-}
-.item__title {
-  font-size: 20px;
-  color: #000;
-  font-weight: bold;
-  overflow: hidden;
-  -o-text-overflow: ellipsis;
-  text-overflow: ellipsis;
-  display: -webkit-box;
-  height: 22px;
-  -webkit-line-clamp: 1;
-  font-family: Nunito-SemiBold;
-  margin-bottom: 0px;
-  margin-top: 0px;
-  margin-bottom: 22px;
-}
-.item__image {
-  width: 216px;
-  height: 152px;
-  border-radius: 8px;
-  -o-object-fit: cover;
-  object-fit: cover;
-}
-.list__container {
-  width: 100%;
-  padding: 20px;
-  border-radius: 10px;
-  box-shadow: 0 2px 8px 0 rgba(0, 0, 0, 0.12);
-  background-color: #fff;
-}
-.list__title {
-  padding-bottom: 20px;
-  color: #333333;
-}
-.list__title h4 {
-  color: #333333;
-}
-.items {
-  border-bottom: 1px solid #cdcdcd;
-  height: inherit;
-}
-.info-contain:hover {
-  opacity: 0.7;
-}
-.items:last-child {
-  border-bottom: none;
-}
-.contain {
-  padding: 56px 0;
-}
-.cover {
-  background-color: #f6f5f2;
-}
+@import '@/assets/css/list/index.css';
 </style>

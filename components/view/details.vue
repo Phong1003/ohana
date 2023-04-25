@@ -53,15 +53,6 @@
           </b-button>
         </div>
       </div>
-      <div class="location__cover d-flex">
-        <span class="mr-2"
-          >HN<b-icon class="ml-2" icon="caret-right"></b-icon
-        ></span>
-        <span class="mr-2"
-          >Cầu Giấy<b-icon class="ml-2" icon="caret-right"></b-icon>
-        </span>
-        <span>Phạm Hùng </span>
-      </div>
       <div class="information__section d-flex mt-4 justify-content-center">
         <div class="house__section col-8 px-0">
           <div class="house__detail">
@@ -120,14 +111,6 @@
             <div class="mt-3 d-flex flex-wrap">
               <div class="col-3 h-100 d-flex justify-content-start mt-4">
                 <img
-                  src="~/assets/icon/air-conditioner-icon.svg"
-                  alt="air-conditioner"
-                  class="icon__custom"
-                />
-                <span class="icon__title">Điều hòa</span>
-              </div>
-              <div class="col-3 h-100 d-flex justify-content-start mt-4">
-                <img
                   src="~/assets/icon/toilet.svg"
                   alt="toilet"
                   class="icon__custom"
@@ -142,57 +125,14 @@
                 />
                 <span class="icon__title">Wifi</span>
               </div>
-              <div class="col-3 h-100 d-flex justify-content-start mt-4">
-                <img
-                  src="~/assets/icon/clock.svg"
-                  alt="clock"
-                  class="icon__custom"
-                />
-                <span class="icon__title">Tự do</span>
-              </div>
-              <div class="col-3 h-100 d-flex justify-content-start mt-4">
-                <b-icon icon="key" class="icon__custom"></b-icon>
-                <span class="icon__title">Không chủ</span>
-              </div>
-              <div class="col-3 h-100 d-flex justify-content-start mt-4">
-                <img
-                  src="~/assets/icon/washing-machine.svg"
-                  alt="washing-machine"
-                  class="icon__custom"
-                />
-                <span class="icon__title">Máy giặt</span>
-              </div>
+
               <div class="col-3 h-100 d-flex justify-content-start mt-4">
                 <img
                   src="~/assets/icon/police-officer.svg"
                   alt="police-officer"
                   class="icon__custom"
                 />
-                <span class="icon__title">Bảo vệ</span>
-              </div>
-              <div class="col-3 h-100 d-flex justify-content-start mt-4">
-                <img
-                  src="~/assets/icon/bed.svg"
-                  alt="bed"
-                  class="icon__custom"
-                />
-                <span class="icon__title">Giường</span>
-              </div>
-              <div class="col-3 h-100 d-flex justify-content-start mt-4">
-                <img
-                  src="~/assets/icon/pot.svg"
-                  alt="pot"
-                  class="icon__custom"
-                />
-                <span class="icon__title">Nấu ăn</span>
-              </div>
-              <div class="col-3 h-100 d-flex justify-content-start mt-4">
-                <img
-                  src="~/assets/icon/wardrobe.svg"
-                  alt="wardrobe"
-                  class="icon__custom"
-                />
-                <span class="icon__title">Tủ đồ</span>
+                <span class="icon__title">An ninh</span>
               </div>
               <div class="col-3 h-100 d-flex justify-content-start mt-4">
                 <img
@@ -201,14 +141,6 @@
                   class="icon__custom"
                 />
                 <span class="icon__title">Cửa sổ</span>
-              </div>
-              <div class="col-3 h-100 d-flex justify-content-start mt-4">
-                <img
-                  src="~/assets/icon/water-heater.svg"
-                  alt="water-heater"
-                  class="icon__custom"
-                />
-                <span class="icon__title">Bình nóng lạnh</span>
               </div>
             </div>
           </div>
@@ -387,155 +319,5 @@ export default {
 </script>
 
 <style>
-.option {
-}
-.info__section {
-  padding: 0 15px;
-}
-.option__type {
-  font-family: Nunito-SemiBold;
-  font-size: 12px;
-  color: #666666;
-  letter-spacing: 0;
-}
-.option__title {
-  padding: 10px 25px;
-  border-radius: 10px;
-  color: #fff;
-  text-align: center;
-  font-family: Nunito-Bold;
-  font-size: 16px;
-  color: #ffffff;
-}
-.capacity__title {
-  font-family: Nunito-SemiBold;
-  font-size: 20px;
-  color: #333333;
-  letter-spacing: 0;
-  line-height: 28px;
-  padding: 0 15px;
-}
-.icon__title {
-  font-size: 16px;
-  color: #333333;
-  letter-spacing: 0;
-  line-height: 24px;
-  margin-left: 8px;
-}
-.icon__custom {
-  width: 30px;
-  height: 30px;
-}
-.contact {
-  border-right: 1px solid #cdcdcd;
-  padding-right: 24px;
-}
-.avatar__cover {
-  width: 60px;
-  height: 60px;
-  border-radius: 30px;
-  object-fit: cover;
-  margin-right: 8px;
-}
-.field__name {
-  font-family: Nunito-SemiBold;
-  font-size: 12px;
-  color: #666666;
-  letter-spacing: 0;
-}
-.field__value {
-  font-size: 16px;
-  color: #333333;
-  letter-spacing: 0;
-  line-height: 24px;
-}
-.status__value {
-  font-family: Nunito-Bold;
-  font-weight: bold;
-}
-.owner__section {
-  padding: 30px;
-  border-radius: 15px;
-  background: #fff;
-  height: 100%;
-  box-shadow: 0 2px 8px 0 rgba(0, 0, 0, 0.12);
-}
-.more__information,
-.notice__details,
-.house__detail,
-.furniture__details {
-  padding: 30px;
-  border-radius: 15px;
-  background: #fff;
-  box-shadow: 0 2px 8px 0 rgba(0, 0, 0, 0.12);
-}
-.house__title {
-  background: #f6f7f9;
-  height: 50px;
-  padding: 0 15px;
-  border-radius: 24px;
-  width: fit-content;
-}
-.house__status,
-.house__localtion {
-  padding: 0 15px;
-}
-.house__title p {
-  font-family: Nunito-Bold;
-  font-weight: bold;
-  font-size: 24px;
-  color: #333333;
-  letter-spacing: 0;
-}
-.title {
-  font-size: 32px;
-  color: #333333;
-  letter-spacing: 0;
-  flex-basis: 800px;
-  font-weight: bold;
-}
-.house__detail__container {
-  padding: 50px;
-  margin-left: auto;
-  margin-right: auto;
-  max-width: 1440px;
-}
-.image__container {
-  height: 500px;
-  cursor: pointer;
-  overflow: hidden;
-  border: 1px solid #ffffff;
-  border-radius: 20px;
-}
-.image__before {
-  height: 250px;
-}
-.image__first {
-  border-right: 1px solid #ffffff;
-}
-.cover__image__before {
-  border-left: 1px solid #ffffff;
-}
-.image__cover {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-.modal {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.7);
-  z-index: 1;
-}
-
-.modal-content {
-  max-width: 80%;
-  max-height: 80%;
-}
+@import '@/assets/css/details/index.css';
 </style>

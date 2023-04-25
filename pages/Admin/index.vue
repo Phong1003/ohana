@@ -18,6 +18,7 @@ import ListComponent from "../../components/view/list.vue";
 import TableAccount from "../../components/view/tableAccount.vue";
 import AuthWrapper from "../../components/authWrapper/index.vue";
 import { mapGetters, mapActions } from "vuex";
+import { search } from "../../api/dashboard/index";
 
 export default {
   layout: "defaults",
@@ -30,82 +31,36 @@ export default {
   data() {
     return {
       listHouseForRent: [
-        {
-          id: 1,
-          image: "~/assets/images/TrungHoa-CG.jpg",
-          title:
-            "Chung cư mini tại ngõ 121 Kim Ngưu - Thanh Lương - Hai Bà Trưng",
-          typeOfHouse: "Chung cư mini",
-          gender: "Nam & Nữ",
-          square: "25m²",
-          location:
-            "Ngõ 121 Ngách 39 số nhà 28 Kim Ngưu - Thanh Lương - Hai Bà Trưng",
-          price: "3.5",
-          currency: "tr/phòng",
-        },
-        {
-          id: 2,
-          image: "~/assets/images/TrungHoa-CG.jpg",
-          title: "Căn hộ 1 ngủ + 1 khách tại phố Trung yên -Trung Hoà",
-          typeOfHouse: "Căn hộ",
-          gender: "Nam & Nữ",
-          square: "45m²",
-          location:
-            "Số 37 Lô 1 Trung Yên 11 Trung yên 11 , Phường Trung Hoà, Quận Cầu Giấy, Hà Nội",
-          price: "6.5",
-          currency: "tr/căn",
-        },
-        {
-          id: 3,
-          image: "~/assets/images/TrungHoa-CG.jpg",
-          title: "Căn hộ 2 ngủ + 1 khách tại phố Trung yên -Trung Hoà",
-          typeOfHouse: "Căn hộ",
-          gender: "Nam & Nữ",
-          square: "75m²",
-          location: "Số 141 Thái Hà, Quận Ba Đình, Hà Nội",
-          price: "12",
-          currency: "tr/căn",
-        },
-        {
-          id: 4,
-          image: "~/assets/images/TrungHoa-CG.jpg",
-          title: "Phòng trọ khép kín - 132 Lĩnh Nam - Hà Nội",
-          typeOfHouse: "Phòng trọ",
-          gender: "Nam & Nữ",
-          square: "20m²",
-          location: "132 Lĩnh Nam, Hà Nội",
-          price: "2.5",
-          currency: "tr/phòng",
-        },
-        {
-          id: 5,
-          image: "~/assets/images/TrungHoa-CG.jpg",
-          title: "Căn hộ 1 ngủ + 1 khách tại phố Trung yên -Trung Hoà",
-          typeOfHouse: "Căn hộ",
-          gender: "Nam & Nữ",
-          square: "45m²",
-          location:
-            "Số 37 Lô 1 Trung Yên 11 Trung yên 11 , Phường Trung Hoà, Quận Cầu Giấy, Hà Nội",
-          price: "6.5",
-          currency: "tr/căn",
-        },
-        {
-          id: 6,
-          image: "~/assets/images/TrungHoa-CG.jpg",
-          title: "Căn hộ 1 ngủ + 1 khách tại phố Trung yên -Trung Hoà",
-          typeOfHouse: "Căn hộ",
-          gender: "Nam & Nữ",
-          square: "45m²",
-          location:
-            "Số 37 Lô 1 Trung Yên 11 Trung yên 11 , Phường Trung Hoà, Quận Cầu Giấy, Hà Nội",
-          price: "6.5",
-          currency: "tr/căn",
-        },
       ],
     };
   },
   computed: {
     ...mapGetters("admin", ["tabIndex"]),
+  },
+  methods: {
+    async handleGetData() {
+      try {
+        const response = await search({
+          searchQuery: "",
+          price: "",
+          category: "",
+          utilities: "",
+          noSex: "",
+          status: "",
+          pageNumber: 10,
+          pageSize: 0,
+          price: "",
+        });
+        for (const item of response.data) {
+          this.listHouseForRent.push(item.room)
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    },
+  },
+  async fetch() {
+    await this.handleGetData();
   },
 };
 </script>
