@@ -11,9 +11,14 @@
           <b-icon :class="{'rotatePrice': priceActive ? true : false}" icon="chevron-right"></b-icon>
         </b-button>
         <b-collapse id="collapse-1" class="mt-2 px-4">
-          <b-form-radio name="some-radios" value="A">1tr-5tr</b-form-radio>
-          <b-form-radio name="some-radios" value="B">6tr-10tr</b-form-radio>
-          <b-form-radio name="some-radios" value="B">11tr-15tr</b-form-radio>
+          <b-form-group >
+            <b-form-radio-group
+              v-model="priceRadio"
+              :options="optionsPrice"
+              name="radios-price"
+              stacked
+            ></b-form-radio-group>
+          </b-form-group>
         </b-collapse>
         <b-button v-b-toggle.collapse-2 class="d-flex align-items-center justify-content-between px-4" @click="utilities">
           <div>Tiện ích</div>
@@ -65,9 +70,14 @@
           <b-icon :class="{'rotateGender': genderActive ? true : false}" icon="chevron-right"></b-icon>
         </b-button>
         <b-collapse id="collapse-4" class="mt-2 px-4">
-          <b-form-radio name="some-radios" value="A">Tất cả</b-form-radio>
-          <b-form-radio name="some-radios" value="B">Nam</b-form-radio>
-          <b-form-radio name="some-radios" value="B">Nữ</b-form-radio>
+          <b-form-group >
+            <b-form-radio-group
+              v-model="genderRadio"
+              :options="optionsGender"
+              name="radios-gender"
+              stacked
+            ></b-form-radio-group>
+          </b-form-group>
         </b-collapse>
       </div>
       <div class="d-flex align-items-center justify-content-center py-4" style="font-size: 16px; color: #4877F8; cursor: pointer;">
@@ -87,6 +97,7 @@
 
 <script>
 import CardRoom from '@/components/listRoom/index.vue'
+import {search} from "../../../api/dashboard/index"
 export default {
   layout: "defaults",
   components: {CardRoom},
@@ -96,53 +107,50 @@ export default {
       utilitiesActive: false,
       roomActive: false,
       genderActive: false,
-      listRoom: [
-        {
-          img: require('@/assets/images/imgRoom.jpg'),
-          nameRoom: 'Ký túc xá quận Thủ Đức',
-          typeRoom: 'Ký túc xá',
-          sex: 'Nam & Nữ',
-          acreage: '30m²',
-          address: '10 Đường sô 4, Phường Hiệp Bình Phước, Quận Thủ Đức, Hồ Chí Minh',
-          price: '1,5'
-        },
-        {
-          img: require('@/assets/images/imgRoom.jpg'),
-          nameRoom: 'Ký túc xá quận Thủ Đức',
-          typeRoom: 'Ký túc xá',
-          sex: 'Nam & Nữ',
-          acreage: '30m²',
-          address: '10 Đường sô 4, Phường Hiệp Bình Phước, Quận Thủ Đức, Hồ Chí Minh',
-          price: '1,5'
-        },
-        {
-          img: require('@/assets/images/imgRoom.jpg'),
-          nameRoom: 'Ký túc xá quận Thủ Đức',
-          typeRoom: 'Ký túc xá',
-          sex: 'Nam & Nữ',
-          acreage: '30m²',
-          address: '10 Đường sô 4, Phường Hiệp Bình Phước, Quận Thủ Đức, Hồ Chí Minh',
-          price: '1,5'
-        },
-        {
-          img: require('@/assets/images/imgRoom.jpg'),
-          nameRoom: 'Ký túc xá quận Thủ Đức',
-          typeRoom: 'Ký túc xá',
-          sex: 'Nam & Nữ',
-          acreage: '30m²',
-          address: '10 Đường sô 4, Phường Hiệp Bình Phước, Quận Thủ Đức, Hồ Chí Minh',
-          price: '1,5'
-        },
-        {
-          img: require('@/assets/images/imgRoom.jpg'),
-          nameRoom: 'Ký túc xá quận Thủ Đức',
-          typeRoom: 'Ký túc xá',
-          sex: 'Nam & Nữ',
-          acreage: '30m²',
-          address: '10 Đường sô 4, Phường Hiệp Bình Phước, Quận Thủ Đức, Hồ Chí Minh',
-          price: '1,5'
-        }
+      listRoom: [],
+      priceRadio: "",
+      genderRadio: "",
+      optionsPrice: [
+        { text: '1tr-5tr', value: 'first' },
+        { text: '6tr-10tr', value: 'second' },
+        { text: '11tr-15tr', value: 'third' }
+      ],
+      optionsGender: [
+        { text: 'Tất cả', value: 'all' },
+        { text: 'Nam', value: 'man' },
+        { text: 'Nữ', value: 'woman' }
       ]
+    }
+  },
+  async created(){
+    try {
+      const response = await search({
+        searchQuery: "",
+        price: "",
+        category: "",
+        utilities: "",
+        noSex: "",
+        status: "",
+        pageNumber: 10,
+        pageSize: 0
+      })
+      if(response && response.data.length){
+        this.listRoom = response.data.map(item => {
+          return {
+            img: item.imgRoom,
+            nameRoom: item.name,
+            typeRoom: item.category,
+            sex: '',
+            acreage: item.capacity,
+            address: item.address,
+            price: item.price
+          }
+        })
+        console.log(this.listRoom);
+      }
+      console.log(response);
+    } catch (error) {
+      console.log(error);
     }
   },
   methods: {

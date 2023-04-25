@@ -18,7 +18,7 @@
         </div>
       </div>
       <div class="d-flex flex-row main_content">
-        <div class="container_new_room bg-white">
+        <div class="container_new_room bg-white h-100">
           <div
             class="d-flex justify-content-between align-items-center"
             style="margin-bottom: 32px"
@@ -98,58 +98,7 @@ export default {
         { img: require("@/assets/images/thuduc.jpg"), nameCard: "Thủ Đức" },
         { img: require("@/assets/images/quan3.jpg"), nameCard: "Quận 3" },
       ],
-      listRoom: [
-        {
-          img: require("@/assets/images/imgRoom.jpg"),
-          nameRoom: "Ký túc xá quận Thủ Đức",
-          typeRoom: "Ký túc xá",
-          sex: "Nam & Nữ",
-          acreage: "30m²",
-          address:
-            "10 Đường sô 4, Phường Hiệp Bình Phước, Quận Thủ Đức, Hồ Chí Minh",
-          price: "1,5",
-        },
-        {
-          img: require("@/assets/images/imgRoom.jpg"),
-          nameRoom: "Ký túc xá quận Thủ Đức",
-          typeRoom: "Ký túc xá",
-          sex: "Nam & Nữ",
-          acreage: "30m²",
-          address:
-            "10 Đường sô 4, Phường Hiệp Bình Phước, Quận Thủ Đức, Hồ Chí Minh",
-          price: "1,5",
-        },
-        {
-          img: require("@/assets/images/imgRoom.jpg"),
-          nameRoom: "Ký túc xá quận Thủ Đức",
-          typeRoom: "Ký túc xá",
-          sex: "Nam & Nữ",
-          acreage: "30m²",
-          address:
-            "10 Đường sô 4, Phường Hiệp Bình Phước, Quận Thủ Đức, Hồ Chí Minh",
-          price: "1,5",
-        },
-        {
-          img: require("@/assets/images/imgRoom.jpg"),
-          nameRoom: "Ký túc xá quận Thủ Đức",
-          typeRoom: "Ký túc xá",
-          sex: "Nam & Nữ",
-          acreage: "30m²",
-          address:
-            "10 Đường sô 4, Phường Hiệp Bình Phước, Quận Thủ Đức, Hồ Chí Minh",
-          price: "1,5",
-        },
-        {
-          img: require("@/assets/images/imgRoom.jpg"),
-          nameRoom: "Ký túc xá quận Thủ Đức",
-          typeRoom: "Ký túc xá",
-          sex: "Nam & Nữ",
-          acreage: "30m²",
-          address:
-            "10 Đường sô 4, Phường Hiệp Bình Phước, Quận Thủ Đức, Hồ Chí Minh",
-          price: "1,5",
-        },
-      ],
+      listRoom: [],
       listVerified: [
         {
           img: require("@/assets/images/imgRoom.jpg"),
@@ -182,7 +131,30 @@ export default {
   },
   async created(){
     try {
-      const response = await search("")
+      const response = await search({
+        searchQuery: "",
+        price: "",
+        category: "",
+        utilities: "",
+        noSex: "",
+        status: "",
+        pageNumber: 0,
+        pageSize: 0
+      })
+      if(response && response.data.length){
+        this.listRoom = response.data.map(item => {
+          return {
+            img: item.imgRoom,
+            nameRoom: item.name,
+            typeRoom: item.category,
+            sex: '',
+            acreage: item.capacity,
+            address: item.address,
+            price: item.price
+          }
+        })
+        console.log(this.listRoom);
+      }
       console.log(response);
     } catch (error) {
       console.log(error);

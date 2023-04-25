@@ -15,7 +15,7 @@
           </div>
           <div class="d-flex align-items-center">
             <b-icon icon="rulers" class="mr-2"></b-icon>
-            <div>{{ inforCard.acreage }}</div>
+            <div>{{ inforCard.acreage }}m2</div>
           </div>
         </div>
         <div class="d-flex align-items-center">
@@ -24,7 +24,7 @@
         </div>
       </div>
     </div>
-    <div style="font-size: 48px; color: #F73486; font-weight: 700;">{{ inforCard.price }}tr</div>
+    <div style="font-size: 48px; color: #F73486; font-weight: 700;">{{ inforCard.price }}</div>
   </div>
 </template>
 
