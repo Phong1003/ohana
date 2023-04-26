@@ -45,7 +45,7 @@
     </div>
     <div class="content__section mb-3">
       <div class="title__cover d-flex justify-content-between">
-        <p class="title">Căn hộ Phạm Hùng, Quận Cầu Giấy</p>
+        <p class="title">{{ dataDetail.name }}</p>
         <div class="h3 cursor-pointer mr-3">
           <b-button class="bg-primary border-primary">
             <b-icon icon="box-arrow-up-right"></b-icon>
@@ -68,19 +68,19 @@
             <div class="house__info mt-4 d-flex">
               <div class="d-flex flex-column col-3">
                 <p class="mb-0 field__name">GIÁ PHÒNG</p>
-                <p class="field__value">7.000.000 VNĐ</p>
+                <p class="field__value">{{ dataDetail.price }} VNĐ</p>
               </div>
               <div class="d-flex flex-column col-3">
                 <p class="mb-0 field__name">DIỆN TÍCH</p>
-                <p class="field__value">40 mét vuông</p>
+                <p class="field__value">{{ dataDetail.capacity }} mét vuông</p>
               </div>
               <div class="d-flex flex-column col-3">
                 <p class="mb-0 field__name">ĐẶT CỌC</p>
-                <p class="field__value">7.000.000 VNĐ</p>
+                <p class="field__value">{{ dataDetail.deposit }} VNĐ</p>
               </div>
               <div class="d-flex flex-column col-3">
                 <p class="mb-0 field__name">SỨC CHỨA</p>
-                <p class="field__value">3 Nam hoặc Nữ</p>
+                <p class="field__value">{{ dataDetail.noSex }} Nam hoặc Nữ</p>
               </div>
             </div>
             <div class="house__status">
@@ -93,7 +93,7 @@
               <div class="d-flex flex-column">
                 <p class="mb-0 field__name">ĐỊA CHỈ</p>
                 <p class="field__value">
-                  Số 180 Phạm Hùng, Phường Trung Hoà, Quận Cầu Giấy, Hà Nội
+                  {{ dataDetail.address }}, {{ dataDetail.area }}
                 </p>
               </div>
             </div>
@@ -215,16 +215,16 @@
                 class="avatar__cover"
               />
               <div class="contact">
-                <span class="mb-0 mr-2">Cu Chung</span>
+                <span class="mb-0 mr-2">{{ dataDetail.houseowner }}</span>
                 <div class="d-flex flex-column mr-2">
                   <span>SĐT:</span>
-                  <span> 0904964437 </span>
+                  <span> {{ dataDetail.ownerphone }} </span>
                 </div>
               </div>
               <div class="d-flex created_date ml-3 mb-2 align-items-end">
                 <div class="d-flex flex-column mr-2">
                   <span>SĐT:</span>
-                  <span> 0904964437 </span>
+                  <span> {{ dataDetail.ownerphone }} </span>
                 </div>
               </div>
             </div>
@@ -236,6 +236,7 @@
 </template>
 
 <script>
+import { search } from '../../api/dashboard';
 export default {
   data() {
     return {
@@ -313,10 +314,35 @@ export default {
           sub_title: "water-heater",
         },
       ],
+      dataDetail: '',
+      response: ''
     };
   },
-  created(){
-    console.log(this.$route.params.id);
+  async created(){
+    await this.handleGetData()
+    for (const item of this.response.data) {
+      if (item.room.id == this.$route.params.id) {
+        this.dataDetail = { ...item.room };
+      }
+    }
+  },
+  methods: {
+    async handleGetData(){
+      try {
+        this.response = await search({
+          searchQuery: "",
+          price: "",
+          category: "",
+          utilities: "",
+          noSex: "",
+          status: "",
+          pageNumber: 0,
+          pageSize: 10
+        })
+      } catch (error) {
+        console.log(error);
+      } 
+    }
   }
 };
 </script>
