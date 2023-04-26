@@ -6,3 +6,5 @@ export const URL_CATEGORY = '/Rooms/getCategory';
 export const URL_USER = '/User/getAllUser';
 export const URL_EDIT = '/Rooms/editRooms';
 export const URL_CREATE_CATEGORY = "/Rooms/newCategory"
+export const URL_DELETE = '/Rooms/deleteRoom'
+export const URL_ACTIVE = '/Rooms/activeRoom'

@@ -1,5 +1,5 @@
 import api from "../api";
-import { URL_LOGIN, URL_REGISTER, URL_SEARCH, URL_NEW_HOME, URL_CATEGORY, URL_USER, URL_EDIT, URL_CREATE_CATEGORY } from "../../constants/endpoints";
+import { URL_LOGIN, URL_REGISTER, URL_SEARCH, URL_NEW_HOME, URL_CATEGORY, URL_USER, URL_EDIT, URL_CREATE_CATEGORY, URL_DELETE, URL_ACTIVE } from "../../constants/endpoints";
 
 export function loginApi(data) {
   return api.post(URL_LOGIN, data);
@@ -31,4 +31,12 @@ export function editRoomsApi(data) {
 
 export function createCategoryApi(data) {
   return api.post(URL_CREATE_CATEGORY, data)
+}
+
+export function deleteRoom(data) {
+  return api.post(URL_DELETE, data)
+}
+
+export function activeRoom(data) {
+  return api.post(URL_ACTIVE, data)
 }

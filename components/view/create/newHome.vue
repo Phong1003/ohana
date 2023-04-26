@@ -332,7 +332,10 @@ export default {
     async handleAddNewHome() {
       try {
         window.scrollTo({ top: 0, behavior: "smooth" });
-        await createApi(this.roomInfo);
+        const res = await createApi(this.roomInfo);
+        if (res.status == 200) {
+          this.$router.go(-1);
+        }
       } catch (error) {
         console.log("error", error);
       }

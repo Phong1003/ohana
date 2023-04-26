@@ -4,7 +4,11 @@
       <b-container class="contain">
         <div class="d-flex flex-lg-row flex-column">
           <Sidebar class="sidebar-space" />
-          <ListComponent v-if="tabIndex == 1" :showList="listHouseForRent" />
+          <ListComponent
+            v-if="tabIndex == 1"
+            :showList="listHouseForRent"
+            @handleDeleteRoom="handleDeleteRoom"
+          />
           <TableAccount v-if="tabIndex == 2" />
         </div>
       </b-container>
@@ -19,6 +23,7 @@ import TableAccount from "../../components/view/tableAccount.vue";
 import AuthWrapper from "../../components/authWrapper/index.vue";
 import { mapGetters, mapActions } from "vuex";
 import { search } from "../../api/dashboard/index";
+import { deleteRoom } from "../../api/auth/index";
 
 export default {
   layout: "defaults",
@@ -51,10 +56,22 @@ export default {
           price: "",
         });
         for (const item of response.data) {
-          this.listHouseForRent.push(item.room)
+          this.listHouseForRent.push(item.room);
         }
       } catch (error) {
         console.log(error);
+      }
+    },
+    async handleDeleteRoom(roomID) {
+      try {
+        const response = await deleteRoom({
+          id: roomID,
+        });
+        if (response.status == 200) {
+          await this.handleGetData();
+        }
+      } catch (error) {
+        console.log("error", error);
       }
     },
   },

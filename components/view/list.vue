@@ -29,6 +29,15 @@
             <span>Xóa</span>
           </b-button>
         </div>
+        <div class="icon-action mr-2 h5 cursor-pointer" v-if="!item.status">
+          <b-button
+            @click="handleActiveRoom(item.id)"
+            class="bg-primary border-primary"
+          >
+            <b-icon icon="check"></b-icon>
+            <span>Xác nhận</span>
+          </b-button>
+        </div>
       </div>
       <a target="_blank" class="info-contain" @click="routerDetails(item.id)">
         <div class="item__details my-3 d-flex justify-content-between">
@@ -47,7 +56,7 @@
               <div class="col-8 px-0 item__info">
                 <div class="mb-3">
                   <b-icon icon="house"></b-icon>
-                  <span> {{ item.category }} </span>
+                  <span> {{ handleReturnNameCategory(item.category) }} </span>
                 </div>
                 <div class="mb-3">
                   <b-icon icon="people"></b-icon>
@@ -91,12 +100,15 @@
 </template>
 
 <script>
+import { categoryApi, activeRoom } from "../../api/auth/index";
+
 export default {
   props: ["showList"],
   data() {
     return {
       currentPage: 1,
       perPage: 3,
+      listCategory: [],
     };
   },
   computed: {
@@ -111,7 +123,38 @@ export default {
       return this.showList.length;
     },
   },
+  async created() {
+    await this.handleGetCategory();
+  },
   methods: {
+    handleReturnNameCategory(id) {
+      const data = this.listCategory.find((el) => el.id == id);
+      if (data) {
+        return data.name;
+      }
+    },
+    async handleGetCategory() {
+      try {
+        const response = await categoryApi();
+        this.listCategory = response.data;
+        this.listCategory.unshift({
+          id: null,
+          code: "006",
+          name: "Chọn loại phòng",
+          status: "1",
+          disabled: true,
+        });
+      } catch (error) {
+        console.log("error", error);
+      }
+    },
+    async handleActiveRoom(id) {
+      try {
+        const res = await activeRoom({ id: id, status: 1 });
+      } catch (error) {
+        console.log("error", error);
+      }
+    },
     createNewRoom() {
       this.$router.push({ name: "create" });
     },
@@ -122,7 +165,7 @@ export default {
       });
     },
     handleDeleteRoom(roomID) {
-      console.log(roomID);
+      this.$emit("handleDeleteRoom", roomID);
     },
     handleChangePage() {
       window.scrollTo({ top: 0, behavior: "smooth" });
