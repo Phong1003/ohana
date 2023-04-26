@@ -8,7 +8,10 @@
         class="title__cover d-flex flex-column h-100 justify-content-between"
       >
         <h4 class="mb-3">Title <span class="text-danger">(*)</span></h4>
-        <b-form-input placeholder="Nhập title cho phòng"></b-form-input>
+        <b-form-input
+          v-model="roomInfo.name"
+          placeholder="Nhập title cho phòng"
+        ></b-form-input>
       </div>
       <div class="files__holder">
         <h4 class="mb-3">
@@ -92,13 +95,36 @@
               </div>
               <div class="d-flex flex-column col-6">
                 <p class="mb-0 field__name mb-2">
-                  SỨC CHỨA <span class="text-danger">(*)</span>
+                  TIỀN ĐIỆN <span class="text-danger">(*)</span>
                 </p>
-                <b-form-input placeholder="VD: 2 nam hoặc nữ"></b-form-input>
+                <b-form-input
+                  v-model="roomInfo.electricprice"
+                  placeholder="Nhập tiền điện"
+                ></b-form-input>
               </div>
             </div>
             <div class="house__info mt-4 d-flex">
-              <div class="d-flex flex-column col-12">
+              <div class="d-flex flex-column col-6">
+                <p class="mb-0 field__name mb-2">
+                  TIỀN NƯỚC <span class="text-danger">(*)</span>
+                </p>
+                <b-form-input
+                  v-model="roomInfo.waterprice"
+                  placeholder="Nhập tiền nước"
+                ></b-form-input>
+              </div>
+              <div class="d-flex flex-column col-6">
+                <p class="mb-0 field__name mb-2">
+                  PHÍ TIỆN ÍCH <span class="text-danger">(*)</span>
+                </p>
+                <b-form-input
+                  v-model="roomInfo.otherprice"
+                  placeholder="Nhập tiền tiện ích"
+                ></b-form-input>
+              </div>
+            </div>
+            <div class="house__info mt-4 d-flex">
+              <div class="d-flex flex-column col-6">
                 <p class="mb-0 field__name mb-2">
                   ĐỊA CHỈ <span class="text-danger">(*)</span>
                 </p>
@@ -106,6 +132,18 @@
                   v-model="roomInfo.address"
                   placeholder="VD: Số 180 Phạm Hùng, Trung Hoà, Cầu Giấy, Hà Nội"
                 ></b-form-input>
+              </div>
+              <div class="d-flex flex-column col-6">
+                <p class="mb-0 field__name mb-2">
+                  LOẠI PHÒNG <span class="text-danger">(*)</span>
+                </p>
+                <b-form-select
+                  v-model="roomInfo.category"
+                  :options="listCategory"
+                  value-field="id"
+                  text-field="name"
+                >
+                </b-form-select>
               </div>
             </div>
           </div>
@@ -120,55 +158,63 @@
               <p class="mb-0">Tiện ích</p>
             </div>
             <div class="mt-3 d-flex flex-wrap">
-              <div
-                class="checkbox__custom align-items-center col-4 d-flex justify-content-start mt-3"
-              >
-                <b-form-checkbox>
-                  <img
-                    src="~/assets/icon/toilet.svg"
-                    alt="toilet"
-                    class="icon__custom"
-                  />
-                  <span class="icon__title">WC riêng</span>
-                </b-form-checkbox>
-              </div>
-              <div
-                class="checkbox__custom align-items-center col-4 d-flex justify-content-start mt-3"
-              >
-                <b-form-checkbox>
-                  <img
-                    src="~/assets/icon/wifi.svg"
-                    alt="wifi"
-                    class="icon__custom"
-                  />
-                  <span class="icon__title">Wifi</span>
-                </b-form-checkbox>
-              </div>
-              <div
-                class="checkbox__custom align-items-center col-4 d-flex justify-content-start mt-3"
-              >
-                <b-form-checkbox>
-                  <img
-                    src="~/assets/icon/police-officer.svg"
-                    alt="police-officer"
-                    class="icon__custom"
-                  />
-                  <span class="icon__title">An ninh</span>
-                </b-form-checkbox>
-              </div>
-
-              <div
-                class="checkbox__custom align-items-center col-4 d-flex justify-content-start mt-3"
-              >
-                <b-form-checkbox>
-                  <img
-                    src="~/assets/icon/window.svg"
-                    alt="window"
-                    class="icon__custom"
-                  />
-                  <span class="icon__title">Cửa sổ</span>
-                </b-form-checkbox>
-              </div>
+              <b-form-group class="w-100">
+                <b-form-checkbox-group
+                  v-model="roomInfo.utilities"
+                  id="checkbox-group"
+                  name="utilities"
+                  class="d-flex align-items-center justify-content-between w-100"
+                >
+                  <div
+                    class="checkbox__custom align-items-center col-3 d-flex justify-content-start mt-3"
+                  >
+                    <b-form-checkbox value="1">
+                      <img
+                        src="~/assets/icon/toilet.svg"
+                        alt="toilet"
+                        class="icon__custom"
+                      />
+                      <span class="icon__title">WC riêng</span>
+                    </b-form-checkbox>
+                  </div>
+                  <div
+                    class="checkbox__custom align-items-center col-3 d-flex justify-content-start mt-3"
+                  >
+                    <b-form-checkbox value="2">
+                      <img
+                        src="~/assets/icon/wifi.svg"
+                        alt="wifi"
+                        class="icon__custom"
+                      />
+                      <span class="icon__title">Wifi</span>
+                    </b-form-checkbox>
+                  </div>
+                  <div
+                    class="checkbox__custom align-items-center col-3 d-flex justify-content-start mt-3"
+                  >
+                    <b-form-checkbox value="3">
+                      <img
+                        src="~/assets/icon/police-officer.svg"
+                        alt="police-officer"
+                        class="icon__custom"
+                      />
+                      <span class="icon__title">An ninh</span>
+                    </b-form-checkbox>
+                  </div>
+                  <div
+                    class="checkbox__custom align-items-center col-3 d-flex justify-content-start mt-3"
+                  >
+                    <b-form-checkbox value="4">
+                      <img
+                        src="~/assets/icon/window.svg"
+                        alt="window"
+                        class="icon__custom"
+                      />
+                      <span class="icon__title">Cửa sổ</span>
+                    </b-form-checkbox>
+                  </div>
+                </b-form-checkbox-group>
+              </b-form-group>
             </div>
           </div>
           <div class="more__information mt-5">
@@ -191,8 +237,17 @@
         </div>
       </div>
       <div class="mt-4 d-flex justify-content-end">
-        <b-button class="bg-primary button__create" @click="handleAddNewHome()"
+        <b-button
+          v-if="!$route.params.edit"
+          class="bg-primary button__create"
+          @click="handleAddNewHome()"
           >ADD NEW</b-button
+        >
+        <b-button
+          v-else
+          class="bg-primary button__create"
+          @click="handleEditHome()"
+          >EDIT</b-button
         >
       </div>
     </div>
@@ -200,16 +255,18 @@
 </template>
 
 <script>
-import { createApi } from "../../../api/auth/index";
+import { createApi, categoryApi, editRoomsApi } from "../../../api/auth/index";
+import { search } from "../../../api/dashboard";
 
 export default {
   data() {
     return {
+      listCategory: [],
       fileHolder: [],
       roomInfo: {
         name: "",
         address: "",
-        category: "",
+        category: null,
         area: "",
         capacity: "",
         description: "",
@@ -222,15 +279,82 @@ export default {
         ownerphone: "",
         imgRoom: [],
         noSex: "",
-        utilities: "",
+        utilities: [],
       },
+      response: {},
     };
   },
+  async created() {
+    if (this.$route.params.edit) {
+      await this.handleGetData();
+      for (const item of this.response.data) {
+        if (item.room.id == this.$route.params.id) {
+          this.roomInfo = { ...item.room };
+          this.roomInfo.utilities = item.utilities;
+        }
+      }
+    }
+    await this.handleGetCategory();
+  },
   methods: {
+    async handleEditHome() {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+      try {
+        await editRoomsApi({
+          ...this.roomInfo,
+          utilities:
+            this.roomInfo.utilities == null ? [] : this.roomInfo.utilities,
+          imgRoom:
+            this.roomInfo.imgRoom == null || !this.roomInfo.imgRoom
+              ? []
+              : this.roomInfo.imgRoom,
+        });
+      } catch (error) {
+        console.log("error", error);
+      }
+    },
+    async handleGetData() {
+      try {
+        this.response = await search({
+          searchQuery: "",
+          price: "",
+          category: "",
+          utilities: [],
+          noSex: "",
+          status: "",
+          pageNumber: 0,
+          pageSize: 10,
+        });
+      } catch (error) {
+        console.log(error);
+      }
+    },
     async handleAddNewHome() {
       try {
-        const response = await createApi(this.roomInfo);
-        console.log(response);
+        window.scrollTo({ top: 0, behavior: "smooth" });
+        await createApi(this.roomInfo);
+      } catch (error) {
+        console.log("error", error);
+      }
+    },
+    async handleGetCategory() {
+      try {
+        const response = await categoryApi();
+        this.listCategory = response.data;
+        this.listCategory.unshift({
+          id: null,
+          code: "006",
+          name: "Chọn loại phòng",
+          status: "1",
+          disabled: true,
+        });
+      } catch (error) {
+        console.log("error", error);
+      }
+    },
+    async handleCreateCategory() {
+      try {
+        await createCategoryApi(this.newCategory);
       } catch (error) {
         console.log("error", error);
       }
@@ -240,5 +364,5 @@ export default {
 </script>
 
 <style>
-@import '@/assets/css/createNew/index.css';
+@import "@/assets/css/createNew/index.css";
 </style>

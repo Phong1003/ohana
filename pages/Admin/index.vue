@@ -30,8 +30,7 @@ export default {
   },
   data() {
     return {
-      listHouseForRent: [
-      ],
+      listHouseForRent: [],
     };
   },
   computed: {
@@ -44,11 +43,11 @@ export default {
           searchQuery: "",
           price: "",
           category: "",
-          utilities: "",
+          utilities: [],
           noSex: "",
           status: "",
-          pageNumber: 10,
-          pageSize: 0,
+          pageNumber: 0,
+          pageSize: 10,
           price: "",
         });
         for (const item of response.data) {

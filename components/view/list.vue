@@ -9,27 +9,28 @@
         </b-button>
       </div>
     </div>
-    <div
-      class="items"
-      @click="routerDetails(item.id)"
-      v-for="(item, index) in lists"
-      :key="index"
-    >
+    <div class="items" v-for="(item, index) in lists" :key="index">
       <div class="action-contain pt-2 px-3 d-flex">
         <div class="icon-action mr-2 h5 cursor-pointer">
-          <b-button class="bg-success border-success">
+          <b-button
+            @click="handleEditRoom(item.id)"
+            class="bg-success border-success"
+          >
             <b-icon icon="pencil-square"> </b-icon>
             <span>Chỉnh sửa</span>
           </b-button>
         </div>
         <div class="icon-action mr-2 h5 cursor-pointer">
-          <b-button class="bg-danger border-danger">
+          <b-button
+            @click="handleDeleteRoom(item.id)"
+            class="bg-danger border-danger"
+          >
             <b-icon icon="trash"></b-icon>
             <span>Xóa</span>
           </b-button>
         </div>
       </div>
-      <a target="_blank" class="info-contain">
+      <a target="_blank" class="info-contain" @click="routerDetails(item.id)">
         <div class="item__details my-3 d-flex justify-content-between">
           <div class="col-4">
             <img
@@ -65,9 +66,7 @@
                   </b-tooltip>
                 </div>
               </div>
-              <div
-                class="col-4 item__price d-flex align-items-center price"
-              >
+              <div class="col-4 item__price d-flex align-items-center price">
                 {{ new Intl.NumberFormat().format(item.price) }}/
                 <span style="font-size: 20px">phòng</span>
               </div>
@@ -116,16 +115,28 @@ export default {
     createNewRoom() {
       this.$router.push({ name: "create" });
     },
+    handleEditRoom(roomID) {
+      this.$router.push({
+        name: "admin-id",
+        params: { id: roomID, edit: true },
+      });
+    },
+    handleDeleteRoom(roomID) {
+      console.log(roomID);
+    },
     handleChangePage() {
       window.scrollTo({ top: 0, behavior: "smooth" });
     },
     routerDetails(value) {
-      this.$router.push({ name: "admin-id" , params: { id: value } });
+      this.$router.push({
+        name: "admin-id",
+        params: { id: value, edit: false },
+      });
     },
   },
 };
 </script>
 
 <style>
-@import '@/assets/css/list/index.css';
+@import "@/assets/css/list/index.css";
 </style>
