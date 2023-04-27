@@ -17,7 +17,7 @@
           <CardTrend :cardContent="item" />
         </div>
       </div>
-      <div class="d-flex flex-row main_content">
+      <div class="main_content">
         <div class="container_new_room bg-white h-100">
           <div
             class="d-flex justify-content-between align-items-center"
@@ -42,30 +42,6 @@
             Xem tất cả
           </div>
         </div>
-        <div class="container_verified bg-white">
-          <div class="d-flex justify-content-between">
-            <div class="d-flex align-items-center">
-              <b-icon icon="shield-fill-check" class="mr-2 icon_shield" />
-              <div style="font-size: 24px; font-weight: 700">Đã xác thực</div>
-            </div>
-            <div class="view_all" @click="viewTop">Xem tất cả</div>
-          </div>
-          <div style="border-bottom: 1px solid #cdcdcd; padding-bottom: 20px">
-            <div
-              class="mt-4"
-              v-for="(item, index) in listVerified"
-              :key="index"
-            >
-              <CardVerified :contentVerified="item" />
-            </div>
-          </div>
-          <div
-            class="d-flex justify-content-center align-items-center mt-3"
-            style="color: #4877f8; cursor: pointer"
-          >
-            Xem tất cả
-          </div>
-        </div>
       </div>
     </div>
   </div>
@@ -75,7 +51,6 @@
 import FilterHouse from "../../components/filterHouse/index.vue";
 import CardTrend from "../../components/cardTrend/index.vue";
 import CardRoom from "../../components/listRoom/index.vue";
-import CardVerified from "../../components/listVerified/index.vue";
 import { mapGetters, mapActions } from "vuex";
 import {search} from "../../api/dashboard/index"
 export default {
@@ -83,8 +58,7 @@ export default {
   components: {
     FilterHouse,
     CardTrend,
-    CardRoom,
-    CardVerified,
+    CardRoom
   },
   data() {
     return {
@@ -100,27 +74,12 @@ export default {
         { img: require("@/assets/images/quan3.jpg"), nameCard: "Quận 3" },
       ],
       listRoom: [],
-      listVerified: [
-        {
-          img: require("@/assets/images/imgRoom.jpg"),
-          nameCard: "Ký túc xá quận Thủ Đức",
-          address: "Quận Thủ Đức",
-          price: 1.6,
-        },
-        {
-          img: require("@/assets/images/imgRoom.jpg"),
-          nameCard: "Ký túc xá quận Thủ Đức",
-          address: "Quận Thủ Đức",
-          price: 1.6,
-        },
-        {
-          img: require("@/assets/images/imgRoom.jpg"),
-          nameCard: "Ký túc xá quận Thủ Đức",
-          address: "Quận Thủ Đức",
-          price: 1.6,
-        },
+      listCategory: [],
+      optionsGender: [
+        { text: 'Tất cả', value: '0' },
+        { text: 'Nam', value: '1' },
+        { text: 'Nữ', value: '2' }
       ],
-      listCategory: []
     };
   },
   computed: {
@@ -139,7 +98,7 @@ export default {
         category: "",
         utilities: [],
         noSex: "",
-        status: "",
+        status: "1",
         pageNumber: 0,
         pageSize: 10
       })
@@ -149,10 +108,10 @@ export default {
           return {
             id: item.room.id,
             uliti: item.utilities,
-            img: item.imgRoom[0].imgRoom,
-            nameRoom: item.room.description,
+            img: item.room.imgRoom,
+            nameRoom: item.room.name,
             typeRoom: item.room.category,
-            sex: item.room.noSex,
+            sex: item.room.noSex == 0 ? 'Tất cả' : item.room.noSex == 1 ? 'Nam' : item.room.noSex == 2 ? 'Nữ' : '',
             acreage: item.room.capacity,
             address: item.room.address,
             area: item.room.area,
@@ -195,10 +154,10 @@ export default {
           this.listRoom = response.data.slice(0, 5).map(item => {
             return {
               id: item.room.id,
-              img: item.imgRoom[0].imgRoom,
-              nameRoom: item.room.description,
+              img: item.room.imgRoom,
+              nameRoom: item.room.name,
               typeRoom: item.room.category,
-              sex: item.room.noSex,
+              sex: item.room.noSex == 0 ? 'Tất cả' : item.room.noSex == 1 ? 'Nam' : item.room.noSex == 2 ? 'Nữ' : '',
               acreage: item.room.capacity,
               address: item.room.address,
               area: item.room.area,
@@ -247,7 +206,6 @@ export default {
 .container_new_room {
   padding: 32px;
   border-radius: 20px;
-  width: 69%;
   box-shadow: 0 4px 12px 0 rgba(0, 0, 0, 0.08);
 }
 .title_new_room {

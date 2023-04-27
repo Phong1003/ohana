@@ -17,14 +17,15 @@
         <h4 class="mb-3">
           Chọn ảnh mô tả cho phòng <span class="text-danger">(*)</span>
         </h4>
-        <b-form-file
+        <!-- <b-form-file
           v-model="fileHolder"
           :state="true"
           placeholder="Choose a file..."
           drop-placeholder="Drop file here..."
           multiple
         >
-        </b-form-file>
+        </b-form-file> -->
+        <input type="file" id="fileInput" @change="handleUploadImg">
       </div>
       <div class="information__section mt-4">
         <div class="house__section px-0">
@@ -140,6 +141,20 @@
                 <b-form-select
                   v-model="roomInfo.category"
                   :options="listCategory"
+                  value-field="id"
+                  text-field="name"
+                >
+                </b-form-select>
+              </div>
+            </div>
+            <div class="house__info mt-4 d-flex">
+              <div class="d-flex flex-column col-6">
+                <p class="mb-0 field__name mb-2">
+                  GIỚI TÍNH <span class="text-danger">(*)</span>
+                </p>
+                <b-form-select
+                  v-model="roomInfo.noSex"
+                  :options="optionsGender"
                   value-field="id"
                   text-field="name"
                 >
@@ -281,6 +296,11 @@ export default {
         noSex: "",
         utilities: [],
       },
+      optionsGender: [
+        { name: 'Tất cả', id: '0' },
+        { name: 'Nam', id: '1' },
+        { name: 'Nữ', id: '2' }
+      ],
       response: {},
     };
   },
@@ -362,6 +382,15 @@ export default {
         console.log("error", error);
       }
     },
+    handleUploadImg(e){
+      let fileInput = e
+      const file = fileInput.target.files[0]
+      const reader = new FileReader()
+      reader.addEventListener("load", () => {
+        this.roomInfo.imgRoom.push(reader.result)
+      })
+      reader.readAsDataURL(file)
+    }
   },
 };
 </script>

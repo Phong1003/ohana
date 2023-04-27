@@ -115,9 +115,9 @@ export default {
         { text: '11tr-15tr', value: 'third' }
       ],
       optionsGender: [
-        { text: 'Tất cả', value: 'all' },
-        { text: 'Nam', value: 'man' },
-        { text: 'Nữ', value: 'woman' }
+        { text: 'Tất cả', value: '0' },
+        { text: 'Nam', value: '1' },
+        { text: 'Nữ', value: '2' }
       ],
       optionsUlities: [
         { item: '1', name: 'WC riêng' },
@@ -154,7 +154,7 @@ export default {
         category: "",
         utilities: [],
         noSex: "",
-        status: "",
+        status: "1",
         pageNumber: 0,
         pageSize: 10
       })
@@ -162,10 +162,10 @@ export default {
         this.listRoom = response.data.map(item => {
           return {
             id: item.room.id,
-            img: item.imgRoom[0].imgRoom,
-            nameRoom: item.room.description,
+            img: item.room.imgRoom,
+            nameRoom: item.room.name,
             typeRoom: item.room.category,
-            sex: item.room.noSex,
+            sex: item.room.noSex == 0 ? 'Tất cả' : item.room.noSex == 1 ? 'Nam' : item.room.noSex == 2 ? 'Nữ' : '',
             acreage: item.room.capacity,
             address: item.room.address,
             area: item.room.area,
@@ -210,9 +210,9 @@ export default {
             this.listRoom = response.data.map(item => {
               return {
                 img: item.imgRoom[0].imgRoom,
-                nameRoom: item.room.description,
+                nameRoom: item.room.name,
                 typeRoom: item.room.category,
-                sex: item.room.noSex,
+                sex: item.room.noSex == 0 ? 'Tất cả' : item.room.noSex == 1 ? 'Nam' : item.room.noSex == 2 ? 'Nữ' : '',
                 acreage: item.room.capacity,
                 address: item.room.address,
                 area: item.room.area,

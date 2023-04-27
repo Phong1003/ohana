@@ -82,12 +82,32 @@
                   <p class="field__value">{{ dataDetail.deposit }} VNĐ</p>
                 </div>
                 <div class="d-flex flex-column col-3">
-                  <p class="mb-0 field__name">SỨC CHỨA</p>
-                  <p class="field__value">{{ dataDetail.noSex }} Nam hoặc Nữ</p>
+                  <p class="mb-0 field__name">ĐỐI TƯỢNG CHO THUÊ</p>
+                  <p class="field__value">
+                    {{ dataDetail.noSex == 0 ? 'Tất cả' : dataDetail.noSex == 1 ? 'Nam' : dataDetail.noSex == 2 ? 'Nữ' : '' }}
+                  </p>
                 </div>
               </div>
-              <div class="house__status">
-                <div class="d-flex flex-column">
+              <div class="house__info mt-4 d-flex">
+                <div class="d-flex flex-column col-3">
+                  <p class="mb-0 field__name">GIÁ ĐIỆN</p>
+                  <p class="field__value">
+                    {{ dataDetail.electricprice }}
+                  </p>
+                </div>
+                <div class="d-flex flex-column col-3">
+                  <p class="mb-0 field__name">GIÁ NƯỚC</p>
+                  <p class="field__value">
+                    {{ dataDetail.waterprice }}
+                  </p>
+                </div>
+                <div class="d-flex flex-column col-3">
+                  <p class="mb-0 field__name">TIỀN TIỆN ÍCH</p>
+                  <p class="field__value">
+                    {{ dataDetail.otherprice }}
+                  </p>
+                </div>
+                <div class="d-flex flex-column col-3">
                   <p class="mb-0 field__name">TRẠNG THÁI</p>
                   <p class="field__value text-success status__value">
                     Còn phòng
@@ -243,18 +263,15 @@ export default {
     await this.handleGetData();
     for (const item of this.response.data) {
       if (item.room.id == this.$route.params.id) {
-        this.dataDetail = { ...item.room, uliti: item.utilities };
+        this.dataDetail = { ...item.room };
       }
     }
     console.log(this.dataDetail);
-    this.optionsUlities = this.dataDetail.uliti.map(el =>{
-      return this.optionsUlities.map(data =>{
-        if(el == data.item){
-          return data
-        }
-      })
-    })
-    console.log(this.optionsUlities);
+    this.optionsUlities = this.optionsUlities.map(el => {
+      if(this.dataDetail.utilities.includes(el.item)){
+        return el
+      }
+    }).filter(data => data != undefined)
   },
   methods: {
     async handleGetData() {

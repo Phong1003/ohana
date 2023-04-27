@@ -42,11 +42,7 @@
       <a target="_blank" class="info-contain" @click="routerDetails(item.id)">
         <div class="item__details my-3 d-flex justify-content-between">
           <div class="col-4">
-            <img
-              src="~/assets/images/TrungHoa-CG.jpg"
-              alt="house"
-              class="item__image"
-            />
+            <img :src="item.imgRoom" class="w-100 h-100"/>
           </div>
           <div class="col-8 px-0 d-flex flex-column">
             <div class="item__title">
