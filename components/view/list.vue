@@ -29,13 +29,22 @@
             <span>Xóa</span>
           </b-button>
         </div>
-        <div class="icon-action mr-2 h5 cursor-pointer" v-if="!item.status">
+        <div
+          class="icon-action mr-2 h5 cursor-pointer"
+          v-if="!item.status && checkRole == 'ADMIN'"
+        >
           <b-button
             @click="handleActiveRoom(item.id)"
             class="bg-primary border-primary"
           >
             <b-icon icon="check"></b-icon>
             <span>Xác nhận</span>
+          </b-button>
+        </div>
+        <div class="icon-action mr-2 h5 cursor-pointer" v-if="item.status">
+          <b-button class="bg-primary border-primary">
+            <b-icon icon="hand-thumbs-up"></b-icon>
+            <span>Đã xác nhận</span>
           </b-button>
         </div>
       </div>
@@ -46,7 +55,7 @@
           </div>
           <div class="col-8 px-0 d-flex flex-column">
             <div class="item__title">
-              <p>{{ item.description }}</p>
+              <p>{{ item.name }}</p>
             </div>
             <div class="d-flex">
               <div class="col-8 px-0 item__info">
@@ -105,6 +114,7 @@ export default {
       currentPage: 1,
       perPage: 3,
       listCategory: [],
+      checkRole: "",
     };
   },
   computed: {
@@ -121,6 +131,9 @@ export default {
   },
   async created() {
     await this.handleGetCategory();
+    if (typeof window !== "undefined") {
+      this.checkRole = sessionStorage.getItem("role");
+    }
   },
   methods: {
     handleReturnNameCategory(id) {
@@ -156,7 +169,7 @@ export default {
     },
     handleEditRoom(roomID) {
       this.$router.push({
-        name: "admin-id",
+        name: "Admin-id",
         params: { id: roomID, edit: true },
       });
     },
@@ -168,7 +181,7 @@ export default {
     },
     routerDetails(value) {
       this.$router.push({
-        name: "admin-id",
+        name: "Admin-id",
         params: { id: value, edit: false },
       });
     },

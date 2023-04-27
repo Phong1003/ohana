@@ -20,16 +20,7 @@ import { mapGetters, mapActions } from "vuex";
 export default {
   data() {
     return {
-      listSideBar: [
-        {
-          id: 1,
-          title: "Quản lý phòng trọ",
-        },
-        {
-          id: 2,
-          title: "Quản lý tài khoản",
-        },
-      ],
+      listSideBar: [],
     };
   },
   computed: {
@@ -37,6 +28,34 @@ export default {
   },
   methods: {
     ...mapActions("admin", ["handleChangeTabIndex"]),
+  },
+  created() {
+    if (typeof window !== "undefined") {
+      const ROLE = sessionStorage.getItem("role");
+      if (ROLE && ROLE == "ADMIN") {
+        this.listSideBar.push(
+          {
+            id: 1,
+            title: "Quản lý phòng trọ",
+          },
+          {
+            id: 2,
+            title: "Quản lý tài khoản",
+          }
+        );
+      } else if (ROLE && ROLE == "USER") {
+        this.listSideBar.push(
+          {
+            id: 1,
+            title: "Phòng của bạn",
+          },
+          {
+            id: 2,
+            title: "Tài khoản của bạn",
+          }
+        );
+      }
+    }
   },
 };
 </script>
