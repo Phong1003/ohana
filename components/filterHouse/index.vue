@@ -1,7 +1,7 @@
 <template>
   <div class="container_filter p-3 bg-white d-flex">
-    <input class="input_filter border-0" placeholder="Tìm kiếm theo địa điểm, quận, tên đường..." />
-    <b-icon class="mr-2 icon_search" icon="search" />
+    <input class="input_filter border-0" v-model="searchInfor" placeholder="Tìm kiếm theo địa điểm, quận, tên đường..." />
+    <b-icon class="mr-2 icon_search" icon="search" @click="handleSearch" />
   </div>
 </template>
 
@@ -9,7 +9,12 @@
 export default {
   data(){
     return {
-      
+      searchInfor: ''
+    }
+  },
+  methods: {
+    handleSearch(){
+      this.$emit('searchRoom', this.searchInfor)
     }
   }
 }

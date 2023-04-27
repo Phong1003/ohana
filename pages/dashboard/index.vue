@@ -3,12 +3,12 @@
     <div class="banner_dashboard">
       <div class="d-flex justify-content-between">
         <img src="~/assets/icon/logoBanner.svg" alt="OhanaLogo" />
-        <div class="text-white create_room" v-if="role == 'ADMIN' || role == 'USER'">Đăng phòng</div>
+        <div class="text-white create_room" v-if="role == 'ADMIN' || role == 'USER'" @click="createNewRoom">Đăng phòng</div>
       </div>
       <div class="description_banner text-white mb-2 w-50">
         Ứng dụng tìm kiếm phòng trọ miễn phí cho người đi thuê hàng đầu Việt Nam
       </div>
-      <FilterHouse class="filter_dashboard" />
+      <FilterHouse @searchRoom="searchRoom" class="filter_dashboard" />
     </div>
     <div class="content_dashboard">
       <div class="search_trends mb-4">Xu hướng tìm kiếm</div>
@@ -120,6 +120,7 @@ export default {
           price: 1.6,
         },
       ],
+      listCategory: []
     };
   },
   computed: {
@@ -136,16 +137,18 @@ export default {
         searchQuery: "",
         price: "",
         category: "",
-        utilities: "",
+        utilities: [],
         noSex: "",
         status: "",
         pageNumber: 0,
         pageSize: 10
       })
+      console.log(response);
       if(response && response.data.length){
-        this.listRoom = response.data.map(item => {
+        this.listRoom = response.data.slice(0, 5).map(item => {
           return {
             id: item.room.id,
+            uliti: item.utilities,
             img: item.imgRoom[0].imgRoom,
             nameRoom: item.room.description,
             typeRoom: item.room.category,
@@ -156,6 +159,7 @@ export default {
             price: new Intl.NumberFormat().format(item.room.price)
           }
         })
+        console.log(this.listRoom);
       }
     } catch (error) {
       console.log(error);
@@ -171,6 +175,40 @@ export default {
     },
     routerDetails(item) {
       this.$router.push({ name: 'dashboard-id', params: { id: item.id } });
+    },
+    createNewRoom() {
+      this.$router.push({ name: "create" });
+    },
+    async searchRoom(value) {
+      try {
+        const response = await search({
+          searchQuery: value,
+          price: "",
+          category: "",
+          utilities: [],
+          noSex: "",
+          status: "",
+          pageNumber: 0,
+          pageSize: 10
+        })
+        if(response && response.data.length){
+          this.listRoom = response.data.slice(0, 5).map(item => {
+            return {
+              id: item.room.id,
+              img: item.imgRoom[0].imgRoom,
+              nameRoom: item.room.description,
+              typeRoom: item.room.category,
+              sex: item.room.noSex,
+              acreage: item.room.capacity,
+              address: item.room.address,
+              area: item.room.area,
+              price: new Intl.NumberFormat().format(item.room.price)
+            }
+          })
+        }
+      } catch (error) {
+        console.log(error);
+      }
     }
   }
 }
@@ -187,6 +225,7 @@ export default {
 .create_room {
   font-size: 20px;
   font-weight: 700;
+  cursor: pointer;
 }
 .description_banner {
   font-size: 32px;

@@ -38,13 +38,14 @@
           <b-icon :class="{'rotateRoom': roomActive ? true : false}" icon="chevron-right"></b-icon>
         </b-button>
         <b-collapse id="collapse-3" class="mt-2 px-4">
-          <b-form-checkbox-group
-            v-model="typeHouse"
-            :options="optionsHouse"
-            class="mb-3"
-            value-field="item1"
-            text-field="name1"
-          ></b-form-checkbox-group>
+          <b-form-group >
+            <b-form-radio-group
+              v-model="categoryRadio"
+              :options="listCategory"
+              name="radios-category"
+              stacked
+            ></b-form-radio-group>
+          </b-form-group>
         </b-collapse>
         <b-button class="d-flex align-items-center justify-content-between px-4" @click="gender" v-b-toggle.collapse-4>
           <div>Giới tính</div>
@@ -61,7 +62,7 @@
           </b-form-group>
         </b-collapse>
       </div>
-      <div class="d-flex align-items-center justify-content-center py-4" style="font-size: 16px; color: #4877F8; cursor: pointer;">
+      <div @click="applyFilter" class="d-flex align-items-center justify-content-center py-4" style="font-size: 16px; color: #4877F8; cursor: pointer;">
         Áp dụng
       </div>
     </div>
@@ -69,8 +70,20 @@
       <div class="d-flex justify-content-between align-items-center" style="margin-bottom: 32px;">
         <div class="title_new_room">Phòng mới nhất</div>
       </div>
-      <div class="content_room" v-for="(item, index) in listRoom" :key="index">
+      <div class="content_room" v-for="(item, index) in lists" :key="index" @click="routerDetails(item)">
         <CardRoom :contentRoom="item" />
+      </div>
+      <div class="overflow-auto d-flex justify-content-center mt-3">
+        <b-pagination
+          :total-rows="totalRows"
+          v-model="currentPage"
+          :per-page="perPage"
+          first-text="First"
+          prev-text="Prev"
+          next-text="Next"
+          last-text="Last"
+          @page-click="handleChangePage"
+        />
       </div>
     </div>
   </div>
@@ -79,6 +92,7 @@
 <script>
 import CardRoom from '@/components/listRoom/index.vue'
 import {search} from "../../../api/dashboard/index"
+import {categoryApi} from "../../../api/auth/index"
 export default {
   layout: "defaults",
   components: {CardRoom},
@@ -88,11 +102,13 @@ export default {
       utilitiesActive: false,
       roomActive: false,
       genderActive: false,
+      currentPage: 1,
+      perPage: 5,
       listRoom: [],
       priceRadio: "",
+      categoryRadio: "",
       genderRadio: "",
       ulitiesCheck: [],
-      typeHouse: [],
       optionsPrice: [
         { text: '1tr-5tr', value: 'first' },
         { text: '6tr-10tr', value: 'second' },
@@ -104,37 +120,48 @@ export default {
         { text: 'Nữ', value: 'woman' }
       ],
       optionsUlities: [
-        { item: 'WC riêng', name: 'WC riêng' },
-        { item: 'Chỗ để xe', name: 'Chỗ để xe' },
-        { item: 'Cửa sổ', name: 'Cửa sổ' },
-        { item: 'An ninh', name: 'An ninh' },
-        { item: 'Wifi', name: 'Wifi' }
+        { item: '1', name: 'WC riêng' },
+        { item: '2', name: 'Wifi' },
+        { item: '3', name: 'An ninh' },
+        { item: '4', name: 'Cửa sổ' }
       ],
-      optionsHouse: [
-        { item1: 'Tất cả', name1: 'Tất cả' },
-        { item1: 'Phòng cho thuê', name1: 'Phòng cho thuê' },
-        { item1: 'Phòng ở ghép', name1: 'Phòng ở ghép' },
-        { item1: 'kí túc xá', name1: 'kí túc xá' },
-        { item1: 'Nhà nguyên căn', name1: 'Nhà nguyên căn' },
-        { item1: 'Căn hộ', name1: 'Căn hộ' }
-      ]
+      listCategory: [
+        {
+          text: '',
+          value: ''
+        }
+      ],
     }
   },
+  computed:{
+    lists() {
+      const items = [...this.listRoom];
+      return items.slice(
+        (this.currentPage - 1) * this.perPage,
+        this.currentPage * this.perPage
+      );
+    },
+    totalRows() {
+      return this.listRoom.length;
+    },
+  },
   async created(){
+    await this.handleGetCategory()
     try {
       const response = await search({
         searchQuery: "",
         price: "",
         category: "",
-        utilities: "",
+        utilities: [],
         noSex: "",
         status: "",
-        pageNumber: 10,
-        pageSize: 0
+        pageNumber: 0,
+        pageSize: 10
       })
       if(response && response.data.length){
         this.listRoom = response.data.map(item => {
           return {
+            id: item.room.id,
             img: item.imgRoom[0].imgRoom,
             nameRoom: item.room.description,
             typeRoom: item.room.category,
@@ -163,12 +190,15 @@ export default {
     gender(){
       this.genderActive = !this.genderActive
     },
+    routerDetails(item) {
+      this.$router.push({ name: 'viewAll-newRoom-id', params: { id: item.id } });
+    },
     async applyFilter(){
       try {
         const response = await search({
           searchQuery: "",
           price: this.priceRadio,
-          category: this.typeHouse,
+          category: this.categoryRadio,
           utilities: this.ulitiesCheck,
           noSex: this.genderRadio,
           status: "",
@@ -197,7 +227,21 @@ export default {
       } catch(error) {
         console.log(error);
       }
-    }
+    },
+    async handleGetCategory() {
+      try {
+        const response = await categoryApi();
+        this.listCategory = response.data.map(item => {
+          return {
+            text: item.name,
+            value: item.id
+          }
+        });
+        console.log(this.listCategory);
+      } catch (error) {
+        console.log("error", error);
+      }
+    },
   }
 }
 </script>

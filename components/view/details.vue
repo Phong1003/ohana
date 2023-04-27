@@ -114,38 +114,13 @@
                 <p class="mb-0">Tiện ích</p>
               </div>
               <div class="mt-3 d-flex flex-wrap">
-                <div class="col-3 h-100 d-flex justify-content-start mt-4">
+                <div class="col-3 h-100 d-flex justify-content-start mt-4" v-for="(item, index) in optionsUlities" :key="index">
                   <img
-                    src="~/assets/icon/toilet.svg"
+                    :src="item.img"
                     alt="toilet"
                     class="icon__custom"
                   />
-                  <span class="icon__title">WC riêng</span>
-                </div>
-                <div class="col-3 h-100 d-flex justify-content-start mt-4">
-                  <img
-                    src="~/assets/icon/wifi.svg"
-                    alt="wifi"
-                    class="icon__custom"
-                  />
-                  <span class="icon__title">Wifi</span>
-                </div>
-
-                <div class="col-3 h-100 d-flex justify-content-start mt-4">
-                  <img
-                    src="~/assets/icon/police-officer.svg"
-                    alt="police-officer"
-                    class="icon__custom"
-                  />
-                  <span class="icon__title">An ninh</span>
-                </div>
-                <div class="col-3 h-100 d-flex justify-content-start mt-4">
-                  <img
-                    src="~/assets/icon/window.svg"
-                    alt="window"
-                    class="icon__custom"
-                  />
-                  <span class="icon__title">Cửa sổ</span>
+                  <span class="icon__title">{{item.name}}</span>
                 </div>
               </div>
             </div>
@@ -255,6 +230,12 @@ export default {
       dataDetail: "",
       response: "",
       isShowEdit: false,
+      optionsUlities: [
+        { item: '1', name: 'WC riêng', img: require('@/assets/icon/toilet.svg') },
+        { item: '2', name: 'Wifi', img: require('@/assets/icon/wifi.svg') },
+        { item: '3', name: 'An ninh', img: require('@/assets/icon/police-officer.svg') },
+        { item: '4', name: 'Cửa sổ', img: require('@/assets/icon/window.svg') }
+      ],
     };
   },
   async created() {
@@ -262,9 +243,18 @@ export default {
     await this.handleGetData();
     for (const item of this.response.data) {
       if (item.room.id == this.$route.params.id) {
-        this.dataDetail = { ...item.room };
+        this.dataDetail = { ...item.room, uliti: item.utilities };
       }
     }
+    console.log(this.dataDetail);
+    this.optionsUlities = this.dataDetail.uliti.map(el =>{
+      return this.optionsUlities.map(data =>{
+        if(el == data.item){
+          return data
+        }
+      })
+    })
+    console.log(this.optionsUlities);
   },
   methods: {
     async handleGetData() {

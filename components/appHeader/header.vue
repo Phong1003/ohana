@@ -48,7 +48,7 @@ export default {
       this.$router.push({name: 'login'})
     },
     admin(){
-      this.$router.push({name: 'admin'})
+      this.$router.push({name: 'Admin'})
     }
   }
 };
