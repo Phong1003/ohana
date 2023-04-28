@@ -13,7 +13,7 @@
       <div class="action-contain pt-2 px-3 d-flex">
         <div class="icon-action mr-2 h5 cursor-pointer">
           <b-button
-            @click="handleEditRoom(item.id)"
+            @click="handleEditRoom(item.room.id)"
             class="bg-success border-success"
           >
             <b-icon icon="pencil-square"> </b-icon>
@@ -22,7 +22,7 @@
         </div>
         <div class="icon-action mr-2 h5 cursor-pointer">
           <b-button
-            @click="handleDeleteRoom(item.id)"
+            @click="handleDeleteRoom(item.room.id)"
             class="bg-danger border-danger"
           >
             <b-icon icon="trash"></b-icon>
@@ -31,57 +31,63 @@
         </div>
         <div
           class="icon-action mr-2 h5 cursor-pointer"
-          v-if="!item.status && checkRole == 'ADMIN'"
+          v-if="!item.room.status && checkRole == 'ADMIN'"
         >
           <b-button
-            @click="handleActiveRoom(item.id)"
+            @click="handleActiveRoom(item.room.id)"
             class="bg-primary border-primary"
           >
             <b-icon icon="check"></b-icon>
             <span>Xác nhận</span>
           </b-button>
         </div>
-        <div class="icon-action mr-2 h5 cursor-pointer" v-if="item.status">
+        <div class="icon-action mr-2 h5 cursor-pointer" v-if="item.room.status">
           <b-button class="bg-primary border-primary">
             <b-icon icon="hand-thumbs-up"></b-icon>
             <span>Đã xác nhận</span>
           </b-button>
         </div>
       </div>
-      <a target="_blank" class="info-contain" @click="routerDetails(item.id)">
+      <a
+        target="_blank"
+        class="info-contain"
+        @click="routerDetails(item.room.id)"
+      >
         <div class="item__details my-3 d-flex justify-content-between">
           <div class="col-4">
-            <img :src="item.imgRoom" class="w-100 h-100"/>
+            <img :src="item.imgRoom" class="w-100 img__custom h-100" />
           </div>
           <div class="col-8 px-0 d-flex flex-column">
             <div class="item__title">
-              <p>{{ item.name }}</p>
+              <p>{{ item.room.name }}</p>
             </div>
             <div class="d-flex">
               <div class="col-8 px-0 item__info">
-                <div class="mb-3">
+                <div class="mb-4">
                   <b-icon icon="house"></b-icon>
-                  <span> {{ handleReturnNameCategory(item.category) }} </span>
+                  <span>
+                    {{ handleReturnNameCategory(item.room.category) }}
+                  </span>
                 </div>
-                <div class="mb-3">
+                <div class="mb-4">
                   <b-icon icon="people"></b-icon>
                   <span class="mr-3"> Nam & Nữ</span>
                   <b-icon icon="rulers"></b-icon>
-                  <span>{{ item.capacity }}</span>
+                  <span>{{ item.room.capacity }}</span>
                 </div>
                 <div
                   :id="'location' + `${index}`"
                   class="d-flex align-items-center"
                 >
                   <b-icon icon="pin-map" class="mr-1"></b-icon>
-                  <span class="item__location">{{ item.address }}</span>
+                  <span class="item__location">{{ item.room.address }}</span>
                   <b-tooltip :target="'location' + `${index}`"
-                    >{{ item.address }}
+                    >{{ item.room.address }}
                   </b-tooltip>
                 </div>
               </div>
               <div class="col-4 item__price d-flex align-items-center price">
-                {{ new Intl.NumberFormat().format(item.price) }}/
+                {{ new Intl.NumberFormat().format(item.room.price) }}/
                 <span style="font-size: 20px">phòng</span>
               </div>
             </div>
@@ -108,25 +114,26 @@
 import { categoryApi, activeRoom } from "../../api/auth/index";
 
 export default {
-  props: ["showList"],
+  props: ["listHouse"],
   data() {
     return {
       currentPage: 1,
       perPage: 3,
       listCategory: [],
       checkRole: "",
+      listImg: [],
     };
   },
   computed: {
     lists() {
-      const items = this.showList;
+      const items = this.listHouse;
       return items.slice(
         (this.currentPage - 1) * this.perPage,
         this.currentPage * this.perPage
       );
     },
     totalRows() {
-      return this.showList.length;
+      return this.listHouse.length;
     },
   },
   async created() {

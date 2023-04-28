@@ -17,17 +17,29 @@
         <h4 class="mb-3">
           Chọn ảnh mô tả cho phòng <span class="text-danger">(*)</span>
         </h4>
-        <!-- <b-form-file
-          v-model="fileHolder"
-          :state="true"
-          placeholder="Choose a file..."
-          drop-placeholder="Drop file here..."
-          multiple
-        >
-        </b-form-file> -->
-        <input type="file" id="fileInput" @change="handleUploadImg">
+        <div>
+          <input
+            type="file"
+            id="fileInput"
+            multiple
+            @change="handleUploadImg"
+          />
+          <div v-if="imgList.length" class="d-flex">
+            <div
+              v-for="(item, index) in imgList"
+              :key="index"
+              class="mr-2 mt-3 cursor_pointer"
+              @click="removeItem(index)"
+            >
+              <img :src="item" class="mr-2 custom__upload" />
+            </div>
+          </div>
+        </div>
       </div>
-      <div class="information__section mt-4">
+      <div
+        class="information__section mt-4"
+        :class="imgList.length ? 'custom_height' : ''"
+      >
         <div class="house__section px-0">
           <div class="house__detail mb-4">
             <div class="house__title d-flex align-items-center">
@@ -296,10 +308,11 @@ export default {
         noSex: "",
         utilities: [],
       },
+      imgList: [],
       optionsGender: [
-        { name: 'Tất cả', id: '0' },
-        { name: 'Nam', id: '1' },
-        { name: 'Nữ', id: '2' }
+        { name: "Tất cả", id: "0" },
+        { name: "Nam", id: "1" },
+        { name: "Nữ", id: "2" },
       ],
       response: {},
     };
@@ -311,24 +324,28 @@ export default {
         if (item.room.id == this.$route.params.id) {
           this.roomInfo = { ...item.room };
           this.roomInfo.utilities = item.utilities;
+          if (item.room.imgRoom) {
+            this.imgList.push(item.room.imgRoom);
+          }
         }
       }
     }
     await this.handleGetCategory();
   },
   methods: {
+    removeItem(index) {
+      this.imgList.splice(index, 1);
+    },
     async handleEditHome() {
       window.scrollTo({ top: 0, behavior: "smooth" });
       try {
-        await editRoomsApi({
+        const params = {
           ...this.roomInfo,
+          imgRoom: this.imgList,
           utilities:
             this.roomInfo.utilities == null ? [] : this.roomInfo.utilities,
-          imgRoom:
-            this.roomInfo.imgRoom == null || !this.roomInfo.imgRoom
-              ? []
-              : this.roomInfo.imgRoom,
-        });
+        };
+        await editRoomsApi(params);
       } catch (error) {
         console.log("error", error);
       }
@@ -352,7 +369,11 @@ export default {
     async handleAddNewHome() {
       try {
         window.scrollTo({ top: 0, behavior: "smooth" });
-        const res = await createApi(this.roomInfo);
+        const params = {
+          ...this.roomInfo,
+          imgRoom: this.imgList,
+        };
+        const res = await createApi(params);
         if (res.status == 200) {
           this.$router.go(-1);
         }
@@ -382,15 +403,18 @@ export default {
         console.log("error", error);
       }
     },
-    handleUploadImg(e){
-      let fileInput = e
-      const file = fileInput.target.files[0]
-      const reader = new FileReader()
-      reader.addEventListener("load", () => {
-        this.roomInfo.imgRoom.push(reader.result)
-      })
-      reader.readAsDataURL(file)
-    }
+    handleUploadImg(e) {
+      let fileInput = e;
+      const length = fileInput.target.files.length;
+      for (let i = 0; i < length; i++) {
+        const file = fileInput.target.files[i];
+        const reader = new FileReader();
+        reader.addEventListener("load", () => {
+          this.imgList.push(reader.result);
+        });
+        reader.readAsDataURL(file);
+      }
+    },
   },
 };
 </script>

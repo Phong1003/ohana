@@ -46,7 +46,7 @@
       </div>
       <div class="content__section mb-3">
         <div class="title__cover d-flex justify-content-between">
-          <p class="title">{{ dataDetail.name }}</p>
+          <p class="title">{{ dataDetail.room?.name }}</p>
           <div class="h3 cursor-pointer mr-3">
             <b-button class="bg-primary border-primary">
               <b-icon icon="box-arrow-up-right"></b-icon>
@@ -69,22 +69,30 @@
               <div class="house__info mt-4 d-flex">
                 <div class="d-flex flex-column col-3">
                   <p class="mb-0 field__name">GIÁ PHÒNG</p>
-                  <p class="field__value">{{ dataDetail.price }} VNĐ</p>
+                  <p class="field__value">{{ dataDetail.room?.price }} VNĐ</p>
                 </div>
                 <div class="d-flex flex-column col-3">
                   <p class="mb-0 field__name">DIỆN TÍCH</p>
                   <p class="field__value">
-                    {{ dataDetail.capacity }} mét vuông
+                    {{ dataDetail.room?.capacity }} mét vuông
                   </p>
                 </div>
                 <div class="d-flex flex-column col-3">
                   <p class="mb-0 field__name">ĐẶT CỌC</p>
-                  <p class="field__value">{{ dataDetail.deposit }} VNĐ</p>
+                  <p class="field__value">{{ dataDetail.room?.deposit }} VNĐ</p>
                 </div>
                 <div class="d-flex flex-column col-3">
                   <p class="mb-0 field__name">ĐỐI TƯỢNG CHO THUÊ</p>
                   <p class="field__value">
-                    {{ dataDetail.noSex == 0 ? 'Tất cả' : dataDetail.noSex == 1 ? 'Nam' : dataDetail.noSex == 2 ? 'Nữ' : '' }}
+                    {{
+                      dataDetail.room?.noSex == 0
+                        ? "Tất cả"
+                        : dataDetail.room?.noSex == 1
+                        ? "Nam"
+                        : dataDetail.room?.noSex == 2
+                        ? "Nữ"
+                        : ""
+                    }}
                   </p>
                 </div>
               </div>
@@ -92,19 +100,19 @@
                 <div class="d-flex flex-column col-3">
                   <p class="mb-0 field__name">GIÁ ĐIỆN</p>
                   <p class="field__value">
-                    {{ dataDetail.electricprice }}
+                    {{ dataDetail.room?.electricprice }}
                   </p>
                 </div>
                 <div class="d-flex flex-column col-3">
                   <p class="mb-0 field__name">GIÁ NƯỚC</p>
                   <p class="field__value">
-                    {{ dataDetail.waterprice }}
+                    {{ dataDetail.room?.waterprice }}
                   </p>
                 </div>
                 <div class="d-flex flex-column col-3">
                   <p class="mb-0 field__name">TIỀN TIỆN ÍCH</p>
                   <p class="field__value">
-                    {{ dataDetail.otherprice }}
+                    {{ dataDetail.room?.otherprice }}
                   </p>
                 </div>
                 <div class="d-flex flex-column col-3">
@@ -118,7 +126,7 @@
                 <div class="d-flex flex-column">
                   <p class="mb-0 field__name">ĐỊA CHỈ</p>
                   <p class="field__value">
-                    {{ dataDetail.address }}, {{ dataDetail.area }}
+                    {{ dataDetail.room?.address }}, {{ dataDetail.room?.area }}
                   </p>
                 </div>
               </div>
@@ -134,13 +142,13 @@
                 <p class="mb-0">Tiện ích</p>
               </div>
               <div class="mt-3 d-flex flex-wrap">
-                <div class="col-3 h-100 d-flex justify-content-start mt-4" v-for="(item, index) in optionsUlities" :key="index">
-                  <img
-                    :src="item.img"
-                    alt="toilet"
-                    class="icon__custom"
-                  />
-                  <span class="icon__title">{{item.name}}</span>
+                <div
+                  class="col-3 h-100 d-flex justify-content-start mt-4"
+                  v-for="(item, index) in optionsUlities"
+                  :key="index"
+                >
+                  <img :src="item.img" alt="toilet" class="icon__custom" />
+                  <span class="icon__title">{{ item.name }}</span>
                 </div>
               </div>
             </div>
@@ -215,16 +223,18 @@
                   class="avatar__cover"
                 />
                 <div class="contact">
-                  <span class="mb-0 mr-2">{{ dataDetail.houseowner }}</span>
+                  <span class="mb-0 mr-2">{{
+                    dataDetail.room?.houseowner
+                  }}</span>
                   <div class="d-flex flex-column mr-2">
                     <span>SĐT:</span>
-                    <span> {{ dataDetail.ownerphone }} </span>
+                    <span> {{ dataDetail.room?.ownerphone }} </span>
                   </div>
                 </div>
                 <div class="d-flex created_date ml-3 mb-2 align-items-end">
                   <div class="d-flex flex-column mr-2">
-                    <span>SĐT:</span>
-                    <span> {{ dataDetail.ownerphone }} </span>
+                    <span>Ngày đăng:</span>
+                    <span> {{ dataDetail.room?.ownerphone }} </span>
                   </div>
                 </div>
               </div>
@@ -247,7 +257,7 @@ export default {
   },
   data() {
     return {
-      dataDetail: "",
+      dataDetail: {},
       response: "",
       isShowEdit: false,
       optionsUlities: [
@@ -263,12 +273,11 @@ export default {
     await this.handleGetData();
     for (const item of this.response.data) {
       if (item.room.id == this.$route.params.id) {
-        this.dataDetail = { ...item.room };
+        this.dataDetail = item;
       }
     }
-    console.log(this.dataDetail);
     this.optionsUlities = this.optionsUlities.map(el => {
-      if(this.dataDetail.utilities.includes(el.item)){
+      if(this.dataDetail.utilities?.includes(el.item)){
         return el
       }
     }).filter(data => data != undefined)
