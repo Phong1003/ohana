@@ -1,41 +1,39 @@
 <template>
   <div class="container_header">
     <div
-      class="header__nav d-flex justify-content-end align-items-center text-white pr-4"
+      class="header__nav d-flex justify-content-between align-items-center text-white pr-4"
     >
-      <div class="mr-2" style="cursor: pointer" @click="gotoDashboard">
-        Trang chủ
-      </div>
-      <div>|</div>
-      <div class="ml-2" style="cursor: pointer" @click="login" v-if="!role">
-        Đăng nhập/Đăng ký
-      </div>
-      <div
-        class="ml-2"
+      <img
+        src="~/assets/icon/logoBanner.svg"
         style="cursor: pointer"
-        @click="admin"
-        v-if="role == 'ADMIN'"
-      >
-        Admin
-      </div>
-      <div
-        class="ml-2"
-        style="cursor: pointer"
-        @click="toUser"
-        v-if="role == 'USER'"
-      >
-        {{ userName }}
-      </div>
-    </div>
-    <div class="header__search">
-      <div class="search__contain d-flex align-items-center">
-        <img
-          src="~/assets/icon/ohanaLogo.svg"
+        class="pl-4"
+        alt="OhanaLogo"
+        @click="gotoDashboard"
+      />
+      <div class="d-flex justify-content-end align-items-center text-white pr-4">
+        <div class="mr-2" style="cursor: pointer" @click="gotoDashboard">
+          Trang chủ
+        </div>
+        <div>|</div>
+        <div class="ml-2" style="cursor: pointer" @click="login" v-if="!role">
+          Đăng nhập/Đăng ký
+        </div>
+        <div
+          class="ml-2"
           style="cursor: pointer"
-          alt="OhanaLogo"
-          @click="gotoDashboard"
-        />
-        <FilterHouse class="filter_house" />
+          @click="admin"
+          v-if="role == 'ADMIN'"
+        >
+          Admin
+        </div>
+        <div
+          class="ml-2"
+          style="cursor: pointer"
+          @click="toUser"
+          v-if="role == 'USER'"
+        >
+          {{ userName }}
+        </div>
       </div>
     </div>
   </div>
@@ -96,7 +94,7 @@ export default {
 }
 .header__nav {
   height: 60px;
-  /* position: fixed; */
+  position: fixed;
   opacity: 1;
   background: #f7346f;
   top: 0px;

@@ -28,5 +28,6 @@ export default {
 }
 .nuxt_class{
   background-color: ghostwhite;
+  margin-top: 60px;
 }
 </style>
