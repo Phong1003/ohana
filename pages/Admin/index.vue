@@ -85,4 +85,13 @@ export default {
 .sidebar-space {
   margin-right: 30px;
 }
+.contain__tab {
+  background-color: #fff;
+  width: 100%;
+  height: 50px;
+  border-radius: 10px;
+}
+.cursor_pointer {
+  cursor: pointer;
+}
 </style>

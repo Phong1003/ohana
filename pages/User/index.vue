@@ -6,7 +6,7 @@
           <Sidebar class="sidebar-space" />
           <ListComponent
             v-if="tabIndex == 1"
-            :showList="listHouseForRent"
+            :listHouse="listHouseForRent"
             @handleDeleteRoom="handleDeleteRoom"
           />
           <MyAccount v-if="tabIndex == 2" />
@@ -22,7 +22,7 @@ import ListComponent from "../../components/view/list.vue";
 import MyAccount from "../../components/view/myAccount.vue";
 import AuthWrapper from "../../components/authWrapper/index.vue";
 import { mapGetters } from "vuex";
-import { search } from "../../api/dashboard/index";
+import { search, searchUser } from "../../api/dashboard/index";
 import { deleteRoom } from "../../api/auth/index";
 
 export default {
@@ -44,13 +44,13 @@ export default {
   methods: {
     async handleGetData() {
       try {
-        const response = await search({
+        const response = await searchUser({
           searchQuery: "",
           price: "",
           category: "",
           utilities: [],
           noSex: "",
-          status: "0",
+          status: "",
           pageNumber: 0,
           pageSize: 10,
           price: "",
