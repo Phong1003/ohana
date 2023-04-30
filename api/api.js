@@ -3,7 +3,7 @@ import { LocalStorageKey } from "../constants/common";
 
 const defaultAxiosConfig = {
   baseURL: process.env.API_URL,
-  timeout: 30000,
+  timeout: 60000,
 };
 
 const api = axios.create({

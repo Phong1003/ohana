@@ -117,6 +117,7 @@
 
 <script>
 import { categoryApi, activeRoom } from "../../api/auth/index";
+import { mapGetters, mapActions } from "vuex";
 
 export default {
   props: ["listHouse"],
@@ -131,6 +132,7 @@ export default {
     };
   },
   computed: {
+    ...mapGetters("admin", ["roomDetails"]),
     lists() {
       const items = this.listHouse;
       if (items.length) {
@@ -158,6 +160,7 @@ export default {
     }
   },
   methods: {
+    ...mapActions("admin", ["handleGetRoomDetails"]),
     handleReturnNameCategory(id) {
       const data = this.listCategory.find((el) => el.id == id);
       if (data) {
@@ -190,6 +193,8 @@ export default {
       this.$router.push({ name: "create" });
     },
     handleEditRoom(roomID) {
+      const selectedHouse = this.listHouse.find((el) => el.room.id == roomID);
+      this.handleGetRoomDetails(selectedHouse);
       this.$router.push({
         name: "Admin-id",
         params: { id: roomID, edit: true },
@@ -202,6 +207,8 @@ export default {
       window.scrollTo({ top: 0, behavior: "smooth" });
     },
     routerDetails(value) {
+      const selectedHouse = this.listHouse.find((el) => el.room.id == value);
+      this.handleGetRoomDetails(selectedHouse);
       this.$router.push({
         name: "Admin-id",
         params: { id: value, edit: false },
