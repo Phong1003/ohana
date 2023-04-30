@@ -1,6 +1,6 @@
 <template>
   <div class="house__detail__container">
-    <b-overlay :show="isLoading" rounded="sm">
+    <b-overlay :show="roomInfo" rounded="sm">
       <div class="content__section mb-3">
         <div class="title">
           <p class="h2">Tạo phòng mới!</p>
@@ -286,12 +286,10 @@
 <script>
 import { createApi, categoryApi, editRoomsApi } from "../../../api/auth/index";
 import { search } from "../../../api/dashboard";
-import { mapGetters } from "vuex";
 
 export default {
   data() {
     return {
-      isLoading: true,
       listCategory: [],
       fileHolder: [],
       roomInfo: {
@@ -321,15 +319,18 @@ export default {
       response: {},
     };
   },
-  computed: {
-    ...mapGetters("admin", ["roomDetails"]),
-  },
   async created() {
-    this.roomInfo = { ...this.roomDetails.room };
-    this.roomInfo.utilities = this.roomDetails.utilities;
-    this.imgList = this.roomDetails.imgRoom;
-    if (Object.keys(this.roomInfo)) {
-      this.isLoading = false;
+    if (this.$route.params.edit) {
+      await this.handleGetData();
+      for (const item of this.response.data) {
+        if (item.room.id == this.$route.params.id) {
+          this.roomInfo = { ...item.room };
+          this.roomInfo.utilities = item.utilities;
+          if (item.room.imgRoom) {
+            this.imgList.push(item.room.imgRoom);
+          }
+        }
+      }
     }
     await this.handleGetCategory();
   },
@@ -349,6 +350,22 @@ export default {
         await editRoomsApi(params);
       } catch (error) {
         console.log("error", error);
+      }
+    },
+    async handleGetData() {
+      try {
+        this.response = await search({
+          searchQuery: "",
+          price: "",
+          category: "",
+          utilities: [],
+          noSex: "",
+          status: "",
+          pageNumber: 0,
+          pageSize: 10,
+        });
+      } catch (error) {
+        console.log(error);
       }
     },
     async handleAddNewHome() {

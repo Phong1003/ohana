@@ -1,7 +1,7 @@
 <template>
   <div class="house__detail__container">
     <div v-if="!isShowEdit">
-      <b-overlay :show="isLoading" rounded="sm">
+      <b-overlay :show="dataDetail" rounded="sm">
         <div class="image__container mb-4 d-flex justify-content-center">
           <div class="col-6 px-0 image__first mr-1">
             <img
@@ -245,7 +245,6 @@
 <script>
 import { search } from "../../api/dashboard";
 import EditHome from "../../components/view/create/newHome.vue";
-import { mapGetters } from "vuex";
 
 export default {
   components: {
@@ -254,43 +253,48 @@ export default {
   data() {
     return {
       dataDetail: {},
-      isLoading: true,
       response: "",
       isShowEdit: false,
       optionsUlities: [
-        {
-          item: "1",
-          name: "WC riêng",
-          img: require("@/assets/icon/toilet.svg"),
-        },
-        { item: "2", name: "Wifi", img: require("@/assets/icon/wifi.svg") },
-        {
-          item: "3",
-          name: "An ninh",
-          img: require("@/assets/icon/police-officer.svg"),
-        },
-        { item: "4", name: "Cửa sổ", img: require("@/assets/icon/window.svg") },
+        { item: '1', name: 'WC riêng', img: require('@/assets/icon/toilet.svg') },
+        { item: '2', name: 'Wifi', img: require('@/assets/icon/wifi.svg') },
+        { item: '3', name: 'An ninh', img: require('@/assets/icon/police-officer.svg') },
+        { item: '4', name: 'Cửa sổ', img: require('@/assets/icon/window.svg') }
       ],
     };
   },
-  computed: {
-    ...mapGetters("admin", ["roomDetails"]),
-  },
   async created() {
     this.isShowEdit = this.$route.params.edit;
-    this.dataDetail = { ...this.roomDetails };
-    this.optionsUlities = this.optionsUlities
-      .map((el) => {
-        if (this.dataDetail.utilities?.includes(el.item)) {
-          return el;
-        }
-      })
-      .filter((data) => data != undefined);
-    if (Object.keys(this.dataDetail)) {
-      this.isLoading = false;
+    await this.handleGetData();
+    for (const item of this.response.data) {
+      if (item.room.id == this.$route.params.id) {
+        this.dataDetail = item;
+      }
     }
+    this.optionsUlities = this.optionsUlities.map(el => {
+      if(this.dataDetail.utilities?.includes(el.item)){
+        return el
+      }
+    }).filter(data => data != undefined)
   },
-  methods: {},
+  methods: {
+    async handleGetData() {
+      try {
+        this.response = await search({
+          searchQuery: "",
+          price: "",
+          category: "",
+          utilities: [],
+          noSex: "",
+          status: "",
+          pageNumber: 0,
+          pageSize: 10,
+        });
+      } catch (error) {
+        console.log(error);
+      }
+    },
+  },
 };
 </script>
 
