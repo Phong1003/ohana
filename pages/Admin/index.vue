@@ -50,7 +50,7 @@ export default {
           category: "",
           utilities: [],
           noSex: "",
-          status: "",
+          status: "0",
           pageNumber: 0,
           pageSize: 10,
           price: "",

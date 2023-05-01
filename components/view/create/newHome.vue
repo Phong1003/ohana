@@ -1,6 +1,6 @@
 <template>
   <div class="house__detail__container">
-    <b-overlay :show="roomInfo" rounded="sm">
+    <b-overlay :show="isLoading" rounded="sm">
       <div class="content__section mb-3">
         <div class="title">
           <p class="h2">Tạo phòng mới!</p>
@@ -12,19 +12,29 @@
           <b-form-input
             v-model="roomInfo.name"
             placeholder="Nhập title cho phòng"
+            :required="objError.name.status"
           ></b-form-input>
+          <b-form-invalid-feedback class="d-block" v-if="objError.name.status">
+            {{ objError.name.error }}
+          </b-form-invalid-feedback>
         </div>
         <div class="files__holder">
           <h4 class="mb-3">
             Chọn ảnh mô tả cho phòng <span class="text-danger">(*)</span>
           </h4>
           <div>
-            <input
-              type="file"
+            <b-form-file
               id="fileInput"
               multiple
               @change="handleUploadImg"
+              :required="objError.file.status"
             />
+            <b-form-invalid-feedback
+              class="d-block"
+              v-if="objError.file.status"
+            >
+              {{ objError.file.error }}
+            </b-form-invalid-feedback>
             <div v-if="imgList.length" class="d-flex">
               <div
                 v-for="(item, index) in imgList"
@@ -57,13 +67,31 @@
                   <p class="mb-0 field__name mb-2">
                     CHỦ PHÒNG <span class="text-danger">(*)</span>
                   </p>
-                  <b-form-input v-model="roomInfo.houseowner"></b-form-input>
+                  <b-form-input
+                    v-model="roomInfo.houseowner"
+                    :required="objError.houseowner.status"
+                  ></b-form-input>
+                  <b-form-invalid-feedback
+                    class="d-block"
+                    v-if="objError.houseowner.status"
+                  >
+                    {{ objError.houseowner.error }}
+                  </b-form-invalid-feedback>
                 </div>
                 <div class="d-flex flex-column col-6">
                   <p class="mb-0 field__name mb-2">
                     SĐT <span class="text-danger">(*)</span>
                   </p>
-                  <b-form-input v-model="roomInfo.ownerphone"></b-form-input>
+                  <b-form-input
+                    v-model="roomInfo.ownerphone"
+                    :required="objError.ownerphone.status"
+                  ></b-form-input>
+                  <b-form-invalid-feedback
+                    class="d-block"
+                    v-if="objError.ownerphone.status"
+                  >
+                    {{ objError.ownerphone.error }}
+                  </b-form-invalid-feedback>
                 </div>
               </div>
             </div>
@@ -85,7 +113,14 @@
                   <b-form-input
                     v-model="roomInfo.price"
                     placeholder="Nhập giá phòng"
+                    :required="objError.price.status"
                   ></b-form-input>
+                  <b-form-invalid-feedback
+                    class="d-block"
+                    v-if="objError.price.status"
+                  >
+                    {{ objError.price.error }}
+                  </b-form-invalid-feedback>
                 </div>
                 <div class="d-flex flex-column col-6">
                   <p class="mb-0 field__name mb-2">
@@ -94,7 +129,14 @@
                   <b-form-input
                     v-model="roomInfo.capacity"
                     placeholder="Nhập diện tích phòng"
+                    :required="objError.capacity.status"
                   ></b-form-input>
+                  <b-form-invalid-feedback
+                    class="d-block"
+                    v-if="objError.capacity.status"
+                  >
+                    {{ objError.capacity.error }}
+                  </b-form-invalid-feedback>
                 </div>
               </div>
               <div class="house__info mt-4 d-flex">
@@ -105,7 +147,14 @@
                   <b-form-input
                     v-model="roomInfo.deposit"
                     placeholder="Nhập tiền cần cọc"
+                    :required="objError.deposit.status"
                   ></b-form-input>
+                  <b-form-invalid-feedback
+                    class="d-block"
+                    v-if="objError.deposit.status"
+                  >
+                    {{ objError.deposit.error }}
+                  </b-form-invalid-feedback>
                 </div>
                 <div class="d-flex flex-column col-6">
                   <p class="mb-0 field__name mb-2">
@@ -114,7 +163,14 @@
                   <b-form-input
                     v-model="roomInfo.electricprice"
                     placeholder="Nhập tiền điện"
+                    :required="objError.electricprice.status"
                   ></b-form-input>
+                  <b-form-invalid-feedback
+                    class="d-block"
+                    v-if="objError.electricprice.status"
+                  >
+                    {{ objError.electricprice.error }}
+                  </b-form-invalid-feedback>
                 </div>
               </div>
               <div class="house__info mt-4 d-flex">
@@ -125,7 +181,14 @@
                   <b-form-input
                     v-model="roomInfo.waterprice"
                     placeholder="Nhập tiền nước"
+                    :required="objError.waterprice.status"
                   ></b-form-input>
+                  <b-form-invalid-feedback
+                    class="d-block"
+                    v-if="objError.waterprice.status"
+                  >
+                    {{ objError.waterprice.error }}
+                  </b-form-invalid-feedback>
                 </div>
                 <div class="d-flex flex-column col-6">
                   <p class="mb-0 field__name mb-2">
@@ -134,7 +197,14 @@
                   <b-form-input
                     v-model="roomInfo.otherprice"
                     placeholder="Nhập tiền tiện ích"
+                    :required="objError.otherprice.status"
                   ></b-form-input>
+                  <b-form-invalid-feedback
+                    class="d-block"
+                    v-if="objError.otherprice.status"
+                  >
+                    {{ objError.otherprice.error }}
+                  </b-form-invalid-feedback>
                 </div>
               </div>
               <div class="house__info mt-4 d-flex">
@@ -145,7 +215,14 @@
                   <b-form-input
                     v-model="roomInfo.address"
                     placeholder="VD: Số 180 Phạm Hùng, Trung Hoà, Cầu Giấy, Hà Nội"
+                    :required="objError.address.status"
                   ></b-form-input>
+                  <b-form-invalid-feedback
+                    class="d-block"
+                    v-if="objError.address.status"
+                  >
+                    {{ objError.address.error }}
+                  </b-form-invalid-feedback>
                 </div>
                 <div class="d-flex flex-column col-6">
                   <p class="mb-0 field__name mb-2">
@@ -156,8 +233,15 @@
                     :options="listCategory"
                     value-field="id"
                     text-field="name"
+                    :required="objError.category.status"
                   >
                   </b-form-select>
+                  <b-form-invalid-feedback
+                    class="d-block"
+                    v-if="objError.category.status"
+                  >
+                    {{ objError.category.error }}
+                  </b-form-invalid-feedback>
                 </div>
               </div>
               <div class="house__info mt-4 d-flex">
@@ -317,7 +401,28 @@ export default {
         { name: "Nữ", id: "2" },
       ],
       response: {},
+      isLoading: true,
+      objError: {
+        check: false,
+        name: { error: "Vui lòng nhập title", status: false },
+        address: { error: "Vui lòng nhập địa chỉ", status: false },
+        houseowner: { error: "Vui lòng nhập tên chủ nhà", status: false },
+        ownerphone: { error: "Vui lòng nhập số điện thoại", status: false },
+        price: { error: "Vui lòng nhập giá phòng", status: false },
+        deposit: { error: "Vui lòng nhập tiền cọc", status: false },
+        capacity: { error: "Vui lòng nhập diện tích phòng", status: false },
+        electricprice: { error: "Vui lòng nhập giá điện", status: false },
+        waterprice: { error: "Vui lòng nhập giá nước", status: false },
+        otherprice: { error: "Vui lòng nhập giá chi phí khác", status: false },
+        category: { error: "Vui lòng nhập loại phòng", status: false },
+        file: { error: "Vui lòng chọn 5 file ảnh", status: false },
+      },
     };
+  },
+  components: {
+    validation() {
+      return this.roomInfo.name.length;
+    },
   },
   async created() {
     if (this.$route.params.edit) {
@@ -326,20 +431,62 @@ export default {
         if (item.room.id == this.$route.params.id) {
           this.roomInfo = { ...item.room };
           this.roomInfo.utilities = item.utilities;
-          if (item.room.imgRoom) {
-            this.imgList.push(item.room.imgRoom);
-          }
+          this.imgList = item.imgRoom;
         }
       }
+    }
+    if (Object.keys(this.roomInfo)) {
+      this.isLoading = false;
     }
     await this.handleGetCategory();
   },
   methods: {
+    handleValidateForm() {
+      this.objError.check = true;
+      this.validateForm();
+    },
+    validateForm() {
+      try {
+        if (this.objError.check) {
+          this.objError.name.status = !this.roomInfo.name;
+          this.objError.address.status = !this.roomInfo.address;
+          this.objError.houseowner.status = !this.roomInfo.houseowner;
+          this.objError.ownerphone.status = !this.roomInfo.ownerphone;
+          this.objError.price.status = !this.roomInfo.price;
+          this.objError.electricprice.status = !this.roomInfo.electricprice;
+          this.objError.deposit.status = !this.roomInfo.deposit;
+          this.objError.capacity.status = !this.roomInfo.capacity;
+          this.objError.waterprice.status = !this.roomInfo.waterprice;
+          this.objError.otherprice.status = !this.roomInfo.otherprice;
+          this.objError.category.status = !this.roomInfo.category;
+          this.objError.file.status = this.imgList.length == 5 ? false : true;
+
+          this.objError.isFormError =
+            this.objError.name.status ||
+            this.objError.address.status ||
+            this.objError.houseowner.status ||
+            this.objError.ownerphone.status ||
+            this.objError.price.status ||
+            this.objError.deposit.status ||
+            this.objError.capacity.status ||
+            this.objError.electricprice.status ||
+            this.objError.waterprice.status ||
+            this.objError.otherprice.status ||
+            this.objError.category.status || 
+            this.objError.file.status
+        }
+        return;
+      } catch (error) {
+        console.log("validateForm", error);
+      }
+    },
     removeItem(index) {
       this.imgList.splice(index, 1);
     },
     async handleEditHome() {
       window.scrollTo({ top: 0, behavior: "smooth" });
+      this.handleValidateForm();
+      if (this.objError.isFormError) return;
       try {
         const params = {
           ...this.roomInfo,
@@ -360,7 +507,7 @@ export default {
           category: "",
           utilities: [],
           noSex: "",
-          status: "",
+          status: "0",
           pageNumber: 0,
           pageSize: 10,
         });
@@ -370,7 +517,12 @@ export default {
     },
     async handleAddNewHome() {
       try {
+        await this.handleValidateForm();
         window.scrollTo({ top: 0, behavior: "smooth" });
+        if (this.objError.isFormError) {
+          return;
+        }
+        console.log(1);
         const params = {
           ...this.roomInfo,
           imgRoom: this.imgList,

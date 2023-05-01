@@ -1,43 +1,58 @@
 <template>
   <div class="house__detail__container">
     <div v-if="!isShowEdit">
-      <b-overlay :show="dataDetail" rounded="sm">
+      <b-overlay :show="isLoading" rounded="sm">
         <div class="image__container mb-4 d-flex justify-content-center">
-          <div class="col-6 px-0 image__first mr-1">
+          <div
+            v-if="dataDetail?.imgRoom?.length && dataDetail.imgRoom[0]"
+            class="col-6 px-0 image__first mr-1"
+          >
             <img
-              src="~/assets/images/binhthanh.jpg"
+              :src="dataDetail.imgRoom[0]"
               alt="binh thanh"
               class="image__cover"
             />
           </div>
           <div class="col-6 px-0 cover__image__before d-flex">
             <div class="col-6 px-0 image__before mr-1">
-              <div class="h-100 mb-1">
+              <div
+                class="h-100 mb-1"
+                v-if="dataDetail?.imgRoom?.length && dataDetail?.imgRoom[1]"
+              >
                 <img
-                  src="~/assets/images/binhthanh.jpg"
+                  :src="dataDetail.imgRoom[1]"
                   alt="binh thanh"
                   class="image__cover"
                 />
               </div>
-              <div class="h-100 mt-1">
+              <div
+                class="h-100 mt-1"
+                v-if="dataDetail?.imgRoom?.length && dataDetail?.imgRoom[2]"
+              >
                 <img
-                  src="~/assets/images/binhthanh.jpg"
+                  :src="dataDetail.imgRoom[2]"
                   alt="binh thanh"
                   class="image__cover"
                 />
               </div>
             </div>
             <div class="col-6 px-0 image__before">
-              <div class="h-100 mb-1">
+              <div
+                class="h-100 mb-1"
+                v-if="dataDetail?.imgRoom?.length && dataDetail?.imgRoom[3]"
+              >
                 <img
-                  src="~/assets/images/binhthanh.jpg"
+                  :src="dataDetail.imgRoom[3]"
                   alt="binh thanh"
                   class="image__cover"
                 />
               </div>
-              <div class="h-100 mt-1">
+              <div
+                class="h-100 mt-1"
+                v-if="dataDetail?.imgRoom?.length && dataDetail?.imgRoom[4]"
+              >
                 <img
-                  src="~/assets/images/binhthanh.jpg"
+                  :src="dataDetail.imgRoom[4]"
                   alt="binh thanh"
                   class="image__cover"
                 />
@@ -253,13 +268,22 @@ export default {
   data() {
     return {
       dataDetail: {},
+      isLoading: true,
       response: "",
       isShowEdit: false,
       optionsUlities: [
-        { item: '1', name: 'WC riêng', img: require('@/assets/icon/toilet.svg') },
-        { item: '2', name: 'Wifi', img: require('@/assets/icon/wifi.svg') },
-        { item: '3', name: 'An ninh', img: require('@/assets/icon/police-officer.svg') },
-        { item: '4', name: 'Cửa sổ', img: require('@/assets/icon/window.svg') }
+        {
+          item: "1",
+          name: "WC riêng",
+          img: require("@/assets/icon/toilet.svg"),
+        },
+        { item: "2", name: "Wifi", img: require("@/assets/icon/wifi.svg") },
+        {
+          item: "3",
+          name: "An ninh",
+          img: require("@/assets/icon/police-officer.svg"),
+        },
+        { item: "4", name: "Cửa sổ", img: require("@/assets/icon/window.svg") },
       ],
     };
   },
@@ -271,11 +295,16 @@ export default {
         this.dataDetail = item;
       }
     }
-    this.optionsUlities = this.optionsUlities.map(el => {
-      if(this.dataDetail.utilities?.includes(el.item)){
-        return el
-      }
-    }).filter(data => data != undefined)
+    this.optionsUlities = this.optionsUlities
+      .map((el) => {
+        if (this.dataDetail.utilities?.includes(el.item)) {
+          return el;
+        }
+      })
+      .filter((data) => data != undefined);
+    if (Object.keys(this.dataDetail)) {
+      this.isLoading = false;
+    }
   },
   methods: {
     async handleGetData() {
@@ -286,7 +315,7 @@ export default {
           category: "",
           utilities: [],
           noSex: "",
-          status: "",
+          status: "0",
           pageNumber: 0,
           pageSize: 10,
         });
