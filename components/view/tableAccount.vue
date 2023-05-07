@@ -9,12 +9,6 @@
             <span>Tạo mới</span>
           </b-button>
         </div>
-        <div class="h4 icon-create cursor-pointer">
-          <b-button class="bg-danger">
-            <b-icon icon="trash"></b-icon>
-            <span>Xóa</span>
-          </b-button>
-        </div>
       </div>
     </div>
     <div>
@@ -27,7 +21,7 @@
         :default-sort="{ prop: 'date', order: 'descending' }"
         @row-dblclicked="onRowClicked"
       >
-        <template #head(accountID)="data">
+        <template #head(roleid)="data">
           <span
             :id="data.field.key + data.index"
             class="text-info d-flex justify-content-start"
@@ -38,7 +32,18 @@
             {{ data.label }}
           </b-tooltip>
         </template>
-        <template #head(name)="data">
+        <template #head(fullName)="data">
+          <span
+            :id="data.field.key + data.index"
+            class="text-info d-flex justify-content-start"
+          >
+            {{ data.label }}
+          </span>
+          <b-tooltip :target="data.field.key + data.index" offset="50">
+            {{ data.label }}
+          </b-tooltip> </template
+        >password
+        <template #head(email)="data">
           <span
             :id="data.field.key + data.index"
             class="text-info d-flex justify-content-start"
@@ -49,7 +54,7 @@
             {{ data.label }}
           </b-tooltip>
         </template>
-        <template #head(dob)="data">
+        <template #head(phone)="data">
           <span
             :id="data.field.key + data.index"
             class="text-info d-flex justify-content-start"
@@ -60,48 +65,12 @@
             {{ data.label }}
           </b-tooltip>
         </template>
-        <template #head(createdDate)="data">
-          <span
-            :id="data.field.key + data.index"
-            class="text-info d-flex justify-content-start"
-          >
-            {{ data.label }}
+        <template #cell(roleid)="row">
+          <span :id="row.field.key + row.index">
+            {{ row.item.roleid == "1" ? "Admin" : "User" }}
           </span>
-          <b-tooltip :target="data.field.key + data.index" offset="50">
-            {{ data.label }}
-          </b-tooltip>
-        </template>
-        <template #head(gender)="data">
-          <span
-            :id="data.field.key + data.index"
-            class="text-info d-flex justify-content-start"
-          >
-            {{ data.label }}
-          </span>
-          <b-tooltip :target="data.field.key + data.index" offset="50">
-            {{ data.label }}
-          </b-tooltip>
-        </template>
-        <template #head(location)="data">
-          <span
-            :id="data.field.key + data.index"
-            class="text-info d-flex justify-content-start"
-          >
-            {{ data.label }}
-          </span>
-          <b-tooltip :target="data.field.key + data.index" offset="50">
-            {{ data.label }}
-          </b-tooltip>
-        </template>
-        <template #head(number)="data">
-          <span
-            :id="data.field.key + data.index"
-            class="text-info d-flex justify-content-start"
-          >
-            {{ data.label }}
-          </span>
-          <b-tooltip :target="data.field.key + data.index" offset="50">
-            {{ data.label }}
+          <b-tooltip :target="row.field.key + row.index" offset="50">
+            {{ row.item.roleid == "1" ? "Admin" : "User" }}
           </b-tooltip>
         </template>
       </b-table>
@@ -122,73 +91,17 @@
 </template>
 
 <script>
+import { mapGetters, mapActions } from "vuex";
+import { getAllUser } from "../../api/auth/index";
 export default {
   data() {
     return {
-      items: [
-        {
-          accountID: "001",
-          name: "Phong",
-          dob: "20/01/2000",
-          createdDate: "20/01/2023",
-          gender: "Nam",
-          location: "Hà Nội",
-          number: "0969966566",
-        },
-        {
-          accountID: "002",
-          name: "Tus",
-          dob: "20/01/2000",
-          createdDate: "20/01/2023",
-          gender: "Nam",
-          location: "Hà Nội",
-          number: "0969966566",
-        },
-        {
-          accountID: "003",
-          name: "Thomas",
-          dob: "20/01/2000",
-          createdDate: "20/01/2023",
-          gender: "Nam",
-          location: "Hà Nội",
-          number: "0969966566",
-        },
-        {
-          accountID: "004",
-          name: "Quinn",
-          dob: "20/01/2000",
-          createdDate: "20/01/2023",
-          gender: "Nam",
-          location: "Hà Nội",
-          number: "0969966566",
-        },
-        {
-          accountID: "005",
-          name: "Bin Vu",
-          dob: "20/01/2000",
-          createdDate: "20/01/2023",
-          gender: "Nam",
-          location: "Hà Nội",
-          number: "0969966566",
-        },
-        {
-          accountID: "005",
-          name: "JC",
-          dob: "20/01/2000",
-          createdDate: "20/01/2023",
-          gender: "Nam",
-          location: "Hà Nội",
-          number: "0969966566",
-        },
-      ],
+      listUser: [],
       fields: [
-        { key: "accountID", label: "ID", sortable: true },
-        { key: "name", label: "Tên người dùng", sortable: true },
-        { key: "dob", label: "Ngày sinh", sortable: true },
-        { key: "createdDate", label: "Ngày tạo", sortable: true },
-        { key: "gender", label: "Giới tính", sortable: true },
-        { key: "location", label: "Địa chỉ", sortable: true },
-        { key: "number", label: "Số điện thoại", sortable: true },
+        { key: "roleid", label: "Role", sortable: true },
+        { key: "fullname", label: "Tên người dùng", sortable: true },
+        { key: "email", label: "Email", sortable: true },
+        { key: "phone", label: "SĐT", sortable: true },
       ],
       currentPage: 1,
       perPage: 3,
@@ -196,14 +109,35 @@ export default {
   },
   computed: {
     lists() {
-      const items = this.items;
+      const items = this.listUser;
       return items.slice(
         (this.currentPage - 1) * this.perPage,
         this.currentPage * this.perPage
       );
     },
     totalRows() {
-      return this.items.length;
+      return this.listUser.length;
+    },
+  },
+  async created() {
+    await this.handleGetAllUser();
+  },
+  methods: {
+    ...mapActions("admin", ["handleChangeTabIndex"]),
+
+    handleChangePage() {},
+    onRowClicked(item) {
+      this.handleChangeTabIndex(3);
+    },
+    async handleGetAllUser() {
+      const res = await getAllUser({
+        searchQuery: "",
+        pageNumber: 0,
+        pageSize: 10,
+      });
+      if (res.status == 200) {
+        this.listUser = res.data;
+      }
     },
   },
 };

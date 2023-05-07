@@ -21,7 +21,7 @@ import Sidebar from "../../components/sidebar/sidebar.vue";
 import ListComponent from "../../components/view/list.vue";
 import TableAccount from "../../components/view/tableAccount.vue";
 import AuthWrapper from "../../components/authWrapper/index.vue";
-import { mapGetters, mapActions } from "vuex";
+import { mapGetters } from "vuex";
 import { search } from "../../api/dashboard/index";
 import { deleteRoom } from "../../api/auth/index";
 
@@ -50,7 +50,7 @@ export default {
           category: "",
           utilities: [],
           noSex: "",
-          status: "0",
+          status: "",
           pageNumber: 0,
           pageSize: 10,
           price: "",

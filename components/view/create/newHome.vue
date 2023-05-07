@@ -23,11 +23,11 @@
             Chọn ảnh mô tả cho phòng <span class="text-danger">(*)</span>
           </h4>
           <div>
-            <b-form-file
+            <input
+              type="file"
               id="fileInput"
               multiple
               @change="handleUploadImg"
-              :required="objError.file.status"
             />
             <b-form-invalid-feedback
               class="d-block"
@@ -472,8 +472,8 @@ export default {
             this.objError.electricprice.status ||
             this.objError.waterprice.status ||
             this.objError.otherprice.status ||
-            this.objError.category.status || 
-            this.objError.file.status
+            this.objError.category.status ||
+            this.objError.file.status;
         }
         return;
       } catch (error) {
@@ -485,6 +485,7 @@ export default {
     },
     async handleEditHome() {
       window.scrollTo({ top: 0, behavior: "smooth" });
+      this.isLoading = true;
       this.handleValidateForm();
       if (this.objError.isFormError) return;
       try {
@@ -494,7 +495,8 @@ export default {
           utilities:
             this.roomInfo.utilities == null ? [] : this.roomInfo.utilities,
         };
-        await editRoomsApi(params);
+        const res = await editRoomsApi(params);
+        if (res.status == 200) this.isLoading = false
       } catch (error) {
         console.log("error", error);
       }
@@ -507,7 +509,7 @@ export default {
           category: "",
           utilities: [],
           noSex: "",
-          status: "0",
+          status: "",
           pageNumber: 0,
           pageSize: 10,
         });
@@ -522,7 +524,6 @@ export default {
         if (this.objError.isFormError) {
           return;
         }
-        console.log(1);
         const params = {
           ...this.roomInfo,
           imgRoom: this.imgList,

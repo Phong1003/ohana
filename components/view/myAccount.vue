@@ -5,7 +5,7 @@
         <h4 class="user__title">Thông tin tài khoản</h4>
         <div v-if="!isEdit" class="h4 cursor-pointer mr-3">
           <b-button @click="isEdit = true" class="bg-primary border-primary">
-            <b-icon icon="plus-square"></b-icon>
+            <b-icon icon="pencil-square"></b-icon>
             <span>Chỉnh sửa</span>
           </b-button>
         </div>
@@ -17,16 +17,16 @@
               Tên <span class="text-danger">(*)</span>
             </p>
             <b-form-input
-              v-model="userInfo.fullName"
+              v-model="userInfo.fullname"
               :disabled="!isEdit"
             ></b-form-input>
           </div>
           <div class="d-flex flex-column col-6 mt-3">
             <p class="mb-0 field__name mb-2">
-              Giới tính <span class="text-danger">(*)</span>
+              Email <span class="text-danger">(*)</span>
             </p>
             <b-form-input
-              v-model="userInfo.gender"
+              v-model="userInfo.email"
               :disabled="!isEdit"
             ></b-form-input>
           </div>
@@ -41,10 +41,10 @@
           </div>
           <div class="d-flex flex-column col-6 mt-3">
             <p class="mb-0 field__name mb-2">
-              Địa chỉ <span class="text-danger">(*)</span>
+              Mật khẩu <span class="text-danger">(*)</span>
             </p>
             <b-form-input
-              v-model="userInfo.address"
+              v-model="userInfo.password"
               :disabled="!isEdit"
             ></b-form-input>
           </div>
@@ -73,31 +73,38 @@
 </template>
 
 <script>
+import { editUser, getAllUser } from "../../api/auth/index";
 export default {
   data() {
     return {
       userInfo: {
-        fullName: "",
+        fullname: "",
         phone: "",
-        role: "",
-        gender: "Nam",
-        address: "121 Kim Ngưu",
+        roleid: "",
+        email: "",
+        password: "",
+        status: "0",
       },
       isEdit: false,
     };
   },
   created() {
+    console.log(this.$route)
     if (typeof window !== "undefined") {
       this.userInfo = {
         ...this.userInfo,
-        fullName: sessionStorage.getItem("fullName"),
+        fullname: sessionStorage.getItem("fullName"),
         phone: sessionStorage.getItem("phone"),
         role: sessionStorage.getItem("role"),
+        email: sessionStorage.getItem("email"),
       };
     }
   },
   methods: {
-    handleSaveEdit() {
+    async handleSaveEdit() {
+      await editUser({
+        ...this.userInfo,
+      });
       this.isEdit = false;
     },
   },

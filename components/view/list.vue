@@ -10,7 +10,7 @@
           </b-button>
         </div>
       </div>
-      <div class="items" v-for="(item, index) in listHouse" :key="index">
+      <div class="items" v-for="(item, index) in lists" :key="index">
         <div class="action-contain pt-2 px-3 d-flex">
           <div class="icon-action mr-2 h5 cursor-pointer">
             <b-button
@@ -36,10 +36,19 @@
           >
             <b-button
               @click="handleActiveRoom(item.room.id)"
-              class="bg-primary border-primary"
+              class="bg-warning border-warning"
             >
               <b-icon icon="check"></b-icon>
               <span>Xác nhận</span>
+            </b-button>
+          </div>
+          <div
+            class="icon-action mr-2 h5 cursor-pointer"
+            v-if="!item.room.status && checkRole == 'USER'"
+          >
+            <b-button class="bg-secondary border-secondary">
+              <b-icon icon="exclamation-diamond"></b-icon>
+              <span>Chưa xác nhận</span>
             </b-button>
           </div>
           <div
@@ -66,7 +75,7 @@
                 <p>{{ item.room.name }}</p>
               </div>
               <div class="d-flex">
-                <div class="col-8 px-0 item__info">
+                <div class="col-7 px-0 item__info">
                   <div class="mb-4">
                     <b-icon icon="house"></b-icon>
                     <span>
@@ -90,7 +99,7 @@
                     </b-tooltip>
                   </div>
                 </div>
-                <div class="col-4 item__price d-flex align-items-center price">
+                <div class="col-5 item__price d-flex align-items-center price">
                   {{ new Intl.NumberFormat().format(item.room.price) }}/
                   <span style="font-size: 20px">phòng</span>
                 </div>
@@ -124,7 +133,7 @@ export default {
     return {
       isLoading: true,
       currentPage: 1,
-      perPage: 3,
+      perPage: 5,
       listCategory: [],
       checkRole: "",
       listImg: [],
@@ -132,7 +141,7 @@ export default {
   },
   computed: {
     lists() {
-      const items = this.listHouse;
+      const items = [...this.listHouse];
       if (items.length) {
         return items.slice(
           (this.currentPage - 1) * this.perPage,

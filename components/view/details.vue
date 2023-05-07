@@ -63,12 +63,6 @@
         <div class="content__section mb-3">
           <div class="title__cover d-flex justify-content-between">
             <p class="title">{{ dataDetail.room?.name }}</p>
-            <div class="h3 cursor-pointer mr-3">
-              <b-button class="bg-primary border-primary">
-                <b-icon icon="box-arrow-up-right"></b-icon>
-                <span>Chia sẻ</span>
-              </b-button>
-            </div>
           </div>
           <div class="information__section d-flex mt-4 justify-content-center">
             <div class="house__section col-8 px-0">
@@ -103,11 +97,11 @@
                     <p class="mb-0 field__name">ĐỐI TƯỢNG CHO THUÊ</p>
                     <p class="field__value">
                       {{
-                        dataDetail.room?.noSex == 0
+                        dataDetail.room?.noSex == "0"
                           ? "Tất cả"
-                          : dataDetail.room?.noSex == 1
+                          : dataDetail.room?.noSex == "1"
                           ? "Nam"
-                          : dataDetail.room?.noSex == 2
+                          : dataDetail.room?.noSex == "2"
                           ? "Nữ"
                           : ""
                       }}
@@ -187,15 +181,24 @@
                 <div class="capacity__options d-flex">
                   <div class="option col-4">
                     <p class="option__type">Rộng</p>
-                    <div class="option__title bg-info">3 người</div>
+                    <div class="option__title bg-info">
+                      {{ Math.round(dataDetail.room?.capacity / 10) }}
+                      <span>người</span>
+                    </div>
                   </div>
                   <div class="option col-4">
                     <p class="option__type">Vừa</p>
-                    <div class="option__title bg-success">4 người</div>
+                    <div class="option__title bg-success">
+                      {{ Math.round(dataDetail.room?.capacity / 10) + 1 }}
+                      <span>người</span>
+                    </div>
                   </div>
                   <div class="option col-4">
                     <p class="option__type">Chật</p>
-                    <div class="option__title bg-warning">5 người +</div>
+                    <div class="option__title bg-warning">
+                      {{ Math.round(dataDetail.room?.capacity / 10) + 2 }}
+                      <span>người</span>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -225,25 +228,24 @@
                 <p class="mb-0">Thông tin chủ phòng</p>
               </div>
               <div class="owner__info mt-4">
-                <div class="d-flex">
+                <div class="d-flex justify-content-center">
                   <img
                     src="~/assets/images/avatar.png"
                     alt="binh thanh"
                     class="avatar__cover"
                   />
-                  <div class="contact">
-                    <span class="mb-0 mr-2">{{
-                      dataDetail.room?.houseowner
-                    }}</span>
-                    <div class="d-flex flex-column mr-2">
-                      <span>SĐT:</span>
-                      <span> {{ dataDetail.room?.ownerphone }} </span>
+                  <div class="contact d-flex flex-column align-items-center">
+                    <div class="d-flex mr-2">
+                      <span class="mr-3">Chủ nhà:</span>
+                      <span class="mb-0 mr-2">{{
+                        dataDetail.room?.houseowner
+                      }}</span>
                     </div>
-                  </div>
-                  <div class="d-flex created_date ml-3 mb-2 align-items-end">
-                    <div class="d-flex flex-column mr-2">
-                      <span>Ngày đăng:</span>
-                      <span> {{ dataDetail.room?.ownerphone }} </span>
+                    <div class="d-flex mr-2">
+                      <span class="mr-3">SĐT:</span>
+                      <span class="mb-0 mr-2">
+                        {{ dataDetail.room?.ownerphone }}
+                      </span>
                     </div>
                   </div>
                 </div>
@@ -293,6 +295,7 @@ export default {
     for (const item of this.response.data) {
       if (item.room.id == this.$route.params.id) {
         this.dataDetail = item;
+        console.log(this.dataDetail);
       }
     }
     this.optionsUlities = this.optionsUlities
@@ -315,7 +318,7 @@ export default {
           category: "",
           utilities: [],
           noSex: "",
-          status: "0",
+          status: "",
           pageNumber: 0,
           pageSize: 10,
         });

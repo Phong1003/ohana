@@ -6,7 +6,7 @@
           <Sidebar class="sidebar-space" />
           <ListComponent
             v-if="tabIndex == 1"
-            :listHouse="listHouseForRent"
+            :listHouse="listHouse"
             @handleDeleteRoom="handleDeleteRoom"
           />
           <MyAccount v-if="tabIndex == 2" />
@@ -35,7 +35,7 @@ export default {
   },
   data() {
     return {
-      listHouseForRent: [],
+      listHouse: [],
     };
   },
   computed: {
@@ -56,7 +56,7 @@ export default {
           price: "",
         });
         for (const item of response.data) {
-          this.listHouseForRent.push(item.room);
+          this.listHouse.push(item);
         }
       } catch (error) {
         console.log(error);
