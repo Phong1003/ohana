@@ -161,6 +161,7 @@ export default {
     },
   },
   async created() {
+    if (this.listHouse.length) this.isLoading = false
     await this.handleGetCategory();
     if (typeof window !== "undefined") {
       this.checkRole = sessionStorage.getItem("role");
