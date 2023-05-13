@@ -7,6 +7,7 @@
           <ListComponent
             v-if="tabIndex == 1"
             :listHouse="listHouse"
+            :isLoading="isLoading"
             @handleDeleteRoom="handleDeleteRoom"
           />
           <MyAccount v-if="tabIndex == 2" />
@@ -36,6 +37,7 @@ export default {
   data() {
     return {
       listHouse: [],
+      isLoading: true,
     };
   },
   computed: {
@@ -55,6 +57,9 @@ export default {
           pageSize: 10,
           price: "",
         });
+        if (response.status) {
+          this.isLoading = false;
+        }
         for (const item of response.data) {
           this.listHouse.push(item);
         }
@@ -67,8 +72,12 @@ export default {
         const response = await deleteRoom({
           id: roomID,
         });
+        this.isLoading = true;
         if (response.status == 200) {
+          this.isLoading = false;
           await this.handleGetData();
+        } else {
+          this.isLoading = false;
         }
       } catch (error) {
         console.log("error", error);

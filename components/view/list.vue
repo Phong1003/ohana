@@ -108,7 +108,13 @@
           </div>
         </a>
       </div>
-      <div class="overflow-auto d-flex justify-content-center mt-3">
+      <div class="text-center h4" v-if="!listHouse.length && !isLoading">
+        Hiện tại bạn chưa có phòng nào
+      </div>
+      <div
+        v-if="listHouse.length"
+        class="overflow-auto d-flex justify-content-center mt-3"
+      >
         <b-pagination
           :total-rows="totalRows"
           v-model="currentPage"
@@ -128,10 +134,9 @@
 import { categoryApi, activeRoom } from "../../api/auth/index";
 
 export default {
-  props: ["listHouse"],
+  props: ["listHouse", "isLoading"],
   data() {
     return {
-      isLoading: true,
       currentPage: 1,
       perPage: 5,
       listCategory: [],
@@ -161,7 +166,6 @@ export default {
     },
   },
   async created() {
-    if (this.listHouse.length) this.isLoading = false
     await this.handleGetCategory();
     if (typeof window !== "undefined") {
       this.checkRole = sessionStorage.getItem("role");
@@ -192,6 +196,11 @@ export default {
     async handleActiveRoom(id) {
       try {
         const res = await activeRoom({ id: id, status: 1 });
+        this.isLoading = true;
+        if (res.status == 200) {
+          this.isLoading = false;
+          this.$$emit("handleGetData");
+        } else alert("Some");
       } catch (error) {
         console.log("error", error);
       }
@@ -201,7 +210,7 @@ export default {
     },
     handleEditRoom(roomID) {
       this.$router.push({
-        name: "Admin-id",
+        name: this.checkRole == "ADMIN" ? "Admin-id" : "User-id",
         params: { id: roomID, edit: true },
       });
     },
@@ -213,7 +222,7 @@ export default {
     },
     routerDetails(value) {
       this.$router.push({
-        name: "Admin-id",
+        name: this.checkRole == "ADMIN" ? "Admin-id" : "User-id",
         params: { id: value, edit: false },
       });
     },

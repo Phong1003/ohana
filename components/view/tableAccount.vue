@@ -1,102 +1,108 @@
 <template>
-  <div class="account__container">
-    <div class="d-flex justify-content-between">
-      <h4 class="list__title">Tất cả tài khoản</h4>
-      <div class="d-flex">
-        <div class="h4 icon-create cursor-pointer mr-3">
-          <b-button class="bg-primary">
-            <b-icon icon="plus-square"></b-icon>
-            <span>Tạo mới</span>
-          </b-button>
+  <div class="w-100">
+    <div class="account__container" v-if="!showDetails">
+      <div class="d-flex justify-content-between">
+        <h4 class="list__title">Tất cả tài khoản</h4>
+      </div>
+      <div>
+        <b-table
+          class="table_dk_proxy_claim"
+          :items="lists"
+          :fields="fields"
+          striped
+          responsive="sm"
+          :default-sort="{ prop: 'date', order: 'descending' }"
+          @row-dblclicked="onRowClicked"
+        >
+          <template #head(roleid)="data">
+            <span
+              :id="data.field.key + data.index"
+              class="text-info d-flex justify-content-start"
+            >
+              {{ data.label }}
+            </span>
+            <b-tooltip :target="data.field.key + data.index" offset="50">
+              {{ data.label }}
+            </b-tooltip>
+          </template>
+          <template #head(fullName)="data">
+            <span
+              :id="data.field.key + data.index"
+              class="text-info d-flex justify-content-start"
+            >
+              {{ data.label }}
+            </span>
+            <b-tooltip :target="data.field.key + data.index" offset="50">
+              {{ data.label }}
+            </b-tooltip> </template
+          >password
+          <template #head(email)="data">
+            <span
+              :id="data.field.key + data.index"
+              class="text-info d-flex justify-content-start"
+            >
+              {{ data.label }}
+            </span>
+            <b-tooltip :target="data.field.key + data.index" offset="50">
+              {{ data.label }}
+            </b-tooltip>
+          </template>
+          <template #head(phone)="data">
+            <span
+              :id="data.field.key + data.index"
+              class="text-info d-flex justify-content-start"
+            >
+              {{ data.label }}
+            </span>
+            <b-tooltip :target="data.field.key + data.index" offset="50">
+              {{ data.label }}
+            </b-tooltip>
+          </template>
+          <template #cell(roleid)="row">
+            <span :id="row.field.key + row.index">
+              {{ row.item.roleid == "1" ? "Admin" : "User" }}
+            </span>
+            <b-tooltip :target="row.field.key + row.index" offset="50">
+              {{ row.item.roleid == "1" ? "Admin" : "User" }}
+            </b-tooltip>
+          </template>
+        </b-table>
+        <div class="overflow-auto d-flex justify-content-center mt-4">
+          <b-pagination
+            :total-rows="totalRows"
+            v-model="currentPage"
+            :per-page="perPage"
+            first-text="First"
+            prev-text="Prev"
+            next-text="Next"
+            last-text="Last"
+            @page-click="handleChangePage"
+          />
         </div>
       </div>
     </div>
-    <div>
-      <b-table
-        class="table_dk_proxy_claim"
-        :items="lists"
-        :fields="fields"
-        striped
-        responsive="sm"
-        :default-sort="{ prop: 'date', order: 'descending' }"
-        @row-dblclicked="onRowClicked"
-      >
-        <template #head(roleid)="data">
-          <span
-            :id="data.field.key + data.index"
-            class="text-info d-flex justify-content-start"
-          >
-            {{ data.label }}
-          </span>
-          <b-tooltip :target="data.field.key + data.index" offset="50">
-            {{ data.label }}
-          </b-tooltip>
-        </template>
-        <template #head(fullName)="data">
-          <span
-            :id="data.field.key + data.index"
-            class="text-info d-flex justify-content-start"
-          >
-            {{ data.label }}
-          </span>
-          <b-tooltip :target="data.field.key + data.index" offset="50">
-            {{ data.label }}
-          </b-tooltip> </template
-        >password
-        <template #head(email)="data">
-          <span
-            :id="data.field.key + data.index"
-            class="text-info d-flex justify-content-start"
-          >
-            {{ data.label }}
-          </span>
-          <b-tooltip :target="data.field.key + data.index" offset="50">
-            {{ data.label }}
-          </b-tooltip>
-        </template>
-        <template #head(phone)="data">
-          <span
-            :id="data.field.key + data.index"
-            class="text-info d-flex justify-content-start"
-          >
-            {{ data.label }}
-          </span>
-          <b-tooltip :target="data.field.key + data.index" offset="50">
-            {{ data.label }}
-          </b-tooltip>
-        </template>
-        <template #cell(roleid)="row">
-          <span :id="row.field.key + row.index">
-            {{ row.item.roleid == "1" ? "Admin" : "User" }}
-          </span>
-          <b-tooltip :target="row.field.key + row.index" offset="50">
-            {{ row.item.roleid == "1" ? "Admin" : "User" }}
-          </b-tooltip>
-        </template>
-      </b-table>
-      <div class="overflow-auto d-flex justify-content-center mt-4">
-        <b-pagination
-          :total-rows="totalRows"
-          v-model="currentPage"
-          :per-page="perPage"
-          first-text="First"
-          prev-text="Prev"
-          next-text="Next"
-          last-text="Last"
-          @page-click="handleChangePage"
-        />
-      </div>
-    </div>
+    <AccountDetails
+      @handleCloseDetails="handleCloseDetails"
+      @handleGetAllUser="handleGetAllUser"
+      :currentAccount="currentAccount"
+      v-else
+    />
   </div>
 </template>
 
 <script>
 import { mapGetters, mapActions } from "vuex";
 import { getAllUser } from "../../api/auth/index";
+import AccountDetails from "../../components/account/accountDetails.vue";
 export default {
+  components: {
+    AccountDetails,
+  },
   data() {
     return {
+      showDetails: false,
       listUser: [],
+      currentAccount: {},
       fields: [
         { key: "roleid", label: "Role", sortable: true },
         { key: "fullname", label: "Tên người dùng", sortable: true },
@@ -124,10 +130,13 @@ export default {
   },
   methods: {
     ...mapActions("admin", ["handleChangeTabIndex"]),
-
+    handleCloseDetails() {
+      this.showDetails = false;
+    },
     handleChangePage() {},
     onRowClicked(item) {
-      this.handleChangeTabIndex(3);
+      this.currentAccount = { ...item };
+      this.showDetails = true;
     },
     async handleGetAllUser() {
       const res = await getAllUser({

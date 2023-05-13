@@ -102,13 +102,12 @@ export default {
         pageNumber: 0,
         pageSize: 10
       })
-      console.log(response);
       if(response && response.data.length){
         this.listRoom = response.data.slice(0, 5).map(item => {
           return {
             id: item.room.id,
             uliti: item.utilities,
-            img: item.room.imgRoom,
+            img: item.imgRoom,
             nameRoom: item.room.name,
             typeRoom: item.room.category,
             sex: item.room.noSex == 0 ? 'Tất cả' : item.room.noSex == 1 ? 'Nam' : item.room.noSex == 2 ? 'Nữ' : '',
@@ -118,7 +117,6 @@ export default {
             price: new Intl.NumberFormat().format(item.room.price)
           }
         })
-        console.log(this.listRoom);
       }
     } catch (error) {
       console.log(error);

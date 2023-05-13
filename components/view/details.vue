@@ -6,6 +6,7 @@
           <div
             v-if="dataDetail?.imgRoom?.length && dataDetail.imgRoom[0]"
             class="col-6 px-0 image__first mr-1"
+            v-viewer
           >
             <img
               :src="dataDetail.imgRoom[0]"
@@ -18,6 +19,7 @@
               <div
                 class="h-100 mb-1"
                 v-if="dataDetail?.imgRoom?.length && dataDetail?.imgRoom[1]"
+                v-viewer
               >
                 <img
                   :src="dataDetail.imgRoom[1]"
@@ -28,6 +30,7 @@
               <div
                 class="h-100 mt-1"
                 v-if="dataDetail?.imgRoom?.length && dataDetail?.imgRoom[2]"
+                v-viewer
               >
                 <img
                   :src="dataDetail.imgRoom[2]"
@@ -40,6 +43,7 @@
               <div
                 class="h-100 mb-1"
                 v-if="dataDetail?.imgRoom?.length && dataDetail?.imgRoom[3]"
+                v-viewer
               >
                 <img
                   :src="dataDetail.imgRoom[3]"
@@ -50,6 +54,7 @@
               <div
                 class="h-100 mt-1"
                 v-if="dataDetail?.imgRoom?.length && dataDetail?.imgRoom[4]"
+                v-viewer
               >
                 <img
                   :src="dataDetail.imgRoom[4]"
@@ -212,7 +217,7 @@
                   ></b-icon>
                   <p class="mb-0">Mô tả thêm</p>
                 </div>
-                <div class="info__section">
+                <div class="info__section mt-3">
                   {{ dataDetail.room?.description }}
                 </div>
               </div>
@@ -234,7 +239,7 @@
                     alt="binh thanh"
                     class="avatar__cover"
                   />
-                  <div class="contact d-flex flex-column align-items-center">
+                  <div class="contact d-flex flex-column align-items-start">
                     <div class="d-flex mr-2">
                       <span class="mr-3">Chủ nhà:</span>
                       <span class="mb-0 mr-2">{{
@@ -260,12 +265,19 @@
 </template>
 
 <script>
-import { search } from "../../api/dashboard";
+import { search, searchUser } from "../../api/dashboard";
 import EditHome from "../../components/view/create/newHome.vue";
+import { directive as viewer } from "v-viewer";
+import "viewerjs/dist/viewer.css";
 
 export default {
   components: {
     EditHome,
+  },
+  directives: {
+    viewer: viewer({
+      debug: true,
+    }),
   },
   data() {
     return {
@@ -287,15 +299,22 @@ export default {
         },
         { item: "4", name: "Cửa sổ", img: require("@/assets/icon/window.svg") },
       ],
+      checkRole: "",
     };
   },
   async created() {
+    if (typeof window !== "undefined") {
+      this.checkRole = sessionStorage.getItem("role");
+    }
     this.isShowEdit = this.$route.params.edit;
-    await this.handleGetData();
+    if (this.checkRole == "ADMIN") {
+      await this.handleGetData();
+    } else {
+      await this.handleGetDataUser();
+    }
     for (const item of this.response.data) {
       if (item.room.id == this.$route.params.id) {
         this.dataDetail = item;
-        console.log(this.dataDetail);
       }
     }
     this.optionsUlities = this.optionsUlities
@@ -313,6 +332,22 @@ export default {
     async handleGetData() {
       try {
         this.response = await search({
+          searchQuery: "",
+          price: "",
+          category: "",
+          utilities: [],
+          noSex: "",
+          status: "",
+          pageNumber: 0,
+          pageSize: 10,
+        });
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    async handleGetDataUser() {
+      try {
+        this.response = await searchUser({
           searchQuery: "",
           price: "",
           category: "",

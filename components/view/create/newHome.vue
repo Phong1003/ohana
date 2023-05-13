@@ -2,8 +2,14 @@
   <div class="house__detail__container">
     <b-overlay :show="isLoading" rounded="sm">
       <div class="content__section mb-3">
-        <div class="title">
+        <div class="title d-flex justify-content-between">
           <p class="h2">{{ isEdit ? "Chỉnh sửa phòng" : "Tạo phòng mới!" }}</p>
+          <b-icon
+            @click="goBack"
+            style="cursor: pointer"
+            icon="x-lg"
+            font-scale="1"
+          ></b-icon>
         </div>
         <div
           class="title__cover d-flex flex-column h-100 justify-content-between"
@@ -369,7 +375,7 @@
 
 <script>
 import { createApi, categoryApi, editRoomsApi } from "../../../api/auth/index";
-import { search } from "../../../api/dashboard";
+import { search, searchUser } from "../../../api/dashboard";
 
 export default {
   data() {
@@ -418,6 +424,7 @@ export default {
         file: { error: "Vui lòng chọn 5 file ảnh", status: false },
       },
       isEdit: false,
+      checkRole: "",
     };
   },
   components: {
@@ -426,9 +433,16 @@ export default {
     },
   },
   async created() {
+    if (typeof window !== "undefined") {
+      this.checkRole = sessionStorage.getItem("role");
+    }
     if (this.$route.params.edit) {
       this.isEdit = true;
-      await this.handleGetData();
+      if (this.checkRole == "ADMIN") {
+        await this.handleGetData();
+      } else {
+        await this.handleGetDataUser();
+      }
       for (const item of this.response.data) {
         if (item.room.id == this.$route.params.id) {
           this.roomInfo = { ...item.room };
@@ -482,6 +496,9 @@ export default {
         console.log("validateForm", error);
       }
     },
+    goBack() {
+      this.$router.push({ name: this.checkRole == "ADMIN" ? "Admin" : "User" });
+    },
     removeItem(index) {
       this.imgList.splice(index, 1);
     },
@@ -502,7 +519,9 @@ export default {
           this.isLoading = false;
         } else {
           this.isLoading = false;
-          this.$router.push({ name: "Admin" });
+          setTimeout(() => {
+            this.$router.push({ name: "Admin" });
+          }, 1000);
         }
       } catch (error) {
         console.log("error", error);
@@ -511,6 +530,22 @@ export default {
     async handleGetData() {
       try {
         this.response = await search({
+          searchQuery: "",
+          price: "",
+          category: "",
+          utilities: [],
+          noSex: "",
+          status: "",
+          pageNumber: 0,
+          pageSize: 10,
+        });
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    async handleGetDataUser() {
+      try {
+        this.response = await searchUser({
           searchQuery: "",
           price: "",
           category: "",

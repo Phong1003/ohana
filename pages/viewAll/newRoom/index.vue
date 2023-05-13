@@ -263,7 +263,6 @@ export default {
                 price: new Intl.NumberFormat().format(item.room.price),
               };
             });
-            console.log(this.listRoom);
           } else {
             this.listRoom = [];
           }

@@ -3,12 +3,12 @@
     <div class="user__info">
       <div class="d-flex justify-content-between">
         <h4 class="user__title">Thông tin tài khoản</h4>
-        <div v-if="!isEdit" class="h4 cursor-pointer mr-3">
+        <!-- <div v-if="!isEdit" class="h4 cursor-pointer mr-3">
           <b-button @click="isEdit = true" class="bg-primary border-primary">
             <b-icon icon="pencil-square"></b-icon>
             <span>Chỉnh sửa</span>
           </b-button>
-        </div>
+        </div> -->
       </div>
       <div class="user__details">
         <div class="d-flex flex-wrap">
@@ -32,19 +32,10 @@
           </div>
           <div class="d-flex flex-column col-6 mt-3">
             <p class="mb-0 field__name mb-2">
-              Quyền <span class="text-danger">(*)</span>
+              Role <span class="text-danger">(*)</span>
             </p>
             <b-form-input
               v-model="userInfo.role"
-              :disabled="!isEdit"
-            ></b-form-input>
-          </div>
-          <div class="d-flex flex-column col-6 mt-3">
-            <p class="mb-0 field__name mb-2">
-              Mật khẩu <span class="text-danger">(*)</span>
-            </p>
-            <b-form-input
-              v-model="userInfo.password"
               :disabled="!isEdit"
             ></b-form-input>
           </div>
@@ -88,8 +79,7 @@ export default {
       isEdit: false,
     };
   },
-  created() {
-    console.log(this.$route)
+  async created() {
     if (typeof window !== "undefined") {
       this.userInfo = {
         ...this.userInfo,
