@@ -3,7 +3,7 @@
     <b-overlay :show="isLoading" rounded="sm">
       <div class="content__section mb-3">
         <div class="title">
-          <p class="h2">Tạo phòng mới!</p>
+          <p class="h2">{{ isEdit ? "Chỉnh sửa phòng" : "Tạo phòng mới!" }}</p>
         </div>
         <div
           class="title__cover d-flex flex-column h-100 justify-content-between"
@@ -417,6 +417,7 @@ export default {
         category: { error: "Vui lòng nhập loại phòng", status: false },
         file: { error: "Vui lòng chọn 5 file ảnh", status: false },
       },
+      isEdit: false,
     };
   },
   components: {
@@ -426,6 +427,7 @@ export default {
   },
   async created() {
     if (this.$route.params.edit) {
+      this.isEdit = true;
       await this.handleGetData();
       for (const item of this.response.data) {
         if (item.room.id == this.$route.params.id) {
@@ -496,7 +498,12 @@ export default {
             this.roomInfo.utilities == null ? [] : this.roomInfo.utilities,
         };
         const res = await editRoomsApi(params);
-        if (res.status == 200) this.isLoading = false
+        if (res.status != 200) {
+          this.isLoading = false;
+        } else {
+          this.isLoading = false;
+          this.$router.push({ name: "Admin" });
+        }
       } catch (error) {
         console.log("error", error);
       }
