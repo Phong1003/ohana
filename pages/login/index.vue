@@ -77,6 +77,11 @@ export default {
   computed:{
   ...mapGetters('dashboard', ['show']),
   },
+  created(){
+    if (typeof window !== "undefined") {
+      sessionStorage.clear()
+    }
+  },
   methods: {
     ...mapActions('dashboard', ['handleShow']),
     async handleLogin() {

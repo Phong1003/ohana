@@ -253,7 +253,7 @@ export default {
           if (response.data.length) {
             this.listRoom = response.data.map((item) => {
               return {
-                img: item.imgRoom[0].imgRoom,
+                img: item.imgRoom[0],
                 nameRoom: item.room.name,
                 typeRoom: item.room.category,
                 sex: item.room.noSex == 0 ? 'Tất cả' : item.room.noSex == 1 ? 'Nam' : item.room.noSex == 2 ? 'Nữ' : '',

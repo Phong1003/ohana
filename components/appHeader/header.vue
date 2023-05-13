@@ -19,7 +19,7 @@
           Đăng nhập/Đăng ký
         </div>
         <div
-          class="ml-2"
+          class="mx-2"
           style="cursor: pointer"
           @click="admin"
           v-if="role == 'ADMIN'"
@@ -27,13 +27,15 @@
           Admin
         </div>
         <div
-          class="ml-2"
+          class="mx-2"
           style="cursor: pointer"
           @click="toUser"
           v-if="role == 'USER'"
         >
           {{ userName }}
         </div>
+        <div v-if="role == 'ADMIN' || role == 'USER'">|</div>
+        <div style="cursor: pointer;" class="ml-2" @click="logOut" v-if="role == 'ADMIN' || role == 'USER'">Đăng xuất</div>
       </div>
     </div>
   </div>
@@ -78,6 +80,9 @@ export default {
     toUser() {
       this.$router.push({ name: "User" });
     },
+    logOut(){
+      this.$router.push({name: "login"})
+    }
   },
 };
 </script>
