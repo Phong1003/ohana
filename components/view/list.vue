@@ -131,7 +131,7 @@
 </template>
 
 <script>
-import { categoryApi, activeRoom } from "../../api/auth/index";
+import { categoryApi, activeRoom, deleteRoom } from "../../api/auth/index";
 
 export default {
   props: ["listHouse", "isLoading"],
@@ -196,11 +196,24 @@ export default {
     async handleActiveRoom(id) {
       try {
         const res = await activeRoom({ id: id, status: 1 });
-        this.isLoading = true;
         if (res.status == 200) {
-          this.isLoading = false;
-          this.$$emit("handleGetData");
-        } else alert("Some");
+          this.$router.go(0);
+        } else {
+          this.$emit("handleChangeLoading");
+          alert("Some");
+        }
+      } catch (error) {
+        console.log("error", error);
+      }
+    },
+    async handleDeleteRoom(roomID) {
+      try {
+        const response = await deleteRoom({
+          id: roomID,
+        });
+        if (response.status == 200) {
+          this.$router.go(0);
+        }
       } catch (error) {
         console.log("error", error);
       }
@@ -213,9 +226,6 @@ export default {
         name: this.checkRole == "ADMIN" ? "Admin-id" : "User-id",
         params: { id: roomID, edit: true },
       });
-    },
-    handleDeleteRoom(roomID) {
-      this.$emit("handleDeleteRoom", roomID);
     },
     handleChangePage() {
       window.scrollTo({ top: 0, behavior: "smooth" });

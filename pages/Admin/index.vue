@@ -8,8 +8,6 @@
             v-if="tabIndex == 1"
             :listHouse="listHouse"
             :isLoading="isLoading"
-            @handleGetData="handleGetData"
-            @handleDeleteRoom="handleDeleteRoom"
           />
           <TableAccount v-if="tabIndex == 2" />
         </div>
@@ -66,18 +64,6 @@ export default {
         }
       } catch (error) {
         console.log(error);
-      }
-    },
-    async handleDeleteRoom(roomID) {
-      try {
-        const response = await deleteRoom({
-          id: roomID,
-        });
-        if (response.status == 200) {
-          await this.handleGetData();
-        }
-      } catch (error) {
-        console.log("error", error);
       }
     },
   },
