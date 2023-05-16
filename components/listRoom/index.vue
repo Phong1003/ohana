@@ -1,7 +1,7 @@
 <template>
   <div class="d-flex justify-content-between align-items-center mt-3 mb-3">
     <div class="d-flex">
-      <b-img :src="inforCard?.img[0]" class="img_room mr-3" />
+      <b-img :src="inforCard?.img" class="img_room mr-3" />
       <div>
         <div class="name_room">{{ inforCard.nameRoom }}</div>
         <div class="d-flex align-items-center mb-3">

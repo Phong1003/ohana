@@ -102,15 +102,16 @@ export default {
         pageNumber: 0,
         pageSize: 10
       })
+      console.log(response);
       if(response && response.data.length){
         this.listRoom = response.data.slice(0, 5).map(item => {
           return {
             id: item.room.id,
             uliti: item.utilities,
-            img: item.imgRoom,
+            img: item.imgRoom[0] ? item.imgRoom[0] : null,
             nameRoom: item.room.name,
             typeRoom: item.room.category,
-            sex: item.room.noSex == 0 ? 'Tất cả' : item.room.noSex == 1 ? 'Nam' : item.room.noSex == 2 ? 'Nữ' : '',
+            sex: item.room.noSex == 0 ? 'Nam' : item.room.noSex == 1 ? 'Nữ' : item.room.noSex == 2 ? 'Tất cả' : '',
             acreage: item.room.capacity,
             address: item.room.address,
             area: item.room.area,
@@ -144,7 +145,7 @@ export default {
           category: "",
           utilities: [],
           noSex: "",
-          status: "",
+          status: "1",
           pageNumber: 0,
           pageSize: 10
         })
@@ -155,7 +156,7 @@ export default {
               img: item.room.imgRoom,
               nameRoom: item.room.name,
               typeRoom: item.room.category,
-              sex: item.room.noSex == 0 ? 'Tất cả' : item.room.noSex == 1 ? 'Nam' : item.room.noSex == 2 ? 'Nữ' : '',
+              sex: item.room.noSex == 0 ? 'Nam' : item.room.noSex == 1 ? 'Nữ' : item.room.noSex == 2 ? 'Tất cả' : '',
               acreage: item.room.capacity,
               address: item.room.address,
               area: item.room.area,

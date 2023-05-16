@@ -155,9 +155,9 @@ export default {
         { text: "11tr-15tr", value: "third" },
       ],
       optionsGender: [
-        { text: "Tất cả", value: "all" },
-        { text: "Nam", value: "man" },
-        { text: "Nữ", value: "woman" },
+        { text: "Tất cả", value: "2" },
+        { text: "Nam", value: "0" },
+        { text: "Nữ", value: "1" },
       ],
       optionsUlities: [
         { item: "1", name: "WC riêng" },
@@ -198,14 +198,15 @@ export default {
         pageNumber: 0,
         pageSize: 10,
       });
+      console.log(response);
       if (response && response.data.length) {
         this.listRoom = response.data.map((item) => {
           return {
             id: item.room.id,
-            img: item.room.imgRoom,
+            img: item.imgRoom[0] ? item.imgRoom[0] : null,
             nameRoom: item.room.name,
             typeRoom: item.room.category,
-            sex: item.room.noSex == 0 ? 'Tất cả' : item.room.noSex == 1 ? 'Nam' : item.room.noSex == 2 ? 'Nữ' : '',
+            sex: item.room.noSex == 0 ? 'Nam' : item.room.noSex == 1 ? 'Nữ' : item.room.noSex == 2 ? 'Tất cả' : '',
             acreage: item.room.capacity,
             address: item.room.address,
             area: item.room.area,
@@ -245,7 +246,7 @@ export default {
           category: this.categoryRadio,
           utilities: this.ulitiesCheck,
           noSex: this.genderRadio,
-          status: "",
+          status: "1",
           pageNumber: 0,
           pageSize: 10,
         });
@@ -253,10 +254,10 @@ export default {
           if (response.data.length) {
             this.listRoom = response.data.map((item) => {
               return {
-                img: item.imgRoom[0],
+                img: item.imgRoom[0] ? item.imgRoom[0] : null,
                 nameRoom: item.room.name,
                 typeRoom: item.room.category,
-                sex: item.room.noSex == 0 ? 'Tất cả' : item.room.noSex == 1 ? 'Nam' : item.room.noSex == 2 ? 'Nữ' : '',
+                sex: item.room.noSex == 0 ? 'Nam' : item.room.noSex == 1 ? 'Nữ' : item.room.noSex == 2 ? 'Tất cả' : '',
                 acreage: item.room.capacity,
                 address: item.room.address,
                 area: item.room.area,
