@@ -103,11 +103,11 @@
                     <p class="field__value">
                       {{
                         dataDetail.room?.noSex == "0"
-                          ? "Tất cả"
-                          : dataDetail.room?.noSex == "1"
                           ? "Nam"
-                          : dataDetail.room?.noSex == "2"
+                          : dataDetail.room?.noSex == "1"
                           ? "Nữ"
+                          : dataDetail.room?.noSex == "2"
+                          ? "Tất cả"
                           : ""
                       }}
                     </p>
@@ -312,11 +312,14 @@ export default {
     } else {
       await this.handleGetData();
     }
-    for (const item of this.response.data) {
-      if (item.room.id == this.$route.params.id) {
-        this.dataDetail = item;
+    if(this.response && this.response.data) {
+      for (const item of this.response.data) {
+        if (item.room.id == this.$route.params.id) {
+          this.dataDetail = item;
+        }
       }
     }
+    console.log(this.dataDetail);
     this.optionsUlities = this.optionsUlities
       .map((el) => {
         if (this.dataDetail.utilities?.includes(el.item)) {
@@ -341,6 +344,7 @@ export default {
           status: "",
           pageNumber: 0,
           pageSize: 10,
+          address: ''
         });
       } catch (error) {
         console.log(error);
