@@ -62,13 +62,13 @@ export default {
   },
   methods: {
     async handleSignUp(){
-      // try {
+      try {
         const response = await registerApi(this.formRegister)
         console.log(response);
         this.$emit('goBack')
-      // } catch (error) {
-      //   console.log(error);
-      // }
+      } catch (error) {
+        console.log(error);
+      }
     }
   }
 }
