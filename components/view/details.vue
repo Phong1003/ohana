@@ -282,7 +282,7 @@ export default {
   },
   data() {
     return {
-      dataDetail: {},
+      dataDetail: [],
       isLoading: true,
       response: "",
       isShowEdit: false,
@@ -301,6 +301,7 @@ export default {
         { item: "4", name: "Cửa sổ", img: require("@/assets/icon/window.svg") },
       ],
       checkRole: "",
+      res: ""
     };
   },
   async created() {
@@ -313,31 +314,24 @@ export default {
     } else {
       await this.handleGetData();
     }
-    if(this.response && this.response.data) {
-      for (const item of this.response.data) {
-        if (item.room.id == this.$route.params.id) {
-          this.dataDetail = item;
-        }
-      }
-    }
-    console.log(this.dataDetail);
-    this.optionsUlities = this.optionsUlities
-      .map((el) => {
-        if (this.dataDetail.utilities?.includes(el.item)) {
-          return el;
-        }
-      })
-      .filter((data) => data != undefined);
-    if (Object.keys(this.dataDetail)) {
-      this.isLoading = false;
-    }
     await this.getDetails();
   },
   methods: {
     async getDetails() {
-      const res = await GetDetail(this.$route.params.id);
-      console.log(res.data)
-      console.log(this.dataDetail)
+      this.res = await GetDetail(this.$route.params.id);
+      this.dataDetail = this.res.data
+      console.log(this.dataDetail);
+      this.optionsUlities = this.optionsUlities
+        .map((el) => {
+          if (this.dataDetail.utilities?.includes(el.item)) {
+            return el;
+          }
+        })
+        .filter((data) => data != undefined);
+        console.log(this.optionsUlities);
+      if (Object.keys(this.dataDetail)) {
+        this.isLoading = false;
+      }
     },
     async handleGetData() {
       try {
