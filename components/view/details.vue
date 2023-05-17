@@ -102,11 +102,11 @@
                     <p class="mb-0 field__name">ĐỐI TƯỢNG CHO THUÊ</p>
                     <p class="field__value">
                       {{
-                        dataDetail.room?.noSex == "0"
+                        dataDetail.room?.noSex == 0
                           ? "Tất cả"
-                          : dataDetail.room?.noSex == "1"
+                          : dataDetail.room?.noSex == 1
                           ? "Nam"
-                          : dataDetail.room?.noSex == "2"
+                          : dataDetail.room?.noSex == 2
                           ? "Nữ"
                           : ""
                       }}
@@ -265,6 +265,7 @@
 </template>
 
 <script>
+import { GetDetail } from "../../api/auth/index";
 import { search, searchUser } from "../../api/dashboard";
 import EditHome from "../../components/view/create/newHome.vue";
 import { directive as viewer } from "v-viewer";
@@ -327,8 +328,14 @@ export default {
     if (Object.keys(this.dataDetail)) {
       this.isLoading = false;
     }
+    await this.getDetails();
   },
   methods: {
+    async getDetails() {
+      const res = await GetDetail(this.$route.params.id);
+      console.log(res.data)
+      console.log(this.dataDetail)
+    },
     async handleGetData() {
       try {
         this.response = await search({

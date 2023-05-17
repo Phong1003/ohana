@@ -1,5 +1,5 @@
 import api from "../api";
-import { URL_LOGIN, URL_REGISTER, URL_SEARCH, URL_NEW_HOME, URL_CATEGORY, URL_GET_USER, URL_USER, URL_USER_EDIT, URL_EDIT, URL_CREATE_CATEGORY, URL_DELETE, URL_ACTIVE } from "../../constants/endpoints";
+import { URL_GET_DETAILS, URL_LOGIN, URL_REGISTER, URL_SEARCH, URL_NEW_HOME, URL_CATEGORY, URL_GET_USER, URL_USER, URL_USER_EDIT, URL_EDIT, URL_CREATE_CATEGORY, URL_DELETE, URL_ACTIVE } from "../../constants/endpoints";
 
 export function loginApi(data) {
   return api.post(URL_LOGIN, data);
@@ -47,4 +47,8 @@ export function editUser(data) {
 
 export function getAllUser(data) {
   return api.post(URL_GET_USER, data)
+}
+
+export function GetDetail(data) {
+  return api.get(URL_GET_DETAILS + `${data}`)
 }
