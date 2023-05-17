@@ -307,10 +307,10 @@ export default {
       this.checkRole = sessionStorage.getItem("role");
     }
     this.isShowEdit = this.$route.params.edit;
-    if (this.checkRole == "ADMIN") {
-      await this.handleGetData();
-    } else {
+    if (this.checkRole == "USER") {
       await this.handleGetDataUser();
+    } else {
+      await this.handleGetData();
     }
     for (const item of this.response.data) {
       if (item.room.id == this.$route.params.id) {
@@ -332,6 +332,7 @@ export default {
     async handleGetData() {
       try {
         this.response = await search({
+          address: "",
           searchQuery: "",
           price: "",
           category: "",
@@ -348,7 +349,7 @@ export default {
     async handleGetDataUser() {
       try {
         this.response = await searchUser({
-          searchQuery: "",
+          address: "",
           price: "",
           category: "",
           utilities: [],
@@ -356,6 +357,7 @@ export default {
           status: "",
           pageNumber: 0,
           pageSize: 10,
+          searchQuery: "",
         });
       } catch (error) {
         console.log(error);
