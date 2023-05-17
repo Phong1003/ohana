@@ -197,13 +197,14 @@ export default {
         status: "1",
         pageNumber: 0,
         pageSize: 10,
+        address: ""
       });
       console.log(response);
       if (response && response.data.length) {
         this.listRoom = response.data.map((item) => {
           return {
             id: item.room.id,
-            img: item.imgRoom[0] ? item.imgRoom[0] : null,
+            img: item.room.imgRoom,
             nameRoom: item.room.name,
             typeRoom: item.room.category,
             sex: item.room.noSex == 0 ? 'Nam' : item.room.noSex == 1 ? 'Nữ' : item.room.noSex == 2 ? 'Tất cả' : '',
@@ -249,12 +250,13 @@ export default {
           status: "1",
           pageNumber: 0,
           pageSize: 10,
+          address: ""
         });
         if (response) {
           if (response.data.length) {
             this.listRoom = response.data.map((item) => {
               return {
-                img: item.imgRoom[0] ? item.imgRoom[0] : null,
+                img: item.room.imgRoom,
                 nameRoom: item.room.name,
                 typeRoom: item.room.category,
                 sex: item.room.noSex == 0 ? 'Nam' : item.room.noSex == 1 ? 'Nữ' : item.room.noSex == 2 ? 'Tất cả' : '',

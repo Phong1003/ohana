@@ -68,7 +68,7 @@
         >
           <div class="item__details my-3 d-flex justify-content-between">
             <div class="col-4">
-              <img :src="item.imgRoom[0]" class="w-100 img__custom h-100" />
+              <img :src="item.room.imgRoom" class="w-100 img__custom h-100" />
             </div>
             <div class="col-8 px-0 d-flex flex-column">
               <div class="item__title">

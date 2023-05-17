@@ -55,6 +55,7 @@ export default {
           pageNumber: 0,
           pageSize: 10,
           price: "",
+          address: ""
         });
         if (response.status) {
           this.isLoading = false;

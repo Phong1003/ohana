@@ -100,7 +100,8 @@ export default {
         noSex: "",
         status: "1",
         pageNumber: 0,
-        pageSize: 10
+        pageSize: 10,
+        address: ""
       })
       console.log(response);
       if(response && response.data.length){
@@ -108,7 +109,7 @@ export default {
           return {
             id: item.room.id,
             uliti: item.utilities,
-            img: item.imgRoom[0] ? item.imgRoom[0] : null,
+            img: item.room.imgRoom,
             nameRoom: item.room.name,
             typeRoom: item.room.category,
             sex: item.room.noSex == 0 ? 'Nam' : item.room.noSex == 1 ? 'Nữ' : item.room.noSex == 2 ? 'Tất cả' : '',
@@ -147,7 +148,8 @@ export default {
           noSex: "",
           status: "1",
           pageNumber: 0,
-          pageSize: 10
+          pageSize: 10,
+          address: ""
         })
         if(response && response.data.length){
           this.listRoom = response.data.slice(0, 5).map(item => {
