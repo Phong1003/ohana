@@ -75,7 +75,7 @@
                   </p>
                   <b-form-input
                     v-model="roomInfo.houseowner"
-                    :required="objError.houseowner.status"
+                    :disabled="true"
                   ></b-form-input>
                   <b-form-invalid-feedback
                     class="d-block"
@@ -90,7 +90,7 @@
                   </p>
                   <b-form-input
                     v-model="roomInfo.ownerphone"
-                    :required="objError.ownerphone.status"
+                    :disabled="true"
                   ></b-form-input>
                   <b-form-invalid-feedback
                     class="d-block"
@@ -394,8 +394,8 @@ export default {
         electricprice: "",
         waterprice: "",
         otherprice: "",
-        houseowner: "",
-        ownerphone: "",
+        houseowner: sessionStorage.getItem("fullName"),
+        ownerphone: sessionStorage.getItem("phone"),
         imgRoom: [],
         noSex: "",
         utilities: [],

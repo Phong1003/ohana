@@ -9,6 +9,13 @@
             <span>Chỉnh sửa</span>
           </b-button>
         </div> -->
+        <b-button class="d-flex align-items-center border-0" style="height: 30px; background-color: #007bff;" v-b-modal.modal-prevent-closing>
+          <div>Nạp tiền</div>
+        </b-button>
+      </div>
+      <div v-if="rechargeSuccess" class="d-flex align-items-center justify-content-center" style="background-color: green; height: 30px;">
+        <div class="mr-2 text-white">Nạp tiền thành công</div>
+        <b-icon icon="check-circle" style="color: white;" />
       </div>
       <div class="user__details">
         <div class="d-flex flex-wrap">
@@ -48,6 +55,15 @@
               :disabled="!isEdit"
             ></b-form-input>
           </div>
+          <div class="d-flex flex-column col-6 mt-3">
+            <p class="mb-0 field__name mb-2">
+              Số tiền hiện có <span class="text-danger">(*)</span>
+            </p>
+            <b-form-input
+              v-model="totalMoney"
+              :disabled="!isEdit"
+            ></b-form-input>
+          </div>
         </div>
         <div
           v-if="isEdit"
@@ -59,12 +75,37 @@
           </b-button>
         </div>
       </div>
+      <b-modal
+        id="modal-prevent-closing"
+        ref="modal"
+        title="Nạp tiền vào tài khoản"
+        modal-class="form_money"
+        @show="resetModal"
+        @hidden="resetModal"
+        @ok="recharge"
+      >
+        <form ref="form">
+          <b-form-group
+            label="Số tiền cần nạp"
+            label-for="name-input"
+            invalid-feedback="money is required"
+            :state="nameState"
+          >
+            <b-form-input
+              id="name-input"
+              v-model="moneys"
+              :state="moneyState"
+              required
+            ></b-form-input>
+          </b-form-group>
+        </form>
+      </b-modal>
     </div>
   </div>
 </template>
 
 <script>
-import { editUser, getAllUser } from "../../api/auth/index";
+import { editUser, getAllUser, getMoney, getUserByToken } from "../../api/auth/index";
 export default {
   data() {
     return {
@@ -77,6 +118,10 @@ export default {
         status: "0",
       },
       isEdit: false,
+      moneys: '',
+      moneyState: null,
+      totalMoney: '',
+      rechargeSuccess: false
     };
   },
   async created() {
@@ -89,6 +134,7 @@ export default {
         email: sessionStorage.getItem("email"),
       };
     }
+    await this.getMoneyUser()
   },
   methods: {
     async handleSaveEdit() {
@@ -96,6 +142,34 @@ export default {
         ...this.userInfo,
       });
       this.isEdit = false;
+    },
+    async recharge(){
+      try{
+        await getMoney({
+          money: this.moneys
+        })
+        this.rechargeSuccess = true
+        this.getMoneyUser()
+        setTimeout(() => {
+          this.rechargeSuccess = false
+        }, 3000)
+      }
+      catch(error){
+        console.log(error);
+      }
+    },
+    async getMoneyUser(){
+      try {
+        const res = await getUserByToken()
+        console.log(res);
+        this.totalMoney = new Intl.NumberFormat().format(res.data.bankBal) + " " +'VND'
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    resetModal() {
+      this.moneys = ''
+      this.moneyState = null
     },
   },
 };
@@ -112,5 +186,9 @@ export default {
 .user__title {
   padding-bottom: 20px;
   color: #333333;
+}
+.modal-backdrop{
+  width: unset !important;
+  height: unset !important;
 }
 </style>
