@@ -1,6 +1,13 @@
 <template>
   <div class="house__detail__container">
     <b-overlay :show="isLoading" rounded="sm">
+      <div
+        v-if="isShowMessage"
+        class="d-flex align-items-center justify-content-center bg-success mb-3"
+        :class="alertStatus == 'success' ? 'bg-success' : 'bg-danger'"
+      >
+        <h4 class="mr-2 text-white">{{ alertMessage }}</h4>
+      </div>
       <div class="content__section mb-3">
         <div class="title d-flex justify-content-between">
           <p class="h2">{{ isEdit ? "Chỉnh sửa phòng" : "Tạo phòng mới!" }}</p>
@@ -367,15 +374,24 @@
             @click="handleAddNewHome()"
             >ADD NEW</b-button
           >
-          <b-button
-            v-else
-            class="bg-primary button__create"
-            @click="handleEditHome()"
+          <b-button v-else class="bg-primary button__create" v-b-modal.editRoom
             >EDIT</b-button
           >
         </div>
       </div>
     </b-overlay>
+    <b-modal
+      id="editRoom"
+      ref="modal"
+      title="Bạn có muốn chỉnh sửa phòng này không?"
+      modal-class="form_money"
+      @hidden="closeModal"
+      @ok="handleEditHome"
+    >
+      <div class="d-block text-center">
+        <h3>Xác nhận chỉnh sửa phòng</h3>
+      </div>
+    </b-modal>
   </div>
 </template>
 
@@ -391,6 +407,9 @@ import { search, searchUser } from "../../../api/dashboard";
 export default {
   data() {
     return {
+      isShowMessage: false,
+      alertStatus: "",
+      alertMessage: "",
       listCategory: [],
       fileHolder: [],
       roomInfo: {
@@ -455,8 +474,8 @@ export default {
     }
     if (this.$route.params.edit) {
       this.isEdit = true;
+      await this.getDetails();
     }
-    await this.getDetails();
     if (Object.keys(this.roomInfo)) {
       this.isLoading = false;
     }
@@ -523,17 +542,23 @@ export default {
         const params = {
           ...this.roomInfo,
           imgRoom: this.imgList,
+          noSex: this.roomInfo.noSex,
           utilities: this.utilities == null ? [] : this.utilities,
         };
         const res = await editRoomsApi(params);
         if (res.status == 200) {
           this.isLoading = false;
+          this.handleShowAlert(true, "success", "Chỉnh sửa phòng thành công!");
           setTimeout(() => {
             this.$router.push({ name: "Admin" });
-          }, 1000);
+          }, 1500);
         }
       } catch (error) {
         this.isLoading = false;
+        this.handleShowAlert(true, "danger", "Chỉnh sửa phòng thất bại!");
+        setTimeout(() => {
+          this.isShowMessage = false;
+        }, 5000);
         console.log("error", error);
       }
     },
@@ -571,22 +596,39 @@ export default {
         console.log(error);
       }
     },
+    handleShowAlert(isShow, status, message) {
+      this.isShowMessage = isShow;
+      this.alertStatus = status;
+      this.alertMessage = message;
+    },
     async handleAddNewHome() {
       try {
         await this.handleValidateForm();
         window.scrollTo({ top: 0, behavior: "smooth" });
+        this.isLoading = true;
         if (this.objError.isFormError) {
           return;
         }
         const params = {
           ...this.roomInfo,
           imgRoom: this.imgList,
+          noSex: this.roomInfo.noSex,
         };
         const res = await createApi(params);
         if (res.status == 200) {
-          this.$router.go(-1);
+          this.isLoading = false;
+          this.handleShowAlert(true, "success", "Tạo phòng mới thành công!");
+          setTimeout(() => {
+            this.isShowMessage = false;
+            this.$router.go(-1);
+          }, 1000);
         }
       } catch (error) {
+        this.isLoading = false;
+        this.handleShowAlert(true, "success", "Tạo phòng thất bại!");
+        setTimeout(() => {
+          this.isShowMessage = false;
+        }, 3000);
         console.log("error", error);
       }
     },
@@ -614,7 +656,6 @@ export default {
     },
     handleUploadImg(e) {
       let fileInput = e;
-      console.log(1);
       const length = fileInput.target.files.length;
       for (let i = 0; i < length; i++) {
         const file = fileInput.target.files[i];

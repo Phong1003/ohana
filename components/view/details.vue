@@ -309,11 +309,6 @@ export default {
       this.checkRole = sessionStorage.getItem("role");
     }
     this.isShowEdit = this.$route.params.edit;
-    if (this.checkRole == "USER") {
-      await this.handleGetDataUser();
-    } else {
-      await this.handleGetData();
-    }
     await this.getDetails();
   },
   methods: {
@@ -329,41 +324,6 @@ export default {
         .filter((data) => data != undefined);
       if (Object.keys(this.dataDetail)) {
         this.isLoading = false;
-      }
-    },
-    async handleGetData() {
-      try {
-        this.response = await search({
-          address: "",
-          searchQuery: "",
-          price: "",
-          category: "",
-          utilities: [],
-          noSex: "",
-          status: "",
-          pageNumber: 0,
-          pageSize: 10,
-          address: "",
-        });
-      } catch (error) {
-        console.log(error);
-      }
-    },
-    async handleGetDataUser() {
-      try {
-        this.response = await searchUser({
-          address: "",
-          price: "",
-          category: "",
-          utilities: [],
-          noSex: "",
-          status: "",
-          pageNumber: 0,
-          pageSize: 10,
-          searchQuery: "",
-        });
-      } catch (error) {
-        console.log(error);
       }
     },
   },

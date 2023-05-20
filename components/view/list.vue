@@ -1,6 +1,13 @@
 <template>
   <div class="list__container">
     <b-overlay :show="isLoading" rounded="sm">
+      <div
+        v-if="isShowMessage"
+        class="d-flex align-items-center justify-content-center bg-success mb-3"
+        :class="alertStatus == 'success' ? 'bg-success' : 'bg-danger'"
+      >
+        <h4 class="mr-2 text-white">{{ alertMessage }}</h4>
+      </div>
       <div class="d-flex justify-content-between">
         <h4 class="list__title">Tất cả các phòng</h4>
         <div class="h4 cursor-pointer mr-3">
@@ -12,22 +19,16 @@
       </div>
       <div class="items" v-for="(item, index) in lists" :key="index">
         <div class="action-contain pt-2 px-3 d-flex">
-          <div class="icon-action mr-2 h5 cursor-pointer">
+          <div
+            class="icon-action mr-2 h5 cursor-pointer"
+            v-if="item.room.createdby == currentEmail"
+          >
             <b-button
               @click="handleEditRoom(item.room.id)"
               class="bg-success border-success"
             >
               <b-icon icon="pencil-square"> </b-icon>
               <span>Chỉnh sửa</span>
-            </b-button>
-          </div>
-          <div class="icon-action mr-2 h5 cursor-pointer">
-            <b-button
-              @click="handleDeleteRoom(item.room.id)"
-              class="bg-danger border-danger"
-            >
-              <b-icon icon="trash"></b-icon>
-              <span>Xóa</span>
             </b-button>
           </div>
           <div
@@ -58,6 +59,16 @@
             <b-button class="bg-primary border-primary">
               <b-icon icon="hand-thumbs-up"></b-icon>
               <span>Đã xác nhận</span>
+            </b-button>
+          </div>
+          <div class="icon-action mr-2 h5 cursor-pointer">
+            <b-button
+              @click="handleGetRoomID(item.room.id)"
+              class="bg-danger border-danger"
+              v-b-modal.deleteRoom
+            >
+              <b-icon icon="trash"></b-icon>
+              <span>Xóa</span>
             </b-button>
           </div>
         </div>
@@ -137,6 +148,18 @@
         />
       </div>
     </b-overlay>
+    <b-modal
+      id="deleteRoom"
+      ref="modal"
+      title="Bạn có muốn xóa phòng này không?"
+      modal-class="form_money"
+      @hidden="closeModal"
+      @ok="handleDeleteRoom(roomID)"
+    >
+      <div class="d-block text-center">
+        <h3>Xác nhận xóa phòng</h3>
+      </div>
+    </b-modal>
   </div>
 </template>
 
@@ -152,6 +175,11 @@ export default {
       listCategory: [],
       checkRole: "",
       listImg: [],
+      currentEmail: "",
+      roomID: "",
+      isShowMessage: false,
+      alertStatus: "",
+      alertMessage: "",
     };
   },
   computed: {
@@ -179,9 +207,17 @@ export default {
     await this.handleGetCategory();
     if (typeof window !== "undefined") {
       this.checkRole = sessionStorage.getItem("role");
+      this.currentEmail = sessionStorage.getItem("email");
+      console.log(this.currentEmail);
     }
   },
   methods: {
+    handleGetRoomID(roomID) {
+      this.roomID = roomID;
+    },
+    closeModal() {
+      this.roomID = "";
+    },
     handleReturnNameCategory(id) {
       const data = this.listCategory.find((el) => el.id == id);
       if (data) {
@@ -216,15 +252,25 @@ export default {
         console.log("error", error);
       }
     },
+    handleShowAlert(isShow, status, message) {
+      this.isShowMessage = isShow;
+      this.alertStatus = status;
+      this.alertMessage = message;
+    },
     async handleDeleteRoom(roomID) {
       try {
         const response = await deleteRoom({
           id: roomID,
         });
         if (response.status == 200) {
-          this.$router.go(0);
+          this.handleShowAlert(true, "success", "Xóa phòng thành công");
+          setTimeout(() => {
+            this.isShowMessage = false;
+            this.$router.go(0);
+          }, 1000);
         }
       } catch (error) {
+        this.handleShowAlert(true, "danger", "Xóa phòng thất bại");
         console.log("error", error);
       }
     },
