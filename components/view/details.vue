@@ -301,7 +301,7 @@ export default {
         { item: "4", name: "Cửa sổ", img: require("@/assets/icon/window.svg") },
       ],
       checkRole: "",
-      res: ""
+      res: "",
     };
   },
   async created() {
@@ -319,8 +319,7 @@ export default {
   methods: {
     async getDetails() {
       this.res = await GetDetail(this.$route.params.id);
-      this.dataDetail = this.res.data
-      console.log(this.dataDetail);
+      this.dataDetail = this.res.data;
       this.optionsUlities = this.optionsUlities
         .map((el) => {
           if (this.dataDetail.utilities?.includes(el.item)) {
@@ -328,7 +327,6 @@ export default {
           }
         })
         .filter((data) => data != undefined);
-        console.log(this.optionsUlities);
       if (Object.keys(this.dataDetail)) {
         this.isLoading = false;
       }
@@ -345,7 +343,7 @@ export default {
           status: "",
           pageNumber: 0,
           pageSize: 10,
-          address: ''
+          address: "",
         });
       } catch (error) {
         console.log(error);

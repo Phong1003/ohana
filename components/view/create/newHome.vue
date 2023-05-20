@@ -41,7 +41,7 @@
             >
               {{ objError.file.error }}
             </b-form-invalid-feedback>
-            <div v-if="imgList.length" class="d-flex">
+            <div v-if="imgList?.length" class="d-flex">
               <div
                 v-for="(item, index) in imgList"
                 :key="index"
@@ -55,7 +55,7 @@
         </div>
         <div
           class="information__section mt-4"
-          :class="imgList.length ? 'custom_height' : ''"
+          :class="imgList?.length ? 'custom_height' : ''"
         >
           <div class="house__section px-0">
             <div class="house__detail mb-4">
@@ -119,6 +119,7 @@
                   <b-form-input
                     v-model="roomInfo.price"
                     placeholder="Nhập giá phòng"
+                    type="number"
                     :required="objError.price.status"
                   ></b-form-input>
                   <b-form-invalid-feedback
@@ -134,6 +135,7 @@
                   </p>
                   <b-form-input
                     v-model="roomInfo.capacity"
+                    type="number"
                     placeholder="Nhập diện tích phòng"
                     :required="objError.capacity.status"
                   ></b-form-input>
@@ -152,6 +154,7 @@
                   </p>
                   <b-form-input
                     v-model="roomInfo.deposit"
+                    type="number"
                     placeholder="Nhập tiền cần cọc"
                     :required="objError.deposit.status"
                   ></b-form-input>
@@ -167,6 +170,7 @@
                     TIỀN ĐIỆN <span class="text-danger">(*)</span>
                   </p>
                   <b-form-input
+                    type="number"
                     v-model="roomInfo.electricprice"
                     placeholder="Nhập tiền điện"
                     :required="objError.electricprice.status"
@@ -185,6 +189,7 @@
                     TIỀN NƯỚC <span class="text-danger">(*)</span>
                   </p>
                   <b-form-input
+                    type="number"
                     v-model="roomInfo.waterprice"
                     placeholder="Nhập tiền nước"
                     :required="objError.waterprice.status"
@@ -201,6 +206,7 @@
                     PHÍ TIỆN ÍCH <span class="text-danger">(*)</span>
                   </p>
                   <b-form-input
+                    type="number"
                     v-model="roomInfo.otherprice"
                     placeholder="Nhập tiền tiện ích"
                     :required="objError.otherprice.status"
@@ -278,7 +284,7 @@
               <div class="mt-3 d-flex flex-wrap">
                 <b-form-group class="w-100">
                   <b-form-checkbox-group
-                    v-model="roomInfo.utilities"
+                    v-model="utilities"
                     id="checkbox-group"
                     name="utilities"
                     class="d-flex align-items-center justify-content-between w-100"
@@ -374,7 +380,12 @@
 </template>
 
 <script>
-import { createApi, categoryApi, editRoomsApi } from "../../../api/auth/index";
+import {
+  createApi,
+  categoryApi,
+  editRoomsApi,
+  GetDetail,
+} from "../../../api/auth/index";
 import { search, searchUser } from "../../../api/dashboard";
 
 export default {
@@ -394,12 +405,13 @@ export default {
         electricprice: "",
         waterprice: "",
         otherprice: "",
-        houseowner: sessionStorage.getItem("fullName"),
-        ownerphone: sessionStorage.getItem("phone"),
+        houseowner: "",
+        ownerphone: "",
         imgRoom: [],
         noSex: "",
         utilities: [],
       },
+      utilities: [],
       imgList: [],
       optionsGender: [
         { name: "Tất cả", id: "0" },
@@ -435,28 +447,28 @@ export default {
   async created() {
     if (typeof window !== "undefined") {
       this.checkRole = sessionStorage.getItem("role");
+      this.roomInfo = {
+        ...this.roomInfo,
+        houseowner: sessionStorage.getItem("fullName"),
+        ownerphone: sessionStorage.getItem("phone"),
+      };
     }
     if (this.$route.params.edit) {
       this.isEdit = true;
-      if (this.checkRole == "ADMIN") {
-        await this.handleGetData();
-      } else {
-        await this.handleGetDataUser();
-      }
-      for (const item of this.response.data) {
-        if (item.room.id == this.$route.params.id) {
-          this.roomInfo = { ...item.room };
-          this.roomInfo.utilities = item.utilities;
-          this.imgList = item.imgRoom;
-        }
-      }
     }
+    await this.getDetails();
     if (Object.keys(this.roomInfo)) {
       this.isLoading = false;
     }
     await this.handleGetCategory();
   },
   methods: {
+    async getDetails() {
+      const res = await GetDetail(this.$route.params.id);
+      this.roomInfo = res.data.room;
+      res.data.utilities.map((el) => this.utilities.push(el));
+      this.imgList = res.data.imgRoom;
+    },
     handleValidateForm() {
       this.objError.check = true;
       this.validateForm();
@@ -511,19 +523,17 @@ export default {
         const params = {
           ...this.roomInfo,
           imgRoom: this.imgList,
-          utilities:
-            this.roomInfo.utilities == null ? [] : this.roomInfo.utilities,
+          utilities: this.utilities == null ? [] : this.utilities,
         };
         const res = await editRoomsApi(params);
-        if (res.status != 200) {
-          this.isLoading = false;
-        } else {
+        if (res.status == 200) {
           this.isLoading = false;
           setTimeout(() => {
             this.$router.push({ name: "Admin" });
           }, 1000);
         }
       } catch (error) {
+        this.isLoading = false;
         console.log("error", error);
       }
     },
@@ -604,6 +614,7 @@ export default {
     },
     handleUploadImg(e) {
       let fileInput = e;
+      console.log(1);
       const length = fileInput.target.files.length;
       for (let i = 0; i < length; i++) {
         const file = fileInput.target.files[i];

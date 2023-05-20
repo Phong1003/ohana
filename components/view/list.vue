@@ -84,7 +84,17 @@
                   </div>
                   <div class="mb-4">
                     <b-icon icon="people"></b-icon>
-                    <span class="mr-3"> {{ item.room.noSex == 0 ? 'Nam' : item.room.noSex == 1 ? 'Nữ' : item.room.noSex == 2 ? 'Tất cả' : '' }}</span>
+                    <span class="mr-3">
+                      {{
+                        item.room.noSex == 0
+                          ? "Nam"
+                          : item.room.noSex == 1
+                          ? "Nữ"
+                          : item.room.noSex == 2
+                          ? "Tất cả"
+                          : ""
+                      }}</span
+                    >
                     <b-icon icon="rulers"></b-icon>
                     <span>{{ item.room.capacity }}</span>
                   </div>
