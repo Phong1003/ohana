@@ -18,58 +18,74 @@
         </div>
       </div>
       <div class="items" v-for="(item, index) in lists" :key="index">
-        <div class="action-contain pt-2 px-3 d-flex">
-          <div
-            class="icon-action mr-2 h5 cursor-pointer"
-            v-if="item.room.createdby == currentEmail"
-          >
-            <b-button
-              @click="handleEditRoom(item.room.id)"
-              class="bg-success border-success"
+        <div class="d-flex justify-content-between">
+          <div class="action-contain pt-2 px-3 d-flex">
+            <div class="icon-action mr-2 h5" v-if="!item.room.status">
+              <b-button class="bg-info border-info non-cursor">
+                <b-icon icon="emoji-neutral"></b-icon>
+                <span>Chưa xác nhận</span>
+              </b-button>
+            </div>
+            <div class="icon-action mr-2 h5" v-if="item.room.status == 1">
+              <b-button class="bg-primary border-primary non-cursor">
+                <b-icon icon="emoji-sunglasses"></b-icon>
+                <span>Đã xác nhận</span>
+              </b-button>
+            </div>
+            <div class="icon-action mr-2 h5" v-if="item.room.status == -1">
+              <b-button class="bg-danger border-danger non-cursor">
+                <b-icon icon="emoji-frown"></b-icon>
+                <span>Đã từ chối</span>
+              </b-button>
+            </div>
+          </div>
+          <div class="action-contain pt-2 px-3 d-flex">
+            <div
+              class="icon-action mr-2 h5 cursor-pointer"
+              v-if="item.room.createdby == currentEmail"
             >
-              <b-icon icon="pencil-square"> </b-icon>
-              <span>Chỉnh sửa</span>
-            </b-button>
-          </div>
-          <div
-            class="icon-action mr-2 h5 cursor-pointer"
-            v-if="!item.room.status && checkRole == 'ADMIN'"
-          >
-            <b-button
-              @click="handleActiveRoom(item.room.id)"
-              class="bg-warning border-warning"
+              <b-button
+                @click="handleEditRoom(item.room.id)"
+                class="bg-success border-success"
+              >
+                <b-icon icon="pencil-square"> </b-icon>
+                <span>Chỉnh sửa</span>
+              </b-button>
+            </div>
+            <div
+              class="icon-action mr-2 h5 cursor-pointer"
+              v-if="!item.room.status && checkRole == 'ADMIN'"
             >
-              <b-icon icon="check"></b-icon>
-              <span>Xác nhận</span>
-            </b-button>
-          </div>
-          <div
-            class="icon-action mr-2 h5 cursor-pointer"
-            v-if="!item.room.status && checkRole == 'USER'"
-          >
-            <b-button class="bg-secondary border-secondary">
-              <b-icon icon="exclamation-diamond"></b-icon>
-              <span>Chưa xác nhận</span>
-            </b-button>
-          </div>
-          <div
-            class="icon-action mr-2 h5 cursor-pointer"
-            v-if="item.room.status"
-          >
-            <b-button class="bg-primary border-primary">
-              <b-icon icon="hand-thumbs-up"></b-icon>
-              <span>Đã xác nhận</span>
-            </b-button>
-          </div>
-          <div class="icon-action mr-2 h5 cursor-pointer">
-            <b-button
-              @click="handleGetRoomID(item.room.id)"
-              class="bg-danger border-danger"
-              v-b-modal.deleteRoom
+              <b-button
+                @click="handleActiveRoom(item.room.id, 1)"
+                class="bg-warning border-warning"
+              >
+                <b-icon icon="emoji-smile"></b-icon>
+                <span>Xác nhận</span>
+              </b-button>
+            </div>
+            <div
+              class="icon-action mr-2 h5 cursor-pointer"
+              v-if="!item.room.status && checkRole == 'ADMIN'"
             >
-              <b-icon icon="trash"></b-icon>
-              <span>Xóa</span>
-            </b-button>
+              <b-button
+                class="bg-secondary border-secondary"
+                @click="handleActiveRoom(item.room.id, -1)"
+              >
+                <b-icon icon="emoji-frown"></b-icon>
+                <span>Từ chối</span>
+              </b-button>
+            </div>
+            <div class="icon-action mr-2 h5 cursor-pointer">
+              <b-button
+                @click="handleGetRoomID(item.room.id)"
+                class="bg-danger border-danger"
+                v-b-modal.deleteRoom
+              >
+                <b-icon icon="trash"></b-icon>
+                <span>Xóa</span>
+              </b-button>
+            </div>
           </div>
         </div>
         <a
@@ -239,9 +255,9 @@ export default {
         console.log("error", error);
       }
     },
-    async handleActiveRoom(id) {
+    async handleActiveRoom(id, status) {
       try {
-        const res = await activeRoom({ id: id, status: 1 });
+        const res = await activeRoom({ id: id, status: status });
         if (res.status == 200) {
           this.$router.go(0);
         } else {
@@ -298,4 +314,8 @@ export default {
 
 <style>
 @import "@/assets/css/list/index.css";
+.non-cursor {
+  cursor: default !important;
+  pointer-events: none !important;
+}
 </style>

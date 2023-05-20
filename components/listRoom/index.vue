@@ -85,7 +85,7 @@ export default {
 
 <style scoped>
 .img_room {
-  width: 216px;
+  width: 250px;
   height: 152px;
   object-fit: cover;
   border-radius: 8px;

@@ -35,7 +35,7 @@
         <div class="input-label text-black">
           Phone
         </div>
-        <b-form-input autocomplete="off" class="input-field input-username" id="input-field-username"
+        <b-form-input autocomplete="off" type="number" class="input-field input-username" id="input-field-username"
           name="input-field-username" v-model="formRegister.phone" />
       </b-form-group>
     </b-form>

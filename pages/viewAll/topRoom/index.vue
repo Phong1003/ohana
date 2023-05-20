@@ -192,7 +192,7 @@ export default {
 }
 .container_filter{
   border-radius: 20px;
-  width: 400px;
+  width: 300px;
   margin-right: 32px;
 }
 .apply{

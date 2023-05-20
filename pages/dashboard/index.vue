@@ -3,7 +3,13 @@
     <div class="banner_dashboard">
       <div class="d-flex justify-content-between">
         <img src="~/assets/icon/logoBanner.svg" alt="OhanaLogo" />
-        <div class="text-white create_room" v-if="role == 'ADMIN' || role == 'USER'" @click="createNewRoom">Đăng phòng</div>
+        <div
+          class="text-white create_room"
+          v-if="role == 'ADMIN' || role == 'USER'"
+          @click="createNewRoom"
+        >
+          Đăng phòng
+        </div>
       </div>
       <div class="description_banner text-white mb-2 w-50">
         Ứng dụng tìm kiếm phòng trọ miễn phí cho người đi thuê hàng đầu Việt Nam
@@ -52,13 +58,13 @@ import FilterHouse from "../../components/filterHouse/index.vue";
 import CardTrend from "../../components/cardTrend/index.vue";
 import CardRoom from "../../components/listRoom/index.vue";
 import { mapGetters, mapActions } from "vuex";
-import {search} from "../../api/dashboard/index"
+import { search } from "../../api/dashboard/index";
 export default {
   layout: "defaults",
   components: {
     FilterHouse,
     CardTrend,
-    CardRoom
+    CardRoom,
   },
   data() {
     return {
@@ -76,21 +82,21 @@ export default {
       listRoom: [],
       listCategory: [],
       optionsGender: [
-        { text: 'Tất cả', value: '0' },
-        { text: 'Nam', value: '1' },
-        { text: 'Nữ', value: '2' }
+        { text: "Tất cả", value: "0" },
+        { text: "Nam", value: "1" },
+        { text: "Nữ", value: "2" },
       ],
     };
   },
   computed: {
-    ...mapGetters('dashboard', ['show']),
-    role(){
-      if (typeof window !== 'undefined') {
-        return sessionStorage.getItem('role')
+    ...mapGetters("dashboard", ["show"]),
+    role() {
+      if (typeof window !== "undefined") {
+        return sessionStorage.getItem("role");
       }
-    }
+    },
   },
-  async created(){
+  async created() {
     try {
       const response = await search({
         searchQuery: "",
@@ -101,39 +107,46 @@ export default {
         status: "1",
         pageNumber: 0,
         pageSize: 10,
-        address: ""
-      })
+        address: "",
+      });
       console.log(response);
-      if(response && response.data.length){
-        this.listRoom = response.data.slice(0, 5).map(item => {
+      if (response && response.data.length) {
+        this.listRoom = response.data.slice(0, 5).map((item) => {
           return {
             id: item.room.id,
             uliti: item.utilities,
             img: item.room.imgRoom,
             nameRoom: item.room.name,
             typeRoom: item.room.category,
-            sex: item.room.noSex == 0 ? 'Nam' : item.room.noSex == 1 ? 'Nữ' : item.room.noSex == 2 ? 'Tất cả' : '',
+            sex:
+              item.room.noSex == 0
+                ? "Nam"
+                : item.room.noSex == 1
+                ? "Nữ"
+                : item.room.noSex == 2
+                ? "Tất cả"
+                : "",
             acreage: item.room.capacity,
             address: item.room.address,
             area: item.room.area,
-            price: new Intl.NumberFormat().format(item.room.price)
-          }
-        })
+            price: new Intl.NumberFormat().format(item.room.price),
+          };
+        });
       }
     } catch (error) {
       console.log(error);
     }
   },
   methods: {
-    ...mapActions('dashboard', ['handleShow']),
-    viewNew(){
-      this.$router.push({name: 'viewAll-newRoom'})
+    ...mapActions("dashboard", ["handleShow"]),
+    viewNew() {
+      this.$router.push({ name: "viewAll-newRoom" });
     },
-    viewTop(){
-      this.$router.push({name: 'viewAll-topRoom'})
+    viewTop() {
+      this.$router.push({ name: "viewAll-topRoom" });
     },
     routerDetails(item) {
-      this.$router.push({ name: 'dashboard-id', params: { id: item.id } });
+      this.$router.push({ name: "dashboard-id", params: { id: item.id } });
     },
     createNewRoom() {
       this.$router.push({ name: "create" });
@@ -149,29 +162,36 @@ export default {
           status: "1",
           pageNumber: 0,
           pageSize: 10,
-          address: ""
-        })
-        if(response && response.data.length){
-          this.listRoom = response.data.slice(0, 5).map(item => {
+          address: "",
+        });
+        if (response && response.data.length) {
+          this.listRoom = response.data.slice(0, 5).map((item) => {
             return {
               id: item.room.id,
               img: item.room.imgRoom,
               nameRoom: item.room.name,
               typeRoom: item.room.category,
-              sex: item.room.noSex == 0 ? 'Nam' : item.room.noSex == 1 ? 'Nữ' : item.room.noSex == 2 ? 'Tất cả' : '',
+              sex:
+                item.room.noSex == 0
+                  ? "Nam"
+                  : item.room.noSex == 1
+                  ? "Nữ"
+                  : item.room.noSex == 2
+                  ? "Tất cả"
+                  : "",
               acreage: item.room.capacity,
               address: item.room.address,
               area: item.room.area,
-              price: new Intl.NumberFormat().format(item.room.price)
-            }
-          })
+              price: new Intl.NumberFormat().format(item.room.price),
+            };
+          });
         }
       } catch (error) {
         console.log(error);
       }
-    }
-  }
-}
+    },
+  },
+};
 </script>
 
 <style scoped>
@@ -205,7 +225,7 @@ export default {
   margin-top: 32px;
 }
 .container_new_room {
-  padding: 32px;
+  padding: 30px 50px;
   border-radius: 20px;
   box-shadow: 0 4px 12px 0 rgba(0, 0, 0, 0.08);
 }
@@ -238,7 +258,7 @@ export default {
   height: 33px;
   color: #4877f8;
 }
-.filter_dashboard{
+.filter_dashboard {
   max-width: 390px;
 }
 </style>
