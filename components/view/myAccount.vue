@@ -144,7 +144,7 @@
         @hidden="resetForm"
         @ok="handleSaveEdit"
       >
-        <form ref="form">
+        <form ref="passwordForm">
           <b-form-group
             label="Mật khẩu hiện tại"
             label-for="name-input"
@@ -245,8 +245,11 @@ export default {
         }, 3000);
         this.isEdit = false;
       } catch (error) {
-        this.isEdit = false;
-        this.handleShowAlert(true, "danger", "Thay đổi thông tin thất bại");
+        this.isEdit = false ;
+        this.handleShowAlert(true, "danger", error.response.data);
+        setTimeout(() => {
+          this.rechargeSuccess = false;
+        }, 3000);
       }
     },
     async recharge() {
@@ -261,6 +264,9 @@ export default {
         }, 3000);
       } catch (error) {
         this.handleShowAlert(true, "danger", "Nạp tiền thất bại");
+        setTimeout(() => {
+          this.rechargeSuccess = false;
+        }, 3000);
       }
     },
     handleShowAlert(isShow, status, message) {

@@ -107,8 +107,8 @@
                           : dataDetail.room?.noSex == "1"
                           ? "Nữ"
                           : dataDetail.room?.noSex == "2"
-                          ? "Tất cả"
-                          : ""
+                          ? "Nam & Nữ"
+                          : "Nam & Nữ"
                       }}
                     </p>
                   </div>
@@ -241,16 +241,22 @@
                   />
                   <div class="contact d-flex flex-column align-items-start">
                     <div class="d-flex mr-2">
-                      <span class="mr-3">Chủ nhà:</span>
+                      <span class="mr-3" style="width: 81px">Chủ nhà:</span>
                       <span class="mb-0 mr-2">{{
                         dataDetail.room?.houseowner
                       }}</span>
                     </div>
                     <div class="d-flex mr-2">
-                      <span class="mr-3">SĐT:</span>
+                      <span class="mr-3" style="width: 81px">SĐT:</span>
                       <span class="mb-0 mr-2">
                         {{ dataDetail.room?.ownerphone }}
                       </span>
+                    </div>
+                    <div class="d-flex mr-2">
+                      <span class="mr-3">Ngày đăng:</span>
+                      <span class="mb-0 mr-2">{{
+                        dataDetail.room?.createddate.replace("T00:00:00", "")
+                      }}</span>
                     </div>
                   </div>
                 </div>

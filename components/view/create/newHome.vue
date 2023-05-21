@@ -550,7 +550,9 @@ export default {
           this.isLoading = false;
           this.handleShowAlert(true, "success", "Chỉnh sửa phòng thành công!");
           setTimeout(() => {
-            this.$router.push({ name: "Admin" });
+            this.$router.push({
+              name: this.checkRole == "ADMIN" ? "Admin" : "User",
+            });
           }, 1500);
         }
       } catch (error) {
@@ -612,6 +614,7 @@ export default {
         const params = {
           ...this.roomInfo,
           imgRoom: this.imgList,
+          utilities: this.utilities,
           noSex: this.roomInfo.noSex,
         };
         const res = await createApi(params);
