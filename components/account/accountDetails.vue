@@ -29,7 +29,7 @@
             <b-form-input
               class="h48"
               v-model="currentAccount.email"
-              :disabled="!isEdit"
+              :disabled="true"
             ></b-form-input>
           </div>
           <div class="d-flex flex-column col-6 mt-3">
