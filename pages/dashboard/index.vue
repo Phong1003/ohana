@@ -19,7 +19,7 @@
     <div class="content_dashboard">
       <div class="search_trends mb-4">Xu hướng tìm kiếm</div>
       <div class="d-flex justify-content-between">
-        <div v-for="(item, index) in cardList" :key="index">
+        <div style="cursor: pointer;" v-for="(item, index) in cardList" :key="index" @click="routerLocation(item)">
           <CardTrend :cardContent="item" />
         </div>
       </div>
@@ -71,13 +71,12 @@ export default {
       cardList: [
         {
           img: require("@/assets/images/binhthanh.jpg"),
-          nameCard: "Bình Thạnh",
+          nameCard: "Hà Đông",
         },
-        { img: require("@/assets/images/quan10.jpg"), nameCard: "Quận 10" },
-        { img: require("@/assets/images/quan1.jpg"), nameCard: "Quận 1" },
-        { img: require("@/assets/images/quan7.jpg"), nameCard: "Quận 7" },
-        { img: require("@/assets/images/thuduc.jpg"), nameCard: "Thủ Đức" },
-        { img: require("@/assets/images/quan3.jpg"), nameCard: "Quận 3" },
+        { img: require("@/assets/images/quan10.jpg"), nameCard: "Thanh Xuân" },
+        { img: require("@/assets/images/quan1.jpg"), nameCard: "Ba Đình" },
+        { img: require("@/assets/images/quan7.jpg"), nameCard: "Cầu Giấy" },
+        { img: require("@/assets/images/thuduc.jpg"), nameCard: "Nam Từ Liêm" }
       ],
       listRoom: [],
       listCategory: [],
@@ -147,6 +146,9 @@ export default {
     },
     routerDetails(item) {
       this.$router.push({ name: "dashboard-id", params: { id: item.id } });
+    },
+    routerLocation(item) {
+      this.$router.push({ name: 'viewAll-newRoom-location', params: { location: item.nameCard}})
     },
     createNewRoom() {
       this.$router.push({ name: "create" });
