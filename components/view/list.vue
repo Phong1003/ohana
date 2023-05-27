@@ -26,10 +26,19 @@
                 <span>Chưa xác nhận</span>
               </b-button>
             </div>
-            <div class="icon-action mr-2 h5" v-if="item.room.status == 1">
+            <div
+              class="icon-action mr-2 h5"
+              v-if="item.room.status == 1 || item.room.status == 2"
+            >
               <b-button class="bg-primary border-primary non-cursor">
                 <b-icon icon="emoji-sunglasses"></b-icon>
                 <span>Đã xác nhận</span>
+              </b-button>
+            </div>
+            <div class="icon-action mr-2 h5" v-if="item.room.status == 3">
+              <b-button class="bg-primary border-primary non-cursor">
+                <b-icon icon="emoji-sunglasses"></b-icon>
+                <span>Đã cho thuê</span>
               </b-button>
             </div>
             <div class="icon-action mr-2 h5" v-if="item.room.status == -1">
@@ -62,6 +71,21 @@
               >
                 <b-icon icon="emoji-smile"></b-icon>
                 <span>Xác nhận</span>
+              </b-button>
+            </div>
+            <div class="icon-action mr-2 h5 cursor-pointer">
+              <b-button
+                class="bg-primary border-primary"
+                v-b-modal.addTenant
+                v-if="
+                  item.room.createdby == currentEmail &&
+                  item.room.status &&
+                  item.room.status != 3
+                "
+                @click="handleAddTenant(item.room.id)"
+              >
+                <b-icon icon="person-plus"></b-icon>
+                <span>Cho thuê</span>
               </b-button>
             </div>
             <div
@@ -164,6 +188,7 @@
         />
       </div>
     </b-overlay>
+    <!-- delete room modal -->
     <b-modal
       id="deleteRoom"
       ref="modal"
@@ -176,11 +201,90 @@
         <h3>Xác nhận xóa phòng</h3>
       </div>
     </b-modal>
+    <!-- tenant modal  -->
+    <b-modal
+      id="addTenant"
+      ref="tenantModal"
+      title="Thông tin người thuê phòng"
+      @hidden="closeTenantModal"
+    >
+      <div
+        v-if="alert.isShow"
+        class="d-flex align-items-center justify-content-center bg-success mb-3"
+        :class="alert.status == 'success' ? 'bg-success' : 'bg-danger'"
+      >
+        <h4 class="mr-2 text-white mb-0">{{ alert.message }}</h4>
+      </div>
+      <form ref="form">
+        <b-form-group label="Họ và tên" label-for="name-input">
+          <b-form-input
+            class="h35"
+            id="name-input"
+            v-model="tenant.name"
+            required
+          ></b-form-input>
+        </b-form-group>
+        <b-form-group label="Địa chỉ" label-for="name-input">
+          <b-form-input
+            class="h35"
+            id="name-input"
+            v-model="tenant.adress"
+            required
+          ></b-form-input>
+        </b-form-group>
+        <b-form-group label="Số điện thoại" label-for="name-input">
+          <b-form-input
+            class="h35"
+            id="name-input"
+            type="number"
+            v-model="tenant.phone"
+            required
+          ></b-form-input>
+        </b-form-group>
+        <b-form-group label="CMND/CCCD" label-for="name-input">
+          <b-form-input
+            class="h35"
+            type="number"
+            id="name-input"
+            v-model="tenant.cartId"
+            required
+          ></b-form-input>
+        </b-form-group>
+        <b-form-group label="Mã phòng cần thuê" label-for="name-input">
+          <b-form-input
+            :disabled="true"
+            class="h35"
+            id="name-input"
+            v-model="tenant.idRoom"
+            required
+          ></b-form-input>
+        </b-form-group>
+      </form>
+      <div class="h4 cursor-pointer mr-3">
+        <b-button
+          @click="handleAddNewTenant()"
+          class="bg-primary border-primary"
+        >
+          <b-icon icon="plus-square"></b-icon>
+          <span>Thêm</span>
+        </b-button>
+      </div>
+      <template #modal-footer="{ cancel }">
+        <b-button size="sm" variant="danger" @click="cancel()">
+          Cancel
+        </b-button>
+      </template>
+    </b-modal>
   </div>
 </template>
 
 <script>
-import { categoryApi, activeRoom, deleteRoom } from "../../api/auth/index";
+import {
+  categoryApi,
+  activeRoom,
+  deleteRoom,
+  newTenant,
+} from "../../api/auth/index";
 
 export default {
   props: ["listHouse", "isLoading"],
@@ -196,6 +300,18 @@ export default {
       isShowMessage: false,
       alertStatus: "",
       alertMessage: "",
+      tenant: {
+        name: "",
+        adress: "",
+        phone: "",
+        cartId: "",
+        idRoom: "",
+      },
+      alert: {
+        isShow: false,
+        status: "",
+        message: "",
+      },
     };
   },
   computed: {
@@ -224,15 +340,42 @@ export default {
     if (typeof window !== "undefined") {
       this.checkRole = sessionStorage.getItem("role");
       this.currentEmail = sessionStorage.getItem("email");
-      console.log(this.currentEmail);
     }
   },
   methods: {
+    handleAddTenant(roomID) {
+      this.tenant.idRoom = roomID;
+    },
+    async handleAddNewTenant() {
+      const res = await newTenant(this.tenant);
+      if (res.status == 200) {
+        this.handleShowAlertModal(true, "success", "Thêm thành công!");
+        this.handleActiveRoom(this.tenant.idRoom, 3);
+      } else {
+        this.handleShowAlertModal(true, "danger", "Thêm thất bại!");
+      }
+    },
+    handleShowAlertModal(show, status, message) {
+      this.alert = {
+        isShow: show,
+        status: status,
+        message: message,
+      };
+    },
     handleGetRoomID(roomID) {
       this.roomID = roomID;
     },
     closeModal() {
       this.roomID = "";
+    },
+    closeTenantModal() {
+      this.tenant = {
+        name: "",
+        address: "",
+        phone: "",
+        cartId: "",
+        idRoom: "",
+      };
     },
     handleReturnNameCategory(id) {
       const data = this.listCategory.find((el) => el.id == id);
@@ -262,7 +405,6 @@ export default {
           this.$router.go(0);
         } else {
           this.$emit("handleChangeLoading");
-          alert("Some");
         }
       } catch (error) {
         console.log("error", error);
@@ -314,8 +456,14 @@ export default {
 
 <style>
 @import "@/assets/css/list/index.css";
+.h35 {
+  height: 35px !important;
+}
 .non-cursor {
   cursor: default !important;
   pointer-events: none !important;
+}
+.modal-content {
+  max-width: 100% !important;
 }
 </style>

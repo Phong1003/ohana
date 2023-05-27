@@ -1,5 +1,5 @@
 import api from "../api";
-import { URL_GET_DETAILS, URL_LOGIN, URL_REGISTER, URL_SEARCH, URL_NEW_HOME, URL_CATEGORY, URL_GET_USER, URL_USER, URL_USER_EDIT, URL_EDIT, URL_CREATE_CATEGORY, URL_DELETE, URL_ACTIVE, URL_MONEY, URL_GET_USER_TOKEN } from "../../constants/endpoints";
+import { URL_NEW_PAY_ROOM, URL_UPDATE_PAY_ROOM, URL_GET_PAY_ROOM, URL_NEW_TENANT, URL_DELETE_TENANT, URL_UPDATE_TENANT, URL_GET_TENANT_ROOM, URL_GET_DETAILS, URL_LOGIN, URL_REGISTER, URL_SEARCH, URL_NEW_HOME, URL_CATEGORY, URL_GET_USER, URL_USER, URL_USER_EDIT, URL_EDIT, URL_CREATE_CATEGORY, URL_DELETE, URL_ACTIVE, URL_MONEY, URL_GET_USER_TOKEN } from "../../constants/endpoints";
 
 export function loginApi(data) {
   return api.post(URL_LOGIN, data);
@@ -59,4 +59,32 @@ export function getMoney(data) {
 
 export function getUserByToken() {
   return api.post(URL_GET_USER_TOKEN)
+}
+
+export function newPayRoom(data) {
+  return api.post(URL_NEW_PAY_ROOM, data)
+}
+
+export function updatePayRoom(data) {
+  return api.post(URL_UPDATE_PAY_ROOM, data)
+}
+
+export function getPayMonthRoom(data) {
+  return api.get(URL_GET_PAY_ROOM, data)
+}
+
+export function newTenant(data) {
+  return api.post(URL_NEW_TENANT, data)
+}
+
+export function updateTenant(data) {
+  return api.post(URL_UPDATE_TENANT, data)
+}
+
+export function delTenant(data) {
+  return api.post(URL_DELETE_TENANT, data)
+}
+
+export function getTenantRoom(data) {
+  return api.get(URL_GET_TENANT_ROOM + `${data}`)
 }

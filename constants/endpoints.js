@@ -13,4 +13,15 @@ export const URL_DELETE = '/Rooms/deleteRoom'
 export const URL_ACTIVE = '/Rooms/activeRoom'
 export const URL_GET_DETAILS = "/Rooms/getRoomById?id="
 export const URL_MONEY = '/User/depMoney'
-export const URL_GET_USER_TOKEN ='/User/getUserToken'
+export const URL_GET_USER_TOKEN = '/User/getUserToken'
+// room payment 
+export const URL_NEW_PAY_ROOM = '/PayRoom/newPayRoom'
+export const URL_UPDATE_PAY_ROOM = '/PayRoom/updatePayRoom'
+export const URL_GET_PAY_ROOM = '/PayRoom/getPayMonthRoom'
+// tenant
+export const URL_NEW_TENANT = '/Tenant/addTenant'
+export const URL_DELETE_TENANT = '/Tenant/delTenant'
+export const URL_UPDATE_TENANT = '/Tenant/updateTenant'
+export const URL_GET_TENANT_ROOM = "/Tenant/getTenantRoom?idRoom="
+
+
