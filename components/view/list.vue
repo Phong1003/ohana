@@ -26,17 +26,14 @@
                 <span>Chưa xác nhận</span>
               </b-button>
             </div>
-            <div
-              class="icon-action mr-2 h5"
-              v-if="item.room.status == 1 || item.room.status == 2"
-            >
+            <div class="icon-action mr-2 h5" v-if="item.room.status == 1">
               <b-button class="bg-primary border-primary non-cursor">
                 <b-icon icon="emoji-sunglasses"></b-icon>
                 <span>Đã xác nhận</span>
               </b-button>
             </div>
             <div class="icon-action mr-2 h5" v-if="item.room.status == 3">
-              <b-button class="bg-primary border-primary non-cursor">
+              <b-button class="bg-success border-success non-cursor">
                 <b-icon icon="emoji-sunglasses"></b-icon>
                 <span>Đã cho thuê</span>
               </b-button>
@@ -350,7 +347,9 @@ export default {
       const res = await newTenant(this.tenant);
       if (res.status == 200) {
         this.handleShowAlertModal(true, "success", "Thêm thành công!");
-        this.handleActiveRoom(this.tenant.idRoom, 3);
+        setTimeout(() => {
+          this.$bvModal.hide("addTenant");
+        }, 3000);
       } else {
         this.handleShowAlertModal(true, "danger", "Thêm thất bại!");
       }

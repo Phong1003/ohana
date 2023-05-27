@@ -183,16 +183,30 @@
               </div>
               <div
                 class="notice__details mt-5"
-                v-if="dataDetail.room?.status == 3"
+                v-if="
+                  dataDetail.room?.status == 3 &&
+                  dataDetail.room?.createdby == userEmail
+                "
               >
-                <div class="house__title d-flex align-items-center">
-                  <b-icon
-                    icon="exclamation-circle"
-                    class="bg-light mr-3"
-                    variant="danger"
-                    font-scale="2"
-                  ></b-icon>
-                  <p class="mb-0">Thông tin người thuê phòng</p>
+                <div class="d-flex justify-content-between align-items-center">
+                  <div class="house__title d-flex align-items-center">
+                    <b-icon
+                      icon="exclamation-circle"
+                      class="bg-light mr-3"
+                      variant="danger"
+                      font-scale="2"
+                    ></b-icon>
+                    <p class="mb-0">Thông tin người thuê phòng</p>
+                  </div>
+                  <div class="h4 cursor-pointer mt-2">
+                    <b-button
+                      class="bg-primary border-primary"
+                      v-b-modal.addTenant
+                    >
+                      <b-icon icon="plus-square"></b-icon>
+                      <span>Thêm thành viên</span>
+                    </b-button>
+                  </div>
                 </div>
                 <div
                   class="capacity__options d-flex flex-column mt-3 border-bottom"
@@ -400,6 +414,70 @@
           </b-button>
         </template>
       </b-modal>
+      <b-modal
+        id="addTenant"
+        ref="tenantModal"
+        title="Thông tin người thuê phòng"
+        @hidden="closeTenantModal"
+      >
+        <div
+          v-if="alert.isShow"
+          class="d-flex align-items-center justify-content-center bg-success mb-3"
+          :class="alert.status == 'success' ? 'bg-success' : 'bg-danger'"
+        >
+          <h4 class="mr-2 text-white mb-0">{{ alert.message }}</h4>
+        </div>
+        <form ref="form">
+          <b-form-group label="Họ và tên" label-for="name-input">
+            <b-form-input
+              class="h35"
+              id="name-input"
+              v-model="newTenant.name"
+              required
+            ></b-form-input>
+          </b-form-group>
+          <b-form-group label="Địa chỉ" label-for="name-input">
+            <b-form-input
+              class="h35"
+              id="name-input"
+              v-model="newTenant.adress"
+              required
+            ></b-form-input>
+          </b-form-group>
+          <b-form-group label="Số điện thoại" label-for="name-input">
+            <b-form-input
+              class="h35"
+              id="name-input"
+              type="number"
+              v-model="newTenant.phone"
+              required
+            ></b-form-input>
+          </b-form-group>
+          <b-form-group label="CMND/CCCD" label-for="name-input">
+            <b-form-input
+              class="h35"
+              type="number"
+              id="name-input"
+              v-model="newTenant.cartId"
+              required
+            ></b-form-input>
+          </b-form-group>
+        </form>
+        <div class="h4 cursor-pointer mr-3">
+          <b-button
+            @click="handleAddNewTenant()"
+            class="bg-primary border-primary"
+          >
+            <b-icon icon="plus-square"></b-icon>
+            <span>Thêm</span>
+          </b-button>
+        </div>
+        <template #modal-footer="{ cancel }">
+          <b-button size="sm" variant="danger" @click="cancel()">
+            Cancel
+          </b-button>
+        </template>
+      </b-modal>
     </div>
     <EditHome v-else />
   </div>
@@ -411,6 +489,7 @@ import {
   getTenantRoom,
   updateTenant,
   delTenant,
+  newTenant,
 } from "../../api/auth/index";
 import { search, searchUser } from "../../api/dashboard";
 import EditHome from "../../components/view/create/newHome.vue";
@@ -442,6 +521,13 @@ export default {
         idTenant: "",
         status: 1,
       },
+      newTenant: {
+        name: "",
+        adress: "",
+        phone: "",
+        cartId: "",
+        idRoom: "",
+      },
       dataDetail: [],
       isLoading: true,
       response: "",
@@ -463,17 +549,40 @@ export default {
       listTenant: [],
       checkRole: "",
       res: "",
+      userEmail: "",
     };
   },
   async created() {
     if (typeof window !== "undefined") {
       this.checkRole = sessionStorage.getItem("role");
+      this.userEmail = sessionStorage.getItem("email");
     }
     this.isShowEdit = this.$route.params.edit;
     await this.getDetails();
-    await this.handleGetTenantInRoom();
+    if (
+      this.dataDetail.room.status == 3 &&
+      this.dataDetail.room.createdby == this.userEmail
+    ) {
+      await this.handleGetTenantInRoom();
+    }
   },
   methods: {
+    async handleAddNewTenant() {
+      const res = await newTenant({
+        ...this.newTenant,
+        idRoom: this.$route.params.id,
+      });
+      if (res.status == 200) {
+        this.handleShowAlertModal(true, "success", "Thêm thành công!");
+        this.handleGetTenantInRoom();
+        setTimeout(() => {
+          this.closeTenantModal();
+          this.$bvModal.hide("addTenant");
+        }, 3000);
+      } else {
+        this.handleShowAlertModal(true, "danger", "Thêm thất bại!");
+      }
+    },
     handleShowAlertModal(show, status, message) {
       this.alert = {
         isShow: show,
@@ -484,14 +593,25 @@ export default {
     getCurrentTenant(tenant) {
       this.tenant = { ...tenant, idTenant: tenant.id };
     },
+    closeTenantModal() {
+      this.newTenant = {
+        name: "",
+        address: "",
+        phone: "",
+        cartId: "",
+        idRoom: "",
+      };
+    },
     async handleGetTenantInRoom() {
       const res = await getTenantRoom(this.$route.params.id);
       this.listTenant = [];
       for (let item of res.data) {
-        this.listTenant.push({
-          ...item,
-          dateJoin: item.dateJoin.replace("T00:00:00", ""),
-        });
+        if (item.status) {
+          this.listTenant.push({
+            ...item,
+            dateJoin: item.dateJoin.replace("T00:00:00", ""),
+          });
+        }
       }
     },
     async handleUpdateTenant() {
