@@ -13,6 +13,14 @@
           >
             <div>Nạp tiền</div>
           </b-button>
+          <b-button
+            class="d-flex align-items-center border-0 ml-3 bg-success"
+            style="height: 30px"
+            v-b-modal.paymentHistory
+            @click="handleGetHistory"
+          >
+            <div>Lịch sử thanh toán</div>
+          </b-button>
         </div>
       </div>
       <div
@@ -175,6 +183,36 @@
           </b-form-group>
         </form>
       </b-modal>
+      <b-modal
+        id="paymentHistory"
+        ref="modal"
+        title="Lịch sử nạp và thanh toán"
+        modal-class="form_money"
+        scrollable
+        ok-only
+        @ok="handleOk"
+      >
+        <div v-if="listHistory.length" class="history__contain">
+          <div
+            v-for="(item, index) of listHistory"
+            :key="index"
+            class="border-bottom text-white history__item mb-2"
+            :class="item.note == 'Nạp tiền' ? 'bg-success' : 'bg-danger'"
+          >
+            <div class="p-2">
+              <p>Hành động: {{ item.note }}</p>
+              <p>Mã lịch sử : {{ item.id }}</p>
+              <p>
+                Ngày thực hiện: {{ item.createDate.replace("T00:00:00", "") }}
+              </p>
+              <p>Số tiền: {{ item.moneyRecharge }}VNĐ</p>
+            </div>
+          </div>
+        </div>
+        <div v-else>
+          <h4 class="text-center">Bạn chưa có lịch sử nạp và thanh toán</h4>
+        </div>
+      </b-modal>
     </div>
   </div>
 </template>
@@ -185,6 +223,7 @@ import {
   getAllUser,
   getMoney,
   getUserByToken,
+  getHistory,
 } from "../../api/auth/index";
 export default {
   data() {
@@ -218,12 +257,14 @@ export default {
       currentState: null,
       newState: null,
       alertMessage: "",
+      listHistory: [],
     };
   },
   async created() {
     await this.getMoneyUser();
   },
   methods: {
+    handleOk() {},
     async handleSaveEdit() {
       try {
         await editUser({
@@ -245,12 +286,16 @@ export default {
         }, 3000);
         this.isEdit = false;
       } catch (error) {
-        this.isEdit = false ;
+        this.isEdit = false;
         this.handleShowAlert(true, "danger", error.response.data);
         setTimeout(() => {
           this.rechargeSuccess = false;
         }, 3000);
       }
+    },
+    async handleGetHistory() {
+      const res = await getHistory();
+      this.listHistory = res.data;
     },
     async recharge() {
       try {
@@ -299,6 +344,9 @@ export default {
 </script>
 
 <style>
+.history__item {
+  border-radius: 10px;
+}
 .h50 {
   height: 50px !important;
 }

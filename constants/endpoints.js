@@ -23,5 +23,8 @@ export const URL_NEW_TENANT = '/Tenant/addTenant'
 export const URL_DELETE_TENANT = '/Tenant/delTenant'
 export const URL_UPDATE_TENANT = '/Tenant/updateTenant'
 export const URL_GET_TENANT_ROOM = "/Tenant/getTenantRoom?idRoom="
+// history
+export const URL_HISTORY = '/User/hisMoney'
+
 
 

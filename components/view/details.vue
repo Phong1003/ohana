@@ -181,6 +181,43 @@
                   </div>
                 </div>
               </div>
+              <div class="notice__details mt-5" v-if="isShowNotice">
+                <div class="house__title d-flex align-items-center">
+                  <b-icon
+                    icon="exclamation-circle"
+                    class="bg-light mr-3"
+                    variant="danger"
+                    font-scale="2"
+                  ></b-icon>
+                  <p class="mb-0">Lưu ý</p>
+                </div>
+                <div class="capacity__container mt-3">
+                  <p class="capacity__title">Sức chứa</p>
+                </div>
+                <div class="capacity__options d-flex">
+                  <div class="option col-4">
+                    <p class="option__type">Rộng</p>
+                    <div class="option__title bg-info">
+                      {{ Math.round(dataDetail.room?.capacity / 10) }}
+                      <span>người</span>
+                    </div>
+                  </div>
+                  <div class="option col-4">
+                    <p class="option__type">Vừa</p>
+                    <div class="option__title bg-success">
+                      {{ Math.round(dataDetail.room?.capacity / 10) + 1 }}
+                      <span>người</span>
+                    </div>
+                  </div>
+                  <div class="option col-4">
+                    <p class="option__type">Chật</p>
+                    <div class="option__title bg-warning">
+                      {{ Math.round(dataDetail.room?.capacity / 10) + 2 }}
+                      <span>người</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
               <div
                 class="notice__details mt-5"
                 v-if="
@@ -507,6 +544,7 @@ export default {
   },
   data() {
     return {
+      isShowNotice: false,
       alert: {
         isShow: false,
         status: "",
@@ -556,6 +594,14 @@ export default {
     if (typeof window !== "undefined") {
       this.checkRole = sessionStorage.getItem("role");
       this.userEmail = sessionStorage.getItem("email");
+    }
+    if (
+      this.$route.name.includes("dashboard") ||
+      this.$route.name.includes("Admin")
+    ) {
+      this.isShowNotice = true;
+    } else {
+      this.isShowNotice = false;
     }
     this.isShowEdit = this.$route.params.edit;
     await this.getDetails();

@@ -8,8 +8,47 @@
       >
         <h4 class="mr-2 text-white">{{ alertMessage }}</h4>
       </div>
-      <div class="d-flex justify-content-between">
-        <h4 class="list__title">Tất cả các phòng</h4>
+      <div class="d-flex justify-content-center border-bottom">
+        <div class="h4 cursor-pointer mr-3">
+          <b-button
+            @click="handleFilterRoom('', 'Tất cả các phòng')"
+            class="bg-primary border-primary"
+          >
+            <b-icon icon="plus-square"></b-icon>
+            <span> Tất cả {{ `(${total})` }} </span>
+          </b-button>
+          <b-button
+            @click="handleFilterRoom('1', 'Phòng đã xác nhận')"
+            class="bg-info border-info"
+          >
+            <b-icon icon="emoji-sunglasses"></b-icon>
+            <span> Đã xác nhận {{ `(${totalConfirm})` }} </span>
+          </b-button>
+          <b-button
+            @click="handleFilterRoom('0', 'Phòng chưa xác nhận')"
+            class="bg-secondary border-secondary"
+          >
+            <b-icon icon="emoji-neutral"></b-icon>
+            <span> Chưa xác nhận {{ `(${totalUnConfirm})` }}</span>
+          </b-button>
+          <b-button
+            @click="handleFilterRoom('-1', 'Phòng đã từ chối')"
+            class="bg-danger border-danger"
+          >
+            <b-icon icon="emoji-frown"></b-icon>
+            <span> Đã từ chối {{ `(${totalReject})` }} </span>
+          </b-button>
+          <b-button
+            @click="handleFilterRoom('3', 'Phòng đã cho thuê')"
+            class="bg-success border-success"
+          >
+            <b-icon icon="emoji-sunglasses"></b-icon>
+            <span> Đã cho thuê {{ `(${totalUnAvailable})` }}</span>
+          </b-button>
+        </div>
+      </div>
+      <div class="d-flex justify-content-between mt-2">
+        <h4 class="list__title">{{ titleRoom }}</h4>
         <div class="h4 cursor-pointer mr-3">
           <b-button @click="createNewRoom()" class="bg-primary border-primary">
             <b-icon icon="plus-square"></b-icon>
@@ -284,10 +323,20 @@ import {
 } from "../../api/auth/index";
 
 export default {
-  props: ["listHouse", "isLoading"],
+  props: [
+    "listHouse",
+    "isLoading",
+    "totalList",
+    "totalUnAvailable",
+    "total",
+    "totalConfirm",
+    "totalReject",
+    "totalUnConfirm",
+  ],
   data() {
     return {
       currentPage: 1,
+      titleRoom: "Tất cả các phòng",
       perPage: 5,
       listCategory: [],
       checkRole: "",
@@ -340,6 +389,10 @@ export default {
     }
   },
   methods: {
+    handleFilterRoom(roomStatus, roomTitle) {
+      this.$emit("handleGetData", roomStatus);
+      this.titleRoom = roomTitle;
+    },
     handleAddTenant(roomID) {
       this.tenant.idRoom = roomID;
     },
@@ -348,6 +401,7 @@ export default {
       if (res.status == 200) {
         this.handleShowAlertModal(true, "success", "Thêm thành công!");
         setTimeout(() => {
+          this.$router.go(0);
           this.$bvModal.hide("addTenant");
         }, 3000);
       } else {
