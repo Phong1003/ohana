@@ -831,11 +831,11 @@ export default {
     }
     this.isShowEdit = this.$route.params.edit;
     await this.getDetails();
-    await this.handleGetPayment();
     if (
       this.dataDetail.room.status == 3 &&
       this.dataDetail.room.createdby == this.userEmail
     ) {
+      await this.handleGetPayment();
       await this.handleGetTenantInRoom();
     }
   },
