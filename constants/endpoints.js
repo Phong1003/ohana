@@ -17,7 +17,7 @@ export const URL_GET_USER_TOKEN = '/User/getUserToken'
 // room payment 
 export const URL_NEW_PAY_ROOM = '/PayRoom/newPayRoom'
 export const URL_UPDATE_PAY_ROOM = '/PayRoom/updatePayRoom'
-export const URL_GET_PAY_ROOM = '/PayRoom/getPayMonthRoom'
+export const URL_GET_PAY_ROOM = '/PayRoom/getPayMonthRoom?idRoom='
 // tenant
 export const URL_NEW_TENANT = '/Tenant/addTenant'
 export const URL_DELETE_TENANT = '/Tenant/delTenant'
@@ -25,6 +25,8 @@ export const URL_UPDATE_TENANT = '/Tenant/updateTenant'
 export const URL_GET_TENANT_ROOM = "/Tenant/getTenantRoom?idRoom="
 // history
 export const URL_HISTORY = '/User/hisMoney'
+// chart 
+export const URL_GET_CHART = 'Chart/getchart'
 
 
 

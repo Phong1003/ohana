@@ -15,35 +15,35 @@
             class="bg-primary border-primary"
           >
             <b-icon icon="plus-square"></b-icon>
-            <span> Tất cả {{ `(${total})` }} </span>
+            <span> Tất cả {{ `(${totalRoom})` }} </span>
           </b-button>
           <b-button
             @click="handleFilterRoom('1', 'Phòng đã xác nhận')"
             class="bg-info border-info"
           >
             <b-icon icon="emoji-sunglasses"></b-icon>
-            <span> Đã xác nhận {{ `(${totalConfirm})` }} </span>
+            <span> Đã xác nhận {{ `(${totalActive})` }} </span>
           </b-button>
           <b-button
             @click="handleFilterRoom('0', 'Phòng chưa xác nhận')"
             class="bg-secondary border-secondary"
           >
             <b-icon icon="emoji-neutral"></b-icon>
-            <span> Chưa xác nhận {{ `(${totalUnConfirm})` }}</span>
+            <span> Chưa xác nhận {{ `(${totalInActive})` }}</span>
           </b-button>
           <b-button
             @click="handleFilterRoom('-1', 'Phòng đã từ chối')"
             class="bg-danger border-danger"
           >
             <b-icon icon="emoji-frown"></b-icon>
-            <span> Đã từ chối {{ `(${totalReject})` }} </span>
+            <span> Đã từ chối {{ `(${totalCancel})` }} </span>
           </b-button>
           <b-button
             @click="handleFilterRoom('3', 'Phòng đã cho thuê')"
             class="bg-success border-success"
           >
             <b-icon icon="emoji-sunglasses"></b-icon>
-            <span> Đã cho thuê {{ `(${totalUnAvailable})` }}</span>
+            <span> Đã cho thuê {{ `(${totalTenantRoom})` }}</span>
           </b-button>
         </div>
       </div>
@@ -178,8 +178,8 @@
                           : item.room.noSex == 1
                           ? "Nữ"
                           : item.room.noSex == 2
-                          ? "Tất cả"
-                          : ""
+                          ? "Nam & Nữ"
+                          : "Nam & Nữ"
                       }}</span
                     >
                     <b-icon icon="rulers"></b-icon>
@@ -320,19 +320,11 @@ import {
   activeRoom,
   deleteRoom,
   newTenant,
+  getChart,
 } from "../../api/auth/index";
 
 export default {
-  props: [
-    "listHouse",
-    "isLoading",
-    "totalList",
-    "totalUnAvailable",
-    "total",
-    "totalConfirm",
-    "totalReject",
-    "totalUnConfirm",
-  ],
+  props: ["listHouse", "isLoading"],
   data() {
     return {
       currentPage: 1,
@@ -358,6 +350,11 @@ export default {
         status: "",
         message: "",
       },
+      totalTenantRoom: 0,
+      totalInActive: 0,
+      totalActive: 0,
+      totalCancel: 0,
+      totalRoom: 0,
     };
   },
   computed: {
@@ -387,8 +384,23 @@ export default {
       this.checkRole = sessionStorage.getItem("role");
       this.currentEmail = sessionStorage.getItem("email");
     }
+    await this.handleGetChart();
   },
   methods: {
+    async handleGetChart() {
+      const res = await getChart();
+      if (res.data) {
+        this.totalTenantRoom = res.data.roomTenant;
+        this.totalInActive = res.data.roomInActive;
+        this.totalActive = res.data.roomActive;
+        this.totalCancel = res.data.roomCancel;
+        this.totalRoom =
+          res.data.roomTenant +
+          res.data.roomInActive +
+          res.data.roomActive +
+          res.data.roomCancel;
+      }
+    },
     handleFilterRoom(roomStatus, roomTitle) {
       this.$emit("handleGetData", roomStatus);
       this.titleRoom = roomTitle;
@@ -429,6 +441,7 @@ export default {
         cartId: "",
         idRoom: "",
       };
+      this.handleShowAlert(false, "", "");
     },
     handleReturnNameCategory(id) {
       const data = this.listCategory.find((el) => el.id == id);

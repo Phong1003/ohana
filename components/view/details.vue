@@ -181,7 +181,10 @@
                   </div>
                 </div>
               </div>
-              <div class="notice__details mt-5" v-if="isShowNotice">
+              <div
+                class="notice__details mt-5"
+                v-if="dataDetail.room?.status != 3"
+              >
                 <div class="house__title d-flex align-items-center">
                   <b-icon
                     icon="exclamation-circle"
@@ -244,6 +247,25 @@
                       <span>Thêm thành viên</span>
                     </b-button>
                   </div>
+                </div>
+                <div class="mt-2 d-flex">
+                  <p
+                    class="paymentNotice"
+                    :class="isShowPayment ? 'text-danger' : 'text-success'"
+                  >
+                    {{
+                      !isShowPayment
+                        ? "Đã thanh toán tháng này"
+                        : "Chưa thanh toán tháng này"
+                    }}
+                  </p>
+                  <p class="mx-2 h4">|</p>
+                  <p
+                    class="text-primary paymentNotice cursor-pointer"
+                    v-b-modal.paymentHistory
+                  >
+                    Lịch sử thanh toán
+                  </p>
                 </div>
                 <div
                   class="capacity__options d-flex flex-column mt-3 border-bottom"
@@ -322,6 +344,17 @@
                     </b-form-group>
                   </form>
                 </div>
+                <div class="mt-3 d-flex justify-content-end">
+                  <b-button
+                    v-if="isShowPayment"
+                    class="bg-danger border-danger"
+                    v-b-modal.monthPayment
+                    @click="handleGetInfo()"
+                  >
+                    <b-icon icon="cash-coin"></b-icon>
+                    <span>Thanh toán tiền phòng</span>
+                  </b-button>
+                </div>
               </div>
               <div class="more__information mt-5">
                 <div class="house__title d-flex align-items-center">
@@ -333,9 +366,10 @@
                   ></b-icon>
                   <p class="mb-0">Mô tả thêm</p>
                 </div>
-                <div class="info__section mt-3">
-                  {{ dataDetail.room?.description }}
-                </div>
+                <div
+                  class="info__section mt-3"
+                  v-html="formatText(dataDetail.room?.description)"
+                ></div>
               </div>
             </div>
             <div class="owner__section col-4 ml-4">
@@ -515,6 +549,182 @@
           </b-button>
         </template>
       </b-modal>
+      <b-modal
+        id="monthPayment"
+        ref="tenantModal"
+        title="Thông tin thanh toán"
+        @hidden="closeTenantModal"
+        scrollable
+      >
+        <div
+          v-if="alert.isShow"
+          class="d-flex align-items-center justify-content-center bg-success mb-3"
+          :class="alert.status == 'success' ? 'bg-success' : 'bg-danger'"
+        >
+          <h4 class="mr-2 text-white mb-0">{{ alert.message }}</h4>
+        </div>
+        <form ref="form">
+          <b-form-group label="Mã phòng" label-for="name-input">
+            <b-form-input
+              class="h50"
+              id="name-input"
+              v-model="payment.idRoom"
+              disabled
+              required
+            ></b-form-input>
+          </b-form-group>
+          <b-form-group
+            label="CMND/CCCD người thanh toán"
+            label-for="name-input"
+          >
+            <b-form-input
+              class="h50"
+              id="name-input"
+              v-model="payment.cartId"
+              disabled
+              required
+            ></b-form-input>
+          </b-form-group>
+          <b-form-group label="Tháng thanh toán" label-for="name-input">
+            <b-form-input
+              class="h50"
+              id="name-input"
+              type="number"
+              v-model="payment.month"
+              required
+            ></b-form-input>
+          </b-form-group>
+          <b-form-group label="Tiền phòng" label-for="name-input">
+            <b-form-input
+              class="h50"
+              id="name-input"
+              type="number"
+              v-model="payment.roomPrice"
+              disabled
+              required
+            ></b-form-input>
+          </b-form-group>
+          <b-form-group label="Phí dịch vụ" label-for="name-input">
+            <b-form-input
+              class="h50"
+              id="name-input"
+              type="number"
+              disabled
+              v-model="payment.roomOtherPrice"
+              required
+            ></b-form-input>
+          </b-form-group>
+          <b-form-group label="Số nước" label-for="name-input">
+            <b-form-input
+              class="h50"
+              id="name-input"
+              type="number"
+              v-model="payment.noWater"
+              required
+            ></b-form-input>
+          </b-form-group>
+          <b-form-group label="Số điện" label-for="name-input">
+            <b-form-input
+              class="h50"
+              type="number"
+              id="name-input"
+              v-model="payment.noElectic"
+              required
+            ></b-form-input>
+          </b-form-group>
+          <b-form-group label="Nội dung" label-for="name-input">
+            <b-form-input
+              class="h50"
+              id="name-input"
+              v-model="payment.note"
+              required
+            ></b-form-input>
+          </b-form-group>
+        </form>
+        <div class="h4 cursor-pointer mr-3">
+          <b-button class="bg-primary border-primary" v-b-modal.confirmPayment>
+            <b-icon icon="plus-square"></b-icon>
+            <span>Thanh toán</span>
+          </b-button>
+        </div>
+        <template #modal-footer="{ cancel }">
+          <b-button size="sm" variant="danger" @click="cancel()">
+            Cancel
+          </b-button>
+        </template>
+      </b-modal>
+      <b-modal
+        id="confirmPayment"
+        ref="tenantModal"
+        title="Xác nhận thanh toán"
+        centered
+        @hidden="closeTenantModal"
+        @ok="handlePayRoomMonth"
+      >
+        <div class="confirm__container bg-success text-white">
+          <div class="p-2 mt-2">
+            <p>Tiền phòng: {{ payment.roomPrice }}VNĐ</p>
+            <p>Phí dịch vụ : {{ payment.roomOtherPrice }}VNĐ</p>
+            <p>
+              Tiền nước: {{ payment.noWater * dataDetail.room?.waterprice }}VNĐ
+            </p>
+            <p>
+              Tiền điện:
+              {{ payment.noWater * dataDetail.room?.electricprice }}VNĐ
+            </p>
+            <p>
+              Tổng thanh toán:
+              {{
+                returnTotalMoney(
+                  payment.roomPrice,
+                  payment.roomOtherPrice,
+                  payment.noWater * dataDetail.room?.waterprice,
+                  payment.noWater * dataDetail.room?.electricprice
+                )
+              }}VNĐ
+            </p>
+          </div>
+        </div>
+      </b-modal>
+      <b-modal
+        id="paymentHistory"
+        ref="modal"
+        title="Lịch sử thanh toán"
+        scrollable
+        ok-only
+        @ok="handleOk"
+      >
+        <div v-if="listHistory.length" class="history__contain">
+          <div
+            v-for="(item, index) of listHistory"
+            :key="index"
+            class="border-bottom text-white history__item mb-2 bg-success"
+          >
+            <div class="p-2">
+              <p>Tháng thanh toán: {{ item.month }}</p>
+              <p>
+                Ngày thanh toán: {{ item.created.replace("T00:00:00", "") }}
+              </p>
+              <p>
+                Tiền nước: {{ item.noWater }} X
+                {{ dataDetail.room?.waterprice }} =
+                {{ item.noWater * dataDetail.room?.waterprice }}VNĐ
+              </p>
+              <p>
+                Tiền điện: {{ item.noElectic }} X
+                {{ dataDetail.room?.electricprice }} =
+                {{ item.noElectic * dataDetail.room?.electricprice }}VNĐ
+              </p>
+              <p>Phí dịch vụ: {{ item.otherPrice }}VNĐ</p>
+              <p>Số tiền thanh toán: {{ item.roomPrice }}VNĐ</p>
+              <p>Nội dung thanh toán: {{ item.note }}</p>
+            </div>
+          </div>
+        </div>
+        <div v-else>
+          <h4 class="text-center">Bạn chưa có lịch sử nạp và thanh toán</h4>
+        </div>
+      </b-modal>
     </div>
     <EditHome v-else />
   </div>
@@ -527,6 +737,8 @@ import {
   updateTenant,
   delTenant,
   newTenant,
+  getPayMonthRoom,
+  newPayRoom,
 } from "../../api/auth/index";
 import { search, searchUser } from "../../api/dashboard";
 import EditHome from "../../components/view/create/newHome.vue";
@@ -544,6 +756,18 @@ export default {
   },
   data() {
     return {
+      isShowPayment: true,
+      payment: {
+        idRoom: "",
+        cartId: "",
+        roomPrice: 0,
+        roomOtherPrice: 0,
+        month: 0,
+        noWater: 0,
+        noElectic: 0,
+        note: "",
+        status: 1,
+      },
       isShowNotice: false,
       alert: {
         isShow: false,
@@ -585,9 +809,11 @@ export default {
         { item: "4", name: "Cửa sổ", img: require("@/assets/icon/window.svg") },
       ],
       listTenant: [],
+      listHistory: [],
       checkRole: "",
       res: "",
       userEmail: "",
+      listName: [],
     };
   },
   async created() {
@@ -605,6 +831,7 @@ export default {
     }
     this.isShowEdit = this.$route.params.edit;
     await this.getDetails();
+    await this.handleGetPayment();
     if (
       this.dataDetail.room.status == 3 &&
       this.dataDetail.room.createdby == this.userEmail
@@ -613,6 +840,36 @@ export default {
     }
   },
   methods: {
+    handleOk() {},
+    formatText(text) {
+      return text ? text.replace(/\n/g, "</br>") : "";
+    },
+    returnTotalMoney(roomPrice, roomOtherPrice, waterPrice, electricPrice) {
+      const sum =
+        Number(roomPrice) +
+        Number(roomOtherPrice) +
+        Number(waterPrice) +
+        Number(electricPrice);
+      return sum;
+    },
+    handleGetInfo() {
+      this.payment.idRoom = this.$route.params.id;
+      this.payment.cartId = this.listTenant[0].cartId;
+      this.payment.roomPrice = this.dataDetail.room.price;
+      this.payment.roomOtherPrice = this.dataDetail.room.otherprice;
+    },
+    async handleGetPayment() {
+      const res = await getPayMonthRoom(this.$route.params.id);
+      this.listHistory = res.data;
+      const currentDay = new Date();
+      for (const payment of res.data) {
+        if (payment.month == currentDay.getMonth() + 1) {
+          this.isShowPayment = false;
+        } else {
+          this.isShowPayment = true;
+        }
+      }
+    },
     async handleAddNewTenant() {
       const res = await newTenant({
         ...this.newTenant,
@@ -647,6 +904,7 @@ export default {
         cartId: "",
         idRoom: "",
       };
+      this.handleShowAlertModal(false, "", "");
     },
     async handleGetTenantInRoom() {
       const res = await getTenantRoom(this.$route.params.id);
@@ -656,6 +914,10 @@ export default {
           this.listTenant.push({
             ...item,
             dateJoin: item.dateJoin.replace("T00:00:00", ""),
+          });
+          this.listName.push({
+            name: item.name,
+            id: item.id,
           });
         }
       }
@@ -684,7 +946,25 @@ export default {
         this.handleShowAlertModal(true, "danger", "Xóa thất bại");
       }
     },
-    handlePayRoomMonth() {},
+    async handlePayRoomMonth() {
+      try {
+        const params = {
+          cartId: this.payment.cartId,
+          idRoom: this.payment.idRoom,
+          month: Number(this.payment.month),
+          noElectic: Number(this.payment.noElectic),
+          noWater: Number(this.payment.noWater),
+          status: 1,
+          note: this.payment.note,
+        };
+        const res = await newPayRoom(params);
+        if (res.status == 200) {
+          this.handleShowAlertModal(true, "success", "Thanh toán thành công");
+        }
+      } catch (error) {
+        this.handleShowAlertModal(true, "danger", "Thanh toán thất bại");
+      }
+    },
     closePaymentModal() {},
     async getDetails() {
       this.res = await GetDetail(this.$route.params.id);
@@ -706,7 +986,21 @@ export default {
 
 <style>
 @import "@/assets/css/details/index.css";
+.paymentNotice {
+  font-size: 18px;
+  font-weight: 700;
+  text-decoration: underline;
+}
+.confirm__container {
+  color: #ffff;
+  font-size: 18px;
+  font-weight: 500;
+  border-radius: 10px;
+}
 .pd15 {
   padding: 0 15px;
+}
+.h50 {
+  height: 50px !important;
 }
 </style>
