@@ -553,6 +553,7 @@
         id="monthPayment"
         ref="tenantModal"
         title="Thông tin thanh toán"
+        size="lg"
         @hidden="closeTenantModal"
         scrollable
       >
@@ -564,84 +565,124 @@
           <h4 class="mr-2 text-white mb-0">{{ alert.message }}</h4>
         </div>
         <form ref="form">
-          <b-form-group label="Mã phòng" label-for="name-input">
-            <b-form-input
-              class="h50"
-              id="name-input"
-              v-model="payment.idRoom"
-              disabled
-              required
-            ></b-form-input>
-          </b-form-group>
-          <b-form-group
-            label="CMND/CCCD người thanh toán"
-            label-for="name-input"
-          >
-            <b-form-input
-              class="h50"
-              id="name-input"
-              v-model="payment.cartId"
-              disabled
-              required
-            ></b-form-input>
-          </b-form-group>
-          <b-form-group label="Tháng thanh toán" label-for="name-input">
-            <b-form-input
-              class="h50"
-              id="name-input"
-              type="number"
-              v-model="payment.month"
-              required
-            ></b-form-input>
-          </b-form-group>
-          <b-form-group label="Tiền phòng" label-for="name-input">
-            <b-form-input
-              class="h50"
-              id="name-input"
-              type="number"
-              v-model="payment.roomPrice"
-              disabled
-              required
-            ></b-form-input>
-          </b-form-group>
-          <b-form-group label="Phí dịch vụ" label-for="name-input">
-            <b-form-input
-              class="h50"
-              id="name-input"
-              type="number"
-              disabled
-              v-model="payment.roomOtherPrice"
-              required
-            ></b-form-input>
-          </b-form-group>
-          <b-form-group label="Số nước" label-for="name-input">
-            <b-form-input
-              class="h50"
-              id="name-input"
-              type="number"
-              v-model="payment.noWater"
-              required
-            ></b-form-input>
-          </b-form-group>
-          <b-form-group label="Số điện" label-for="name-input">
-            <b-form-input
-              class="h50"
-              type="number"
-              id="name-input"
-              v-model="payment.noElectic"
-              required
-            ></b-form-input>
-          </b-form-group>
-          <b-form-group label="Nội dung" label-for="name-input">
-            <b-form-input
-              class="h50"
-              id="name-input"
-              v-model="payment.note"
-              required
-            ></b-form-input>
-          </b-form-group>
+          <div class="d-flex justify-content-around">
+            <b-form-group class="col-6" label="Mã phòng" label-for="name-input">
+              <b-form-input
+                class="h50"
+                id="name-input"
+                v-model="payment.idRoom"
+                disabled
+                required
+              ></b-form-input>
+            </b-form-group>
+            <b-form-group
+              class="col-6"
+              label="CMND/CCCD người thanh toán"
+              label-for="name-input"
+            >
+              <b-form-input
+                class="h50"
+                id="name-input"
+                v-model="payment.cartId"
+                disabled
+                required
+              ></b-form-input>
+            </b-form-group>
+          </div>
+          <div class="d-flex justify-content-around">
+            <b-form-group
+              class="col-6"
+              label="Tháng thanh toán"
+              label-for="name-input"
+            >
+              <b-form-input
+                class="h50"
+                id="name-input"
+                type="number"
+                v-model="payment.month"
+                disabled
+              ></b-form-input>
+            </b-form-group>
+            <b-form-group
+              class="col-6"
+              label="Năm thanh toán"
+              label-for="name-input"
+            >
+              <b-form-input
+                class="h50"
+                id="name-input"
+                type="number"
+                v-model="payment.year"
+                disabled
+              ></b-form-input>
+            </b-form-group>
+          </div>
+          <div class="d-flex justify-content-around">
+            <b-form-group
+              class="col-6"
+              label="Tiền phòng"
+              label-for="name-input"
+            >
+              <b-form-input
+                class="h50"
+                id="name-input"
+                type="number"
+                v-model="payment.roomPrice"
+                disabled
+                required
+              ></b-form-input>
+            </b-form-group>
+            <b-form-group
+              class="col-6"
+              label="Phí dịch vụ"
+              label-for="name-input"
+            >
+              <b-form-input
+                class="h50"
+                id="name-input"
+                type="number"
+                disabled
+                v-model="payment.roomOtherPrice"
+                required
+              ></b-form-input>
+            </b-form-group>
+          </div>
+          <div class="d-flex justify-content-around">
+            <b-form-group class="col-6" label="Số nước" label-for="name-input">
+              <b-form-input
+                class="h50"
+                id="name-input"
+                type="number"
+                v-model="payment.noWater"
+                required
+              ></b-form-input>
+            </b-form-group>
+            <b-form-group class="col-6" label="Số điện" label-for="name-input">
+              <b-form-input
+                class="h50"
+                type="number"
+                id="name-input"
+                v-model="payment.noElectic"
+                required
+              ></b-form-input>
+            </b-form-group>
+          </div>
+          <div>
+            <b-form-group
+              class="col-12"
+              label="Nội dung"
+              label-for="name-input"
+            >
+              <b-form-input
+                class="h50"
+                id="name-input"
+                v-model="payment.note"
+                required
+              ></b-form-input>
+            </b-form-group>
+          </div>
         </form>
-        <div class="h4 cursor-pointer mr-3">
+        <div class="h4 cursor-pointer mr-3 pl-3">
           <b-button class="bg-primary border-primary" v-b-modal.confirmPayment>
             <b-icon icon="plus-square"></b-icon>
             <span>Thanh toán</span>
@@ -708,15 +749,21 @@
               <p>
                 Tiền nước: {{ item.noWater }} X
                 {{ dataDetail.room?.waterprice }} =
-                {{ item.noWater * dataDetail.room?.waterprice }}VNĐ
+                {{
+                  handleReturnTotal(item.noWater * dataDetail.room?.waterprice)
+                }}
               </p>
               <p>
                 Tiền điện: {{ item.noElectic }} X
                 {{ dataDetail.room?.electricprice }} =
-                {{ item.noElectic * dataDetail.room?.electricprice }}VNĐ
+                {{
+                  handleReturnTotal(
+                    item.noElectic * dataDetail.room?.electricprice
+                  )
+                }}
               </p>
-              <p>Phí dịch vụ: {{ item.otherPrice }}VNĐ</p>
-              <p>Số tiền thanh toán: {{ item.roomPrice }}VNĐ</p>
+              <p>Phí dịch vụ: {{ handleReturnTotal(item.otherPrice) }}</p>
+              <p>Số tiền thanh toán: {{ handleReturnTotal(item.roomPrice) }}</p>
               <p>Nội dung thanh toán: {{ item.note }}</p>
             </div>
           </div>
@@ -762,7 +809,8 @@ export default {
         cartId: "",
         roomPrice: 0,
         roomOtherPrice: 0,
-        month: 0,
+        month: new Date().getMonth() + 1,
+        year: new Date().getFullYear(),
         noWater: 0,
         noElectic: 0,
         note: "",
@@ -840,6 +888,9 @@ export default {
     }
   },
   methods: {
+    handleReturnTotal(money) {
+      return new Intl.NumberFormat().format(money) + " " + "VND";
+    },
     handleOk() {},
     formatText(text) {
       return text ? text.replace(/\n/g, "</br>") : "";
@@ -952,6 +1003,7 @@ export default {
           cartId: this.payment.cartId,
           idRoom: this.payment.idRoom,
           month: Number(this.payment.month),
+          year: Number(this.payment.year),
           noElectic: Number(this.payment.noElectic),
           noWater: Number(this.payment.noWater),
           status: 1,

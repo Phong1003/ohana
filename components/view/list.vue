@@ -468,11 +468,16 @@ export default {
       try {
         const res = await activeRoom({ id: id, status: status });
         if (res.status == 200) {
-          this.$router.go(0);
+          this.handleShowAlert(true, "success", "Xác nhận phòng thành công");
+          setTimeout(() => {
+            this.isShowMessage = false;
+            this.$router.go(0);
+          }, 2000);
         } else {
           this.$emit("handleChangeLoading");
         }
       } catch (error) {
+        this.handleShowAlert(true, "danger", "Xác nhận phòng thất bại!");
         console.log("error", error);
       }
     },

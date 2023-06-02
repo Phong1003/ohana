@@ -60,6 +60,22 @@
               :disabled="!isEdit"
             ></b-form-input>
           </div>
+          <div class="d-flex flex-column col-6 mt-3">
+            <p class="mb-0 field__name mb-2">Số dư</p>
+            <b-form-input
+              class="h48"
+              v-model="totalMoney"
+              disabled
+            ></b-form-input>
+          </div>
+          <div class="d-flex flex-column col-6 mt-3">
+            <p class="mb-0 field__name mb-2">Ngày tạo</p>
+            <b-form-input
+              class="h48"
+              v-model="createdDate"
+              disabled
+            ></b-form-input>
+          </div>
         </div>
         <div
           v-if="isEdit"
@@ -75,17 +91,89 @@
         v-if="!isEdit"
         class="d-flex justify-content-end mt-3 h4 cursor-pointer mr-3"
       >
+        <b-button
+          v-if="currentAccount.roleid == 1"
+          v-b-modal.quarterHistory
+          class="bg-success border-success mr-3"
+        >
+          <span>Thống kê quý</span>
+        </b-button>
+        <b-button
+          v-if="currentAccount.roleid == 1"
+          v-b-modal.paymentHistory
+          class="bg-warning border-warning mr-3"
+        >
+          <span>Biến động số dư</span>
+        </b-button>
         <b-button @click="isEdit = true" class="bg-primary border-primary">
           <b-icon icon="pencil-square"></b-icon>
           <span>Chỉnh sửa</span>
         </b-button>
       </div>
     </div>
+    <b-modal
+      id="paymentHistory"
+      ref="modal"
+      title="Biến động số dư"
+      modal-class="form_money"
+      scrollable
+      ok-only
+      @ok="handleOk"
+    >
+      <div v-if="listHistory.length" class="history__contain">
+        <div
+          v-for="(item, index) of listHistory"
+          :key="index"
+          class="border-bottom text-white history__item mb-2"
+          :class="item.note.includes('cộng tiền') ? 'bg-success' : 'bg-danger'"
+        >
+          <div class="p-2">
+            <p>Hành động: {{ item.note }}</p>
+            <p>Mã lịch sử : {{ item.id }}</p>
+            <p>
+              Ngày thực hiện: {{ item.createDate.replace("T00:00:00", "") }}
+            </p>
+            <p>Số tiền: {{ handleReturnTotal(item.moneyRecharge) }}</p>
+          </div>
+        </div>
+      </div>
+      <div v-else>
+        <h4 class="text-center">Bạn chưa có lịch sử nạp và thanh toán</h4>
+      </div>
+    </b-modal>
+    <b-modal
+      id="quarterHistory"
+      ref="modal"
+      :title="`Thống kê theo quý ${currentYear}`"
+      modal-class="form_money"
+      scrollable
+      ok-only
+      @ok="handleOk"
+    >
+      <div class="history__contain">
+        <div class="border-bottom" v-if="currentMonth >= 1">
+          <p class="text-danger h5">Quý 1 - Tháng 1 2 3</p>
+          <p>Doanh thu: {{ handleReturnTotal(quarterHistory["Quý 1"]) }}</p>
+        </div>
+        <div class="border-bottom" v-if="currentMonth >= 4">
+          <p class="text-danger h5">Quý 2 - Tháng 4 5 6</p>
+          <p>Doanh thu: {{ handleReturnTotal(quarterHistory["Quý 2"]) }}</p>
+        </div>
+        <div class="border-bottom" v-if="currentMonth >= 7">
+          <p class="text-danger h5">Quý 3 - Tháng 7 8 9</p>
+          <p>Doanh thu: {{ handleReturnTotal(quarterHistory["Quý 3"]) }}</p>
+        </div>
+        <div class="border-bottom" v-if="currentMonth >= 10">
+          <p class="text-danger h5">Quý 4 - Tháng 10 11 12</p>
+          <p>Doanh thu: {{ handleReturnTotal(quarterHistory["Quý 4"]) }}</p>
+        </div>
+      </div>
+    </b-modal>
   </div>
 </template>
 
 <script>
-import { editUser } from "../../api/auth/index";
+import { editUser, getHistory, getMoneyChart } from "../../api/auth/index";
 import Autocomplete from "../../components/autocomplete/index.vue";
 export default {
   props: ["currentAccount"],
@@ -95,6 +183,11 @@ export default {
   data() {
     return {
       isEdit: false,
+      createdDate: "",
+      listHistory: [],
+      currentYear: "",
+      currentMonth: "",
+      totalMoney: "",
       options: [
         {
           id: "1",
@@ -105,9 +198,33 @@ export default {
           name: "USER",
         },
       ],
+      quarterHistory: {},
     };
   },
+  async created() {
+    this.currentYear = new Date().getFullYear();
+    this.currentMonth = new Date().getMonth();
+    await this.handleGetHistory();
+    if (this.currentAccount.roleid == 1) {
+      await this.handleGetMoneyChart(this.currentYear);
+    }
+
+    this.createdDate = this.currentAccount.createddate.replace("T00:00:00", "");
+    this.totalMoney =
+      new Intl.NumberFormat().format(this.currentAccount.bankBal) + " " + "VND";
+  },
   methods: {
+    async handleGetMoneyChart(currentYear) {
+      const res = await getMoneyChart(currentYear);
+      this.quarterHistory = res.data;
+    },
+    handleReturnTotal(money) {
+      return new Intl.NumberFormat().format(money) + " " + "VND";
+    },
+    async handleGetHistory() {
+      const res = await getHistory();
+      this.listHistory = res.data;
+    },
     handleCloseDetails() {
       this.$emit("handleCloseDetails");
     },

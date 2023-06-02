@@ -14,12 +14,20 @@
             <div>Nạp tiền</div>
           </b-button>
           <b-button
-            class="d-flex align-items-center border-0 ml-3 bg-success"
+            class="d-flex align-items-center border-0 ml-3 bg-warning"
             style="height: 30px"
             v-b-modal.paymentHistory
             @click="handleGetHistory"
           >
             <div>Lịch sử thanh toán</div>
+          </b-button>
+          <b-button
+            class="d-flex align-items-center border-0 ml-3 bg-success"
+            style="height: 30px"
+            v-b-modal.quarterHistory
+            @click="handleGetHistory"
+          >
+            <div>Thống kê quý</div>
           </b-button>
         </div>
       </div>
@@ -88,6 +96,14 @@
               class="h50"
               v-model="totalMoney"
               :disabled="true"
+            ></b-form-input>
+          </div>
+          <div class="d-flex flex-column col-6 mt-3">
+            <p class="mb-0 field__name mb-2">Ngày tạo</p>
+            <b-form-input
+              class="h50"
+              v-model="userInfo.createddate"
+              disabled
             ></b-form-input>
           </div>
         </div>
@@ -205,12 +221,40 @@
               <p>
                 Ngày thực hiện: {{ item.createDate.replace("T00:00:00", "") }}
               </p>
-              <p>Số tiền: {{ item.moneyRecharge }}VNĐ</p>
+              <p>Số tiền: {{ handleReturnTotal(item.moneyRecharge) }}</p>
             </div>
           </div>
         </div>
         <div v-else>
           <h4 class="text-center">Bạn chưa có lịch sử nạp và thanh toán</h4>
+        </div>
+      </b-modal>
+      <b-modal
+        id="quarterHistory"
+        ref="modal"
+        :title="`Thống kê theo quý ${currentYear}`"
+        modal-class="form_money"
+        scrollable
+        ok-only
+        @ok="handleOk"
+      >
+        <div class="history__contain">
+          <div class="border-bottom" v-if="currentMonth >= 1">
+            <p class="text-danger h5">Quý 1 - Tháng 1 2 3</p>
+            <p>Doanh thu: {{ handleReturnTotal(quarterHistory["Quý 1"]) }}</p>
+          </div>
+          <div class="border-bottom" v-if="currentMonth >= 4">
+            <p class="text-danger h5">Quý 2 - Tháng 4 5 6</p>
+            <p>Doanh thu: {{ handleReturnTotal(quarterHistory["Quý 2"]) }}</p>
+          </div>
+          <div class="border-bottom" v-if="currentMonth >= 7">
+            <p class="text-danger h5">Quý 3 - Tháng 7 8 9</p>
+            <p>Doanh thu: {{ handleReturnTotal(quarterHistory["Quý 3"]) }}</p>
+          </div>
+          <div class="border-bottom" v-if="currentMonth >= 10">
+            <p class="text-danger h5">Quý 4 - Tháng 10 11 12</p>
+            <p>Doanh thu: {{ handleReturnTotal(quarterHistory["Quý 4"]) }}</p>
+          </div>
         </div>
       </b-modal>
     </div>
@@ -224,6 +268,7 @@ import {
   getMoney,
   getUserByToken,
   getHistory,
+  getMoneyChart,
 } from "../../api/auth/index";
 export default {
   data() {
@@ -258,12 +303,25 @@ export default {
       newState: null,
       alertMessage: "",
       listHistory: [],
+      quarterHistory: {},
+      currentYear: "",
+      currentMonth: "",
     };
   },
   async created() {
+    this.currentYear = new Date().getFullYear();
+    this.currentMonth = new Date().getMonth();
     await this.getMoneyUser();
+    await this.handleGetMoneyChart(this.currentYear);
   },
   methods: {
+    async handleGetMoneyChart(currentYear) {
+      const res = await getMoneyChart(currentYear);
+      this.quarterHistory = res.data;
+    },
+    handleReturnTotal(money) {
+      return new Intl.NumberFormat().format(money) + " " + "VND";
+    },
     handleOk() {},
     async handleSaveEdit() {
       try {
@@ -322,7 +380,10 @@ export default {
     async getMoneyUser() {
       try {
         const res = await getUserByToken();
-        this.userInfo = { ...res.data };
+        this.userInfo = {
+          ...res.data,
+          createddate: res.data.createddate.replace("T00:00:00", ""),
+        };
         this.totalMoney =
           new Intl.NumberFormat().format(res.data.bankBal) + " " + "VND";
       } catch (error) {
@@ -344,6 +405,9 @@ export default {
 </script>
 
 <style>
+.quarterHistory {
+  font-weight: 700;
+}
 .history__item {
   border-radius: 10px;
 }

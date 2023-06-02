@@ -38,11 +38,6 @@ export default {
     return {
       listHouse: [],
       isLoading: true,
-      total: 0,
-      totalConfirm: 0,
-      totalReject: 0,
-      totalUnConfirm: 0,
-      totalUnAvailable: 0,
     };
   },
   computed: {
@@ -60,7 +55,7 @@ export default {
           noSex: "",
           status: roomStatus ? roomStatus : "",
           pageNumber: 0,
-          pageSize: 10,
+          pageSize: 15,
           price: "",
           address: "",
         });
