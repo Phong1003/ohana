@@ -59,6 +59,7 @@ import CardTrend from "../../components/cardTrend/index.vue";
 import CardRoom from "../../components/listRoom/index.vue";
 import { mapGetters, mapActions } from "vuex";
 import { search } from "../../api/dashboard/index";
+import { getAdr } from "../../api/auth/index";
 export default {
   layout: "defaults",
   components: {
@@ -71,12 +72,12 @@ export default {
       cardList: [
         {
           img: require("@/assets/images/binhthanh.jpg"),
-          nameCard: "Hà Đông",
+          nameCard: "",
         },
-        { img: require("@/assets/images/quan10.jpg"), nameCard: "Thanh Xuân" },
-        { img: require("@/assets/images/quan1.jpg"), nameCard: "Ba Đình" },
-        { img: require("@/assets/images/quan7.jpg"), nameCard: "Cầu Giấy" },
-        { img: require("@/assets/images/thuduc.jpg"), nameCard: "Nam Từ Liêm" }
+        { img: require("@/assets/images/quan10.jpg"), nameCard: "" },
+        { img: require("@/assets/images/quan1.jpg"), nameCard: "" },
+        { img: require("@/assets/images/quan7.jpg"), nameCard: "" },
+        { img: require("@/assets/images/thuduc.jpg"), nameCard: "" }
       ],
       listRoom: [],
       listCategory: [],
@@ -108,7 +109,6 @@ export default {
         pageSize: 10,
         address: "",
       });
-      console.log(response);
       if (response && response.data.length) {
         this.listRoom = response.data.slice(0, 5).map((item) => {
           return {
@@ -135,6 +135,13 @@ export default {
     } catch (error) {
       console.log(error);
     }
+    const res =  await getAdr()
+    this.cardList = res.data.map((item, index) => {
+      return {
+        img: this.cardList[index] ? this.cardList[index].img : require("@/assets/images/binhthanh.jpg"),
+        nameCard: item
+      }
+    })
   },
   methods: {
     ...mapActions("dashboard", ["handleShow"]),

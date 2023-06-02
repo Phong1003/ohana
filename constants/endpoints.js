@@ -27,6 +27,7 @@ export const URL_GET_TENANT_ROOM = "/Tenant/getTenantRoom?idRoom="
 export const URL_HISTORY = '/User/hisMoney'
 // chart 
 export const URL_GET_CHART = 'Chart/getchart'
+export const URL_GET_ADR = 'Chart/getRandomAdr'
 
 
 
