@@ -259,13 +259,6 @@
                         : "Chưa thanh toán tháng này"
                     }}
                   </p>
-                  <p class="mx-2 h4">|</p>
-                  <p
-                    class="text-primary paymentNotice cursor-pointer"
-                    v-b-modal.paymentHistory
-                  >
-                    Lịch sử thanh toán
-                  </p>
                 </div>
                 <div
                   class="capacity__options d-flex flex-column mt-3 border-bottom"
@@ -346,7 +339,6 @@
                 </div>
                 <div class="mt-3 d-flex justify-content-end">
                   <b-button
-                    v-if="isShowPayment"
                     class="bg-danger border-danger"
                     v-b-modal.monthPayment
                     @click="handleGetInfo()"
@@ -410,13 +402,24 @@
                   </div>
                 </div>
               </div>
-              <div class="mt-4">
+              <div class="mt-4 border-top">
                 <div
-                  class="house__title d-flex align-items-center cursor_pointer"
+                  class="pl-3 mt-3 d-flex align-items-center cursor_pointer"
                   v-b-modal.roomHistory
                   v-if="dataDetail.room?.createdby == userEmail"
                 >
-                  <p class="mb-0 text-danger">Lịch sử thuê phòng</p>
+                  <p class="mb-0 paymentNotice text-success">
+                    Lịch sử thuê phòng
+                  </p>
+                </div>
+                <div
+                  class="pl-3 mt-3 d-flex align-items-center cursor_pointer"
+                  v-b-modal.paymentHistory
+                  v-if="dataDetail.room?.createdby == userEmail"
+                >
+                  <p class="mb-0 paymentNotice text-primary">
+                    Lịch sử thanh toán
+                  </p>
                 </div>
               </div>
             </div>
@@ -431,7 +434,7 @@
       >
         <div
           v-if="alert.isShow"
-          class="d-flex align-items-center justify-content-center bg-success mb-3"
+          class="d-flex align-items-center text-center justify-content-center bg-success mb-3"
           :class="alert.status == 'success' ? 'bg-success' : 'bg-danger'"
         >
           <h4 class="mr-2 text-white mb-0">{{ alert.message }}</h4>
@@ -468,7 +471,7 @@
               type="number"
               id="name-input"
               v-model="tenant.cartId"
-              required
+              disabled
             ></b-form-input>
           </b-form-group>
         </form>
@@ -609,7 +612,6 @@
                 id="name-input"
                 type="number"
                 v-model="payment.month"
-                disabled
               ></b-form-input>
             </b-form-group>
             <b-form-group
@@ -694,7 +696,7 @@
         <div class="h4 cursor-pointer mr-3 pl-3">
           <b-button class="bg-primary border-primary" v-b-modal.confirmPayment>
             <b-icon icon="plus-square"></b-icon>
-            <span>Thanh toán</span>
+            <span>Xác nhận thanh toán</span>
           </b-button>
         </div>
         <template #modal-footer="{ cancel }">
@@ -708,8 +710,7 @@
         ref="tenantModal"
         title="Xác nhận thanh toán"
         centered
-        @hidden="closeTenantModal"
-        @ok="handlePayRoomMonth"
+        hide-footer
       >
         <div class="confirm__container bg-success text-white">
           <div class="p-2 mt-2">
@@ -735,52 +736,31 @@
             </p>
           </div>
         </div>
-      </b-modal>
-      <b-modal
-        id="paymentHistory"
-        ref="modal"
-        title="Lịch sử thanh toán"
-        scrollable
-        ok-only
-        @ok="handleOk"
-      >
-        <div v-if="listHistory.length" class="history__contain">
-          <div
-            v-for="(item, index) of listHistory"
-            :key="index"
-            class="border-bottom text-white history__item mb-2 bg-success"
+        <div class="d-flex justify-content-end mt-3">
+          <b-button
+            size="sm"
+            class="mr-3"
+            variant="secondary"
+            @click="handlePayRoomMonth(0)"
           >
-            <div class="p-2">
-              <p>Tháng thanh toán: {{ item.month }}</p>
-              <p>
-                Ngày thanh toán: {{ item.created.replace("T00:00:00", "") }}
-              </p>
-              <p>
-                Tiền nước: {{ item.noWater }} X
-                {{ dataDetail.room?.waterprice }} =
-                {{
-                  handleReturnTotal(item.noWater * dataDetail.room?.waterprice)
-                }}
-              </p>
-              <p>
-                Tiền điện: {{ item.noElectic }} X
-                {{ dataDetail.room?.electricprice }} =
-                {{
-                  handleReturnTotal(
-                    item.noElectic * dataDetail.room?.electricprice
-                  )
-                }}
-              </p>
-              <p>Phí dịch vụ: {{ handleReturnTotal(item.otherPrice) }}</p>
-              <p>Số tiền thanh toán: {{ handleReturnTotal(item.roomPrice) }}</p>
-              <p>Nội dung thanh toán: {{ item.note }}</p>
-            </div>
-          </div>
-        </div>
-        <div v-else>
-          <h4 class="text-center">Bạn chưa có lịch sử nạp và thanh toán</h4>
+            Lưu thông tin
+          </b-button>
+          <b-button size="sm" variant="success" @click="handlePayRoomMonth(1)">
+            Thanh Toán
+          </b-button>
         </div>
       </b-modal>
+      <ConfirmPayment
+        idModal="confirmPayment"
+        :currentPayment="currentPayment"
+      />
+      <HistoryPayment
+        idModal="paymentHistory"
+        :listHistory="listHistory"
+        :fullListTenants="fullListTenants"
+        :price="price"
+        @handleGetPayment="handleGetPayment"
+      />
       <HistoryModal idModal="roomHistory" :fullListTenants="fullListTenants" />
     </div>
     <EditHome v-else />
@@ -797,9 +777,9 @@ import {
   getPayMonthRoom,
   newPayRoom,
 } from "../../api/auth/index";
-import { search, searchUser } from "../../api/dashboard";
 import EditHome from "../../components/view/create/newHome.vue";
 import HistoryModal from "../../components/modal/historyTable.vue";
+import HistoryPayment from "../../components/modal/historyPayment.vue";
 import { directive as viewer } from "v-viewer";
 import "viewerjs/dist/viewer.css";
 
@@ -807,6 +787,7 @@ export default {
   components: {
     EditHome,
     HistoryModal,
+    HistoryPayment,
   },
   directives: {
     viewer: viewer({
@@ -815,7 +796,10 @@ export default {
   },
   data() {
     return {
-      isShowPayment: true,
+      price: {
+        electric: 0,
+        water: 0,
+      },
       fullListTenants: [],
       payment: {
         idRoom: "",
@@ -892,12 +876,15 @@ export default {
     }
     this.isShowEdit = this.$route.params.edit;
     await this.getDetails();
-    if (
-      this.dataDetail.room.status == 3 &&
-      this.dataDetail.room.createdby == this.userEmail
-    ) {
+    if (this.dataDetail.room.createdby == this.userEmail) {
       await this.handleGetPayment();
       await this.handleGetTenantInRoom();
+    }
+    if (this.dataDetail.room?.electricprice) {
+      this.price.electric = this.dataDetail.room.electricprice;
+    }
+    if (this.dataDetail.room?.waterprice) {
+      this.price.water = this.dataDetail.room.waterprice;
     }
   },
   methods: {
@@ -925,14 +912,6 @@ export default {
     async handleGetPayment() {
       const res = await getPayMonthRoom(this.$route.params.id);
       this.listHistory = res.data;
-      const currentDay = new Date();
-      for (const payment of res.data) {
-        if (payment.month == currentDay.getMonth() + 1) {
-          this.isShowPayment = false;
-        } else {
-          this.isShowPayment = true;
-        }
-      }
     },
     async handleAddNewTenant() {
       const res = await newTenant({
@@ -1000,6 +979,16 @@ export default {
       }
     },
     async handleDeleteTenant() {
+      const findUnPayment = this.listHistory.find((el) => el.status == 0);
+
+      if (this.listTenant.length == 1 && findUnPayment) {
+        this.handleShowAlertModal(
+          true,
+          "danger",
+          `Vui lòng thanh toán tháng ${findUnPayment.month} trước khi trả phòng ( chi tiết ở lịch sử thanh toán )`
+        );
+        return;
+      }
       const res = await delTenant({ tenantId: this.tenant.id });
       if (res.status == 200) {
         this.handleShowAlertModal(true, "success", "Xóa thành công");
@@ -1011,7 +1000,7 @@ export default {
         this.handleShowAlertModal(true, "danger", "Xóa thất bại");
       }
     },
-    async handlePayRoomMonth() {
+    async handlePayRoomMonth(status) {
       try {
         const params = {
           cartId: this.payment.cartId,
@@ -1020,15 +1009,27 @@ export default {
           year: Number(this.payment.year),
           noElectic: Number(this.payment.noElectic),
           noWater: Number(this.payment.noWater),
-          status: 1,
+          status: status,
           note: this.payment.note,
         };
         const res = await newPayRoom(params);
         if (res.status == 200) {
-          this.handleShowAlertModal(true, "success", "Thanh toán thành công");
+          if (status) {
+            this.handleShowAlertModal(true, "success", "Thanh toán thành công");
+          } else {
+            this.handleShowAlertModal(
+              true,
+              "success",
+              "Lưu thông tin thành công"
+            );
+          }
         }
       } catch (error) {
-        this.handleShowAlertModal(true, "danger", "Thanh toán thất bại");
+        if (status) {
+          this.handleShowAlertModal(true, "danger", "Thanh toán thất bại");
+        } else {
+          this.handleShowAlertModal(true, "danger", "Lưu thông tin thất bại");
+        }
       }
     },
     closePaymentModal() {},
@@ -1052,6 +1053,7 @@ export default {
 
 <style>
 @import "@/assets/css/details/index.css";
+
 .paymentNotice {
   font-size: 18px;
   font-weight: 700;
@@ -1061,7 +1063,6 @@ export default {
   color: #ffff;
   font-size: 18px;
   font-weight: 500;
-  border-radius: 10px;
 }
 .pd15 {
   padding: 0 15px;
