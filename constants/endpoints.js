@@ -28,6 +28,6 @@ export const URL_HISTORY = '/User/hisMoney'
 // chart 
 export const URL_GET_CHART = 'Chart/getchart'
 export const URL_GET_MONEY_CHART = 'Chart/GetChartMoney?nam='
-
+export const URL_GET_ADR = 'Chart/getRandomAdr'
 
 

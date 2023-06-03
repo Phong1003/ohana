@@ -66,7 +66,7 @@
           </div>
         </div>
         <div class="content__section mb-3">
-          <div class="title__cover d-flex justify-content-between">
+          <div class="title__cover">
             <p class="title">{{ dataDetail.room?.name }}</p>
           </div>
           <div class="information__section d-flex mt-4 justify-content-center">
@@ -408,6 +408,15 @@
                       }}</span>
                     </div>
                   </div>
+                </div>
+              </div>
+              <div class="mt-4">
+                <div
+                  class="house__title d-flex align-items-center cursor_pointer"
+                  v-b-modal.roomHistory
+                  v-if="dataDetail.room?.createdby == userEmail"
+                >
+                  <p class="mb-0 text-danger">Lịch sử thuê phòng</p>
                 </div>
               </div>
             </div>
@@ -772,6 +781,7 @@
           <h4 class="text-center">Bạn chưa có lịch sử nạp và thanh toán</h4>
         </div>
       </b-modal>
+      <HistoryModal idModal="roomHistory" :fullListTenants="fullListTenants" />
     </div>
     <EditHome v-else />
   </div>
@@ -789,12 +799,14 @@ import {
 } from "../../api/auth/index";
 import { search, searchUser } from "../../api/dashboard";
 import EditHome from "../../components/view/create/newHome.vue";
+import HistoryModal from "../../components/modal/historyTable.vue";
 import { directive as viewer } from "v-viewer";
 import "viewerjs/dist/viewer.css";
 
 export default {
   components: {
     EditHome,
+    HistoryModal,
   },
   directives: {
     viewer: viewer({
@@ -804,6 +816,7 @@ export default {
   data() {
     return {
       isShowPayment: true,
+      fullListTenants: [],
       payment: {
         idRoom: "",
         cartId: "",
@@ -960,6 +973,7 @@ export default {
     async handleGetTenantInRoom() {
       const res = await getTenantRoom(this.$route.params.id);
       this.listTenant = [];
+      this.fullListTenants = res.data;
       for (let item of res.data) {
         if (item.status) {
           this.listTenant.push({
