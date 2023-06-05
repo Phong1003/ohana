@@ -8,6 +8,7 @@
     "start": "nuxt start",
     "generate": "nuxt generate"
   },
+  "type": "module",
   "dependencies": {
     "@nuxtjs/auth-next": "5.0.0-1667386184.dfbbb54",
     "@nuxtjs/axios": "^5.13.6",
@@ -17,8 +18,10 @@
     "bootstrap-icons": "^1.8.3",
     "bootstrap-vue": "^2.22.0",
     "core-js": "^3.25.3",
+    "export-from-json": "^1.7.2",
     "nuxt": "^2.15.8",
     "nuxt-dropzone": "^1.0.4",
+    "read-excel-file": "^5.6.1",
     "v-click-outside": "^3.2.0",
     "v-viewer": "^1.6.4",
     "vue": "^2.7.10",

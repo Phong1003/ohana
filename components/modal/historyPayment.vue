@@ -127,10 +127,6 @@
 
 <script>
 import { updatePayRoom } from "../../api/auth/index";
-import VueExcelXlsx from "vue-excel-xlsx";
-import Vue from "vue";
-
-Vue.use(VueExcelXlsx);
 export default {
   props: [
     "idModal",

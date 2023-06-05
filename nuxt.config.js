@@ -26,6 +26,7 @@ export default {
     { src: "@/plugins/vClickOutside.js", ssr: false },
     { src: "@/plugins/vue-simple-suggest.js", ssr: false },
     { src: "@/plugins/vViewer.js", ssr: false },
+    { src: "@/plugins/excelLib", mode: "client" },
   ],
 
   // Auto import components: https://go.nuxtjs.dev/config-components
