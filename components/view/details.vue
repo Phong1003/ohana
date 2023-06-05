@@ -859,6 +859,7 @@ export default {
       res: "",
       userEmail: "",
       listName: [],
+      isShowPayment: true,
     };
   },
   async created() {
@@ -912,6 +913,14 @@ export default {
     async handleGetPayment() {
       const res = await getPayMonthRoom(this.$route.params.id);
       this.listHistory = res.data;
+      const currentDay = new Date();
+      for (const payment of res.data) {
+        if (payment.month == currentDay.getMonth() + 1 && payment.status) {
+          this.isShowPayment = false;
+        } else {
+          this.isShowPayment = true;
+        }
+      }
     },
     async handleAddNewTenant() {
       const res = await newTenant({
@@ -1014,6 +1023,7 @@ export default {
         };
         const res = await newPayRoom(params);
         if (res.status == 200) {
+          this.$bvModal.hide("confirmPayment");
           if (status) {
             this.handleShowAlertModal(true, "success", "Thanh toán thành công");
           } else {
@@ -1025,10 +1035,27 @@ export default {
           }
         }
       } catch (error) {
+        this.$bvModal.hide("confirmPayment");
         if (status) {
-          this.handleShowAlertModal(true, "danger", "Thanh toán thất bại");
+          if (error.response.data == "Đã thanh toán rồi") {
+            this.handleShowAlertModal(
+              true,
+              "danger",
+              "Tháng này đã được thanh toán"
+            );
+          } else {
+            this.handleShowAlertModal(true, "danger", "Thanh toán thất bại");
+          }
         } else {
-          this.handleShowAlertModal(true, "danger", "Lưu thông tin thất bại");
+          if (error.response.data == "Đã thanh toán rồi") {
+            this.handleShowAlertModal(
+              true,
+              "danger",
+              "Tháng này đã được thanh toán"
+            );
+          } else {
+            this.handleShowAlertModal(true, "danger", "Lưu thông tin thất bại");
+          }
         }
       }
     },
