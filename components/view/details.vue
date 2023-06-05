@@ -759,6 +759,9 @@
         :listHistory="listHistory"
         :fullListTenants="fullListTenants"
         :price="price"
+        :ownerName="ownerName"
+        :ownerPhone="ownerPhone"
+        :roomName="roomName"
         @handleGetPayment="handleGetPayment"
       />
       <HistoryModal idModal="roomHistory" :fullListTenants="fullListTenants" />
@@ -860,12 +863,15 @@ export default {
       userEmail: "",
       listName: [],
       isShowPayment: true,
+      roomName: "",
     };
   },
   async created() {
     if (typeof window !== "undefined") {
       this.checkRole = sessionStorage.getItem("role");
       this.userEmail = sessionStorage.getItem("email");
+      this.ownerName = sessionStorage.getItem("fullName");
+      this.ownerPhone = sessionStorage.getItem("phone");
     }
     if (
       this.$route.name.includes("dashboard") ||
@@ -886,6 +892,9 @@ export default {
     }
     if (this.dataDetail.room?.waterprice) {
       this.price.water = this.dataDetail.room.waterprice;
+    }
+    if (this.dataDetail.room?.name) {
+      this.roomName = this.dataDetail.room.name;
     }
   },
   methods: {

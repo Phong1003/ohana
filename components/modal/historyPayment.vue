@@ -62,7 +62,7 @@
     <b-modal
       id="updatePayment"
       ref="tenantModal"
-      title="Xác nhận thanh toán"
+      :title="!currentPayment.status ? 'Xác nhận thanh toán' : 'Hóa đơn'"
       centered
       hide-footer
     >
@@ -102,7 +102,22 @@
         </div>
       </div>
       <div class="d-flex justify-content-end mt-3">
-        <b-button size="sm" variant="success" @click="handleUpdatePayment(1)">
+        <vue-excel-xlsx
+          :data="historyData"
+          :columns="columns"
+          :file-name="'Thông tin tiền phòng'"
+          :file-type="'xlsx'"
+          :sheet-name="'sheetname'"
+        >
+          Xuất file
+        </vue-excel-xlsx>
+        <b-button
+          v-if="!currentPayment.status"
+          class="ml-3"
+          size="sm"
+          variant="success"
+          @click="handleUpdatePayment(1)"
+        >
           Thanh Toán
         </b-button>
       </div>
@@ -112,10 +127,69 @@
 
 <script>
 import { updatePayRoom } from "../../api/auth/index";
+import VueExcelXlsx from "vue-excel-xlsx";
+import Vue from "vue";
+
+Vue.use(VueExcelXlsx);
 export default {
-  props: ["idModal", "listHistory", "price", "fullListTenants"],
+  props: [
+    "idModal",
+    "listHistory",
+    "price",
+    "fullListTenants",
+    "roomName",
+    "ownerName",
+    "ownerPhone",
+  ],
   data() {
     return {
+      columns: [
+        {
+          label: "Tên phòng",
+          field: "roomName",
+        },
+        {
+          label: "Chủ nhà",
+          field: "ownerName",
+        },
+        {
+          label: "SĐT chủ nhà",
+          field: "ownerPhone",
+        },
+        {
+          label: "Người thanh toán",
+          field: "tenantName",
+        },
+        {
+          label: "SĐT người thuê",
+          field: "tenantPhone",
+        },
+        {
+          label: "Tháng",
+          field: "month",
+        },
+        {
+          label: "Năm",
+          field: "year",
+        },
+        {
+          label: "Tiền điện",
+          field: "electricPrice",
+        },
+        {
+          label: "Tiền nước",
+          field: "waterPrice",
+        },
+        {
+          label: "Tiền dịch vụ",
+          field: "otherPrice",
+        },
+        {
+          label: "Tổng tiền thanh toán",
+          field: "totalMoney",
+        },
+      ],
+      historyData: [],
       fields: [
         { key: "cartId", label: "Người thanh toán", sortable: true },
         { key: "month", label: "Tháng", sortable: true },
@@ -133,6 +207,7 @@ export default {
         status: "",
         message: "",
       },
+      tenantPhone: 0,
     };
   },
   methods: {
@@ -166,11 +241,35 @@ export default {
       return this.handleReturnTotal(sum);
     },
     onRowClicked(item) {
+      this.historyData = [];
       this.currentPayment = { ...item };
-      console.log(this.currentPayment);
-      if (!item.status) {
-        this.$bvModal.show("updatePayment");
-      }
+      const paymentInfo = {
+        roomName: this.roomName,
+        ownerName: this.ownerName,
+        ownerPhone: this.ownerPhone,
+        tenantName: this.handleReturnNameTenant(this.currentPayment.cartId),
+        tenantPhone: this.tenantPhone,
+        month: this.currentPayment.month,
+        year: this.currentPayment.year,
+        electricPrice: this.handleReturnMoney(
+          this.currentPayment.noElectic,
+          "electric"
+        ),
+        waterPrice: this.handleReturnMoney(
+          this.currentPayment.noWater,
+          "water"
+        ),
+        otherPrice: this.handleReturnTotal(this.currentPayment.otherPrice),
+        totalMoney: this.returnTotalMoney(
+          this.currentPayment.roomPrice,
+          this.currentPayment.otherPrice,
+          this.currentPayment.noWater * this.price.water,
+          this.currentPayment.noWater * this.price.electric
+        ),
+      };
+      console.log(paymentInfo);
+      this.historyData.push(paymentInfo);
+      this.$bvModal.show("updatePayment");
     },
     handleReplace(text) {
       return text ? text.replace("T00:00:00", "") : "";
@@ -183,9 +282,9 @@ export default {
     },
     handleReturnNameTenant(id) {
       if (id && this.fullListTenants.length) {
-        const tenantName = this.fullListTenants.find(
-          (el) => el.cartId == id
-        ).name;
+        const tenant = this.fullListTenants.find((el) => el.cartId == id);
+        const tenantName = tenant.name;
+        this.tenantPhone = tenant.phone;
         return tenantName;
       }
     },
