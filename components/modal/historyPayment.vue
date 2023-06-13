@@ -139,6 +139,7 @@ export default {
   ],
   data() {
     return {
+      
       columns: [
         {
           label: "Tên phòng",

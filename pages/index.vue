@@ -9,5 +9,6 @@ export default {
   created(){
     this.$router.push({name: 'dashboard'})
   }
+  
 }
 </script>

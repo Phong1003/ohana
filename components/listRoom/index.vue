@@ -1,5 +1,5 @@
 <template>
-  <div class="d-flex justify-content-between align-items-center mt-3 mb-3">
+  <div class="d-flex justify-content-between align-items-center mt-3 mb-3" >
     <div class="d-flex">
       <b-img :src="inforCard?.img" class="img_room mr-3" />
       <div>

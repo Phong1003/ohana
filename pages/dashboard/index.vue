@@ -24,10 +24,64 @@
         </div>
       </div>
       <div class="main_content">
-        <div class="container_new_room bg-white h-100">
+        <div class="container_new_room bg-white h-100"  style="width:70%; float:left">
           <div
             class="d-flex justify-content-between align-items-center"
             style="margin-bottom: 32px"
+          >
+            <div class="title_new_room">Phòng mới nhất</div>
+            <div class="view_all" @click="viewNew">Xem tất cả</div>
+          </div>
+          <div
+            class="content_room"
+          
+            @click="routerDetails(item)"
+            v-for="(item, index) in listRoom"
+            :key="index"
+          >
+            <CardRoom :contentRoom="item" />
+          </div>
+          <div
+            class="d-flex justify-content-center align-items-center mt-4"
+            style="color: #4877f8; cursor: pointer"
+            @click="viewNew"
+          >
+            Xem tất cả
+          </div>
+        </div>
+        <div class="container_new_room bg-white h-100"  style="width:25% float:right">
+         <img src="@/assets/images/2fb8e7f13a00864fd5e9d05e481814dc.jpg" >
+        </div>
+        <div class="container_new_room bg-white h-100" style="width:70%;margin-top:30px; float:left">
+          <div
+            class="d-flex justify-content-between align-items-center"
+            style="margin-bottom: 32px"
+          >
+            <div class="title_new_room">Phòng mới nhất</div>
+            <div class="view_all" @click="viewNew">Xem tất cả</div>
+          </div>
+          <div
+            class="content_room"
+            
+            @click="routerDetails(item)"
+            v-for="(item, index) in listRoom2"
+            :key="index"
+          >
+            <CardRoom :contentRoom="item" />
+          </div>
+          <div
+            class="d-flex justify-content-center align-items-center mt-4"
+            style="color: #4877f8; cursor: pointer"
+            @click="viewNew"
+          >
+            Xem tất cả
+          </div>
+        </div>
+       
+        <div class="container_new_room bg-white h-100"  style="width:70%;margin-top:30px; float:left">
+          <div
+            class="d-flex justify-content-between align-items-center"
+            style="margin-bottom: 32px "
           >
             <div class="title_new_room">Phòng mới nhất</div>
             <div class="view_all" @click="viewNew">Xem tất cả</div>
@@ -48,6 +102,7 @@
             Xem tất cả
           </div>
         </div>
+        
       </div>
     </div>
   </div>
@@ -80,6 +135,7 @@ export default {
         { img: require("@/assets/images/thuduc.jpg"), nameCard: "" }
       ],
       listRoom: [],
+       listRoom2: [],
       listCategory: [],
       optionsGender: [
         { text: "Tất cả", value: "0" },
@@ -135,6 +191,65 @@ export default {
     } catch (error) {
       console.log(error);
     }
+     try {
+      const response = await search({
+        searchQuery: "",
+        price: "",
+        category: "38ece0e6-2842-402f-a323-8c229bb19a0c",
+        utilities: [],
+        noSex: "",
+        status: "1",
+        pageNumber: 0,
+        pageSize: 10,
+        address: "",
+      });
+      if (response && response.data.length) {
+        this.listRoom2 = response.data.slice(0, 5).map((item) => {
+          return {
+            id: item.room.id,
+            uliti: item.utilities,
+            img: item.room.imgRoom,
+            nameRoom: item.room.name,
+            typeRoom: item.room.category,
+            sex:
+              item.room.noSex == 0
+                ? "Nam"
+                : item.room.noSex == 1
+                ? "Nữ"
+                : item.room.noSex == 2
+                ? "Tất cả"
+                : "",
+            acreage: item.room.capacity,
+            address: item.room.address,
+            area: item.room.area,
+            price: new Intl.NumberFormat().format(item.room.price),
+          };
+        });
+        this.listRoom2 = response.data.slice(0, 5).map((item) => {
+          return {
+            id: item.room.id,
+            uliti: item.utilities,
+            img: item.room.imgRoom,
+            nameRoom: item.room.name,
+            typeRoom: item.room.category,
+            sex:
+              item.room.noSex == 0
+                ? "Nam"
+                : item.room.noSex == 1
+                ? "Nữ"
+                : item.room.noSex == 2
+                ? "Tất cả"
+                : "",
+            acreage: item.room.capacity,
+            address: item.room.address,
+            area: item.room.area,
+            price: new Intl.NumberFormat().format(item.room.price),
+          };
+        });
+      }
+    } catch (error) {
+      console.log(error);
+    }
     const res =  await getAdr()
     this.cardList = res.data.map((item, index) => {
       return {
@@ -142,7 +257,10 @@ export default {
         nameCard: item
       }
     })
+    
   },
+  
+  
   methods: {
     ...mapActions("dashboard", ["handleShow"]),
     viewNew() {
@@ -199,6 +317,7 @@ export default {
         console.log(error);
       }
     },
+    
   },
 };
 </script>
